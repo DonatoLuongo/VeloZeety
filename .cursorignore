@@ -1,0 +1,46 @@
+# Cursor no indexa estos archivos/carpetas → la IA va más rápida.
+# Ajustado para proyectos React/Next/Expo con muchos node_modules.
+
+# Dependencias (miles de archivos)
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build y caché
+.next/
+**/.next/
+out/
+dist/
+**/dist/
+.expo/
+**/.expo/
+*.tsbuildinfo
+.turbo/
+
+# Entornos virtuales y caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Git e historial pesado
+.git/
+
+# Logs y temporales
+*.log
+logs/
+.cache/
+.npm/
+.eslintcache
+
+# Coverage y tests generados
+coverage/
+.nyc_output/
+
+# Otros pesados
+*.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
