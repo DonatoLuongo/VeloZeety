@@ -11,11 +11,43 @@
       "resizeMode": "contain",
       "backgroundColor": "#0F172A"
     },
-    "assetBundlePatterns": ["**/*"],
-    "ios": { "supportsTablet": true, "bundleIdentifier": "com.velocity.app" },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.velocity.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "VeloCity necesita tu ubicación para mostrarte conductores cercanos y calcular rutas.",
+        "NSLocationAlwaysUsageDescription": "VeloCity necesita tu ubicación en segundo plano para el seguimiento de viajes."
+      }
+    },
     "android": {
-      "adaptiveIcon": { "foregroundImage": "./assets/velocity-logo.png", "backgroundColor": "#0F172A" },
-      "package": "com.velocity.app"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/velocity-logo.png",
+        "backgroundColor": "#0F172A"
+      },
+      "package": "com.velocity.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "FOREGROUND_SERVICE",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/velocity-logo.png",
+          "color": "#F46E20"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f1f41124-6c78-4b45-baef-8ed6076a04dc"
+      }
     }
   }
 }

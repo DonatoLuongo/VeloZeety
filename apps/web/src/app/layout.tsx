@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -12,8 +13,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "VeloCity — Tu ciudad en movimiento",
-  description: "Moto-taxi y taxi a tiempo real. Wallet cripto, referidos y viajes gratis. Tu ciudad, en movimiento.",
+  title: "VeloZeety — Tu ciudad en movimiento",
+  description: "Plataforma multi-servicios. Transporte, mandados, fletes, emergencias médicas y más. Tu ciudad, en movimiento.",
 };
 
 export default function RootLayout({
@@ -22,9 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${outfit.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen bg-black text-white antialiased font-sans">
-        {children}
+    <html lang="es" className={`${outfit.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen bg-white dark:bg-[#0f1117] text-[#3F474A] dark:text-white antialiased font-sans transition-colors duration-300">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

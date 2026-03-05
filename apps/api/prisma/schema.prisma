@@ -11,20 +11,25 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
-  role      String   // client | driver | admin
+  role      String   // client | driver | business | admin
   fullName  String
   phone     String?
   avatarUrl String?
+  deviceToken String? // Para notificaciones push
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  clientProfile  ClientProfile?
-  driverProfile  DriverProfile?
-  ridesAsClient  Ride[]         @relation("ClientRides")
-  ridesAsDriver  Ride[]         @relation("DriverRides")
+  clientProfile   ClientProfile?
+  driverProfile   DriverProfile?
+  businessProfile BusinessProfile?
+  healthRecord    HealthRecord?
+  
+  requestsAsClient Request[] @relation("ClientRequests")
+  requestsAsDriver Request[] @relation("DriverRequests")
+  
   wallet         Wallet?
-  referralsGiven Referral[]     @relation("Referrer")
-  referralsGot   Referral[]     @relation("Referred")
+  referralsGiven Referral[] @relation("Referrer")
+  referralsGot   Referral[] @relation("Referred")
 }
 
 model ClientProfile {
@@ -40,11 +45,37 @@ model DriverProfile {
   id           String   @id @default(cuid())
   userId       String   @unique
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  vehicleType  String   // moto | car
+  vehicleType  String   // moto | car | truck_350 | truck_npr
   plate        String?
   documentId   String?
   rating       Float?
   totalTrips   Int      @default(0)
+  status       String   @default("inactive") // active | inactive | on_trip
+  currentLat   Float?
+  currentLng   Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BusinessProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rif          String   @unique
+  companyName  String
+  category     String   // restaurant | store | clinic | pharmacy
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HealthRecord {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bloodType    String?
+  allergies    String?
+  emergencyContacts Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -53,61 +84,89 @@ model Wallet {
   id        String   @id @default(cuid())
   userId    String   @unique
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  balance   Decimal  @default(0) @db.Decimal(18, 8)
-  currency  String   @default("VELO")
+  balances  WalletBalance[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   transactions Transaction[]
 }
 
+model WalletBalance {
+  id        String   @id @default(cuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  currency  String   // USDT | USDC | VES | USD
+  balance   Decimal  @default(0) @db.Decimal(18, 8)
+  updatedAt DateTime @updatedAt
+
+  @@unique([walletId, currency])
+}
+
 model Transaction {
   id          String   @id @default(cuid())
-  walletId   String
-  wallet     Wallet   @relation(fields: [walletId], references: [id])
-  type       String   // recharge | ride_payment | referral_bonus | store | refund
-  amount     Decimal  @db.Decimal(18, 8)
-  metadata   Json?
-  createdAt  DateTime @default(now())
+  walletId    String
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
+  type        String   // top_up | payment | refund | withdrawal
+  amount      Decimal  @db.Decimal(18, 8)
+  currency    String   // USDT | USDC | VES | USD
+  reference   String?  @unique
+  status      String   @default("pending") // pending | completed | failed
+  metadata    Json?
+  createdAt   DateTime @default(now())
 }
 
-model Stop {
+model ExchangeRate {
   id           String   @id @default(cuid())
-  name         String
-  address      String
-  lat          Float
-  lng          Float
-  vehicleTypes String[] // ["moto", "car"]
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  currency     String   @unique // VES
+  rate         Decimal  @db.Decimal(10, 4)
+  source       String   @default("BCV")
+  lastUpdated  DateTime @default(now())
 }
 
-model Ride {
-  id           String   @id @default(cuid())
-  clientId     String
-  client       User     @relation("ClientRides", fields: [clientId], references: [id])
-  driverId     String?
-  driver       User?    @relation("DriverRides", fields: [driverId], references: [id])
-  status       String   // searching | accepted | driver_en_route | in_progress | completed | cancelled
-  vehicleType  String
-  pickupLat    Float
-  pickupLng    Float
-  pickupAddress String?
-  dropoffLat   Float
-  dropoffLng   Float
-  dropoffAddress String?
-  stopId       String?
-  fare         Decimal? @db.Decimal(10, 2)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Service {
+  id          String   @id @default(cuid())
+  type        String   @unique // transport | errand | freight | medical | fire
+  name        String
+  baseFee     Decimal  @db.Decimal(10, 2)
+  kmFee       Decimal  @db.Decimal(10, 2)
+  isActive    Boolean  @default(true)
+  requests    Request[]
+}
+
+model Request {
+  id             String   @id @default(cuid())
+  clientId       String
+  client         User     @relation("ClientRequests", fields: [clientId], references: [id])
+  driverId       String?
+  driver         User?    @relation("DriverRequests", fields: [driverId], references: [id])
+  serviceId      String
+  service        Service  @relation(fields: [serviceId], references: [id])
+  
+  status         String   // searching | accepted | en_route | in_progress | completed | cancelled
+  
+  originLat      Float
+  originLng      Float
+  originAddress  String?
+  destLat        Float
+  destLng        Float
+  destAddress    String?
+  
+  price          Decimal? @db.Decimal(10, 2)
+  distanceKm     Float?
+  
+  // Opciones para fletes o mandados
+  freightDetails Json?    // { weightKg, volumeM3, isHeavy, description }
+  medicalDetails Json?    // { symptoms, isEmergency }
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Referral {
-  id         String   @id @default(cuid())
-  referrerId String
-  referrer   User     @relation("Referrer", fields: [referrerId], references: [id])
-  referredId String
-  referred   User     @relation("Referred", fields: [referredId], references: [id])
-  bonusApplied Boolean @default(false)
-  createdAt  DateTime @default(now())
+  id           String   @id @default(cuid())
+  referrerId   String
+  referrer     User     @relation("Referrer", fields: [referrerId], references: [id])
+  referredId   String
+  referred     User     @relation("Referred", fields: [referredId], references: [id])
+  bonusApplied Boolean  @default(false)
+  createdAt    DateTime @default(now())
 }

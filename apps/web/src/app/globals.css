@@ -8,6 +8,20 @@
   --velocity-dark: #3F474A;
   --velocity-light: #F8FAFC;
   --velocity-accent: #5BA4D4;
+  --velocity-bg: #FFFFFF;
+  --velocity-surface: #F8FAFC;
+  --velocity-text: #3F474A;
+}
+
+.dark {
+  --velocity-primary: #FD7014;
+  --velocity-secondary: #393E46;
+  --velocity-dark: #222831;
+  --velocity-light: #393E46;
+  --velocity-accent: #5BA4D4;
+  --velocity-bg: #222831;
+  --velocity-surface: #393E46;
+  --velocity-text: #EEEEEE;
 }
 
 body {

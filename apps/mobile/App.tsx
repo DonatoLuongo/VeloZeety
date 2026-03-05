@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -8,16 +8,55 @@ import {
   Platform,
   Linking,
   ActivityIndicator,
+  BackHandler,
+  Alert,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import * as Location from "expo-location";
 import { WEB_APP_URL, WEB_APP_APP_URL } from "./webapp.config";
+import { useNotifications } from "./src/hooks/useNotifications";
 
-type ViewMode = "home" | "webview";
+import SettingsScreen from "./src/screens/SettingsScreen";
+
+type ViewMode = "home" | "webview" | "settings";
 
 export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>("home");
   const [webLoading, setWebLoading] = useState(true);
   const [webError, setWebError] = useState<string | null>(null);
+  const [locationPermission, setLocationPermission] = useState<boolean | null>(null);
+  const webViewRef = useRef<WebView>(null);
+  const { expoPushToken } = useNotifications();
+
+  useEffect(() => {
+    // 1. Manejo del botón atrás (Android)
+    const backAction = () => {
+      if (viewMode === "webview") {
+        setViewMode("home");
+        return true;
+      }
+      if (viewMode === "settings") {
+        setViewMode("home");
+        return true;
+      }
+
+      Alert.alert("👋 VeloCity", "¿Deseas cerrar la aplicación?", [
+        { text: "Seguir usando", onPress: () => null, style: "cancel" },
+        { text: "Salir", onPress: () => BackHandler.exitApp() },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    // 2. Solicitar permisos de ubicación al inicio
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      setLocationPermission(status === "granted");
+    })();
+
+    return () => backHandler.remove();
+  }, [viewMode]);
 
   const openInBrowser = () => {
     Linking.openURL(WEB_APP_APP_URL);
@@ -34,14 +73,36 @@ export default function App() {
     );
   }
 
+  // Vista de Ajustes
+  if (viewMode === "settings") {
+    return <SettingsScreen onBack={() => setViewMode("home")} />;
+  }
+
   // Pantalla nativa: inicio de la app móvil
   if (viewMode === "home") {
     return (
       <View style={styles.container}>
         <StatusBar style="dark" />
         <View style={styles.homeContent}>
-          <Text style={styles.title}>VeloCity</Text>
-          <Text style={styles.subtitle}>Tu ciudad en movimiento</Text>
+          <View style={styles.topRow}>
+            <View>
+              <Text style={styles.title}>VeloCity</Text>
+              <Text style={styles.subtitle}>Tu ciudad en movimiento</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setViewMode("settings")}
+              style={styles.settingsIcon}
+            >
+              <Text style={styles.settingsIconText}>⚙️</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.statusBox}>
+            <Text style={styles.statusLabel}>GPS:</Text>
+            <Text style={[styles.statusValue, locationPermission ? styles.statusOk : styles.statusError]}>
+              {locationPermission === null ? "Verificando…" : locationPermission ? "Activado" : "Denegado"}
+            </Text>
+          </View>
           <Text style={styles.paragraph}>
             Para ver la aplicación con la interfaz adaptada al móvil (Servicios,
             Perfil, mapa, etc.), ábrela en el navegador de tu teléfono.
@@ -61,8 +122,7 @@ export default function App() {
             <Text style={styles.secondaryButtonText}>Ver app (mapa, Servicios, Perfil) aquí</Text>
           </TouchableOpacity>
           <Text style={styles.hint}>
-            Misma Wi‑Fi que la PC. En la PC: npm run dev:web (puerto 3000). IP en
-            webapp.config.ts.
+            Push Token: {expoPushToken ? "Registrado ✅" : "Pendiente..."}
           </Text>
         </View>
       </View>
@@ -83,6 +143,7 @@ export default function App() {
         >
           <Text style={styles.backButtonText}>← Volver</Text>
         </TouchableOpacity>
+        <Text style={styles.headerTitle}>Explorando VeloCity</Text>
       </View>
       {webError && (
         <View style={styles.errorBox}>
@@ -90,6 +151,7 @@ export default function App() {
         </View>
       )}
       <WebView
+        ref={webViewRef}
         source={{ uri: WEB_APP_APP_URL }}
         style={[styles.webview, webLoading && styles.webviewHidden]}
         onLoadStart={() => setWebError(null)}
@@ -124,6 +186,8 @@ export default function App() {
   );
 }
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,6 +198,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
     paddingBottom: 24,
+  },
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 4,
+  },
+  settingsIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  settingsIconText: {
+    fontSize: 20,
   },
   title: {
     fontSize: 28,
@@ -180,10 +263,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  statusBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  statusLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#64748b",
+    marginRight: 8,
+  },
+  statusValue: {
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  statusOk: {
+    color: "#10b981",
+  },
+  statusError: {
+    color: "#ef4444",
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#3F474A",
+    textAlign: "center",
+    marginRight: 40,
+  },
   hint: {
     fontSize: 12,
     color: "#94a3b8",
-    lineHeight: 18,
+    textAlign: "center",
+    marginTop: 20,
   },
   webviewHeader: {
     flexDirection: "row",
