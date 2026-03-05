@@ -25,6 +25,7 @@ import {
   Briefcase,
   Dog,
   Boxes,
+  ShieldAlert,
 } from "lucide-react";
 import AppMap from "@/components/AppMap";
 import MapPickerModal from "@/components/MapPickerModal";
@@ -120,39 +121,39 @@ export default function AppInicioPage() {
       </div>
 
       {/* Panel derecho: Inicio (HOME) — Negocios + viajes */}
-      <div className="md:w-[420px] bg-white md:border-l md:shadow-xl p-5 flex flex-col gap-5 overflow-y-auto">
+      <div className="md:w-[420px] bg-white dark:bg-slate-900 md:border-l md:border-slate-200 dark:border-slate-800 md:shadow-xl p-5 flex flex-col gap-5 overflow-y-auto velocity-no-scrollbar">
         {step === "select" && (
           <>
-            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 animate-slide-up-soft">
-              <h1 className="text-lg font-bold text-slate-800">Inicio</h1>
-              <span className="text-xs text-slate-500 font-normal">Tu panel principal</span>
+            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft">
+              <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">Inicio</h1>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">Tu panel principal</span>
             </div>
             <div className="animate-slide-up-soft animation-delay-100">
               <BcvWidget />
             </div>
             {/* Negocios verificados — clic abre perfil del negocio */}
-            <section className="pb-4 border-b border-slate-100 animate-slide-up-soft animation-delay-200">
-              <h2 className="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+            <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-200">
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-2">
                 <Building2 className="w-4 h-4" />
                 Negocios verificados
               </h2>
-              <p className="text-xs text-slate-500 mb-2">Compra y paga con tu billetera. El pago va al emprendedor.</p>
-              <p className="text-[10px] text-amber-700/80 mb-2 flex items-center gap-1 rounded-lg bg-amber-50/80 px-2 py-1 border border-amber-100">Tasa BCV de referencia para tus pagos.</p>
-              <div className="space-y-3 max-h-[280px] overflow-y-auto overflow-x-hidden">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Compra y paga con tu billetera. El pago va al emprendedor.</p>
+              <p className="text-[10px] text-amber-700/80 dark:text-amber-500 mb-2 flex items-center gap-1 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1 border border-amber-100 dark:border-amber-900/30">Tasa BCV de referencia para tus pagos.</p>
+              <div className="space-y-3 max-h-[280px] overflow-y-auto overflow-x-hidden velocity-no-scrollbar">
                 {NEGOCIOS_VERIFICADOS.map((neg) => (
-                  <div key={neg.id} className="rounded-xl border border-slate-200 p-3 bg-slate-50/50 hover:border-[#0EA5E9]/30 transition velocity-card">
+                  <div key={neg.id} className="rounded-xl border border-slate-200 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-800 hover:border-[#0EA5E9]/30 transition velocity-card">
                     <button type="button" onClick={() => setNegocioSeleccionado(neg)} className="w-full text-left">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-medium text-slate-800 text-sm">{neg.nombre}</span>
+                        <span className="font-medium text-slate-800 dark:text-slate-100 text-sm">{neg.nombre}</span>
                         {neg.verified && (
-                          <span className="inline-flex items-center gap-0.5 text-emerald-600 text-xs">
+                          <span className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-500 text-xs">
                             <BadgeCheck className="w-3.5 h-3.5" /> Verificado
                           </span>
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {neg.productos.map((p, i) => (
-                          <span key={i} className="text-xs px-2 py-1 rounded-lg bg-white border border-slate-200 text-slate-600">
+                          <span key={i} className="text-xs px-2 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400">
                             {p.nombre} · ${p.precio}
                           </span>
                         ))}
@@ -167,34 +168,34 @@ export default function AppInicioPage() {
             </section>
 
             {/* Confianza */}
-            <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-50 border border-slate-200 animate-slide-up-soft animation-delay-300">
+            <div className="flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 animate-slide-up-soft animation-delay-300">
               <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-600">
                 <BadgeCheck className="w-4 h-4" />
               </span>
-              <p className="text-sm font-medium text-slate-700">Todos los conductores han sido verificados</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Todos los conductores han sido verificados</p>
             </div>
 
-            <div className="rounded-xl py-2.5 px-3 flex items-center gap-2 text-sm font-medium text-slate-800 border border-amber-200 bg-amber-50/80 animate-slide-up-soft animation-delay-300">
-              <Wallet className="w-4 h-4 text-amber-600" />
+            <div className="rounded-xl py-2.5 px-3 flex items-center gap-2 text-sm font-medium text-slate-800 dark:text-slate-200 border border-amber-200 dark:border-amber-900/50 bg-amber-50/80 dark:bg-amber-900/20 animate-slide-up-soft animation-delay-300">
+              <Wallet className="w-4 h-4 text-amber-600 dark:text-amber-500" />
               Paga con VELO y acumula beneficios en cada viaje y envío
             </div>
 
             {/* ¿Qué necesitas hoy? — Viajes y Envíos (Mandaito) */}
-            <section className="pb-4 border-b border-slate-100 animate-slide-up-soft animation-delay-400">
-              <h2 className="text-base font-semibold text-slate-800 mb-3">¿Qué necesitas hoy?</h2>
+            <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-400">
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">¿Qué necesitas hoy?</h2>
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl border-2 border-slate-200 p-3 bg-slate-50/50 hover:border-[#0EA5E9]/30 transition velocity-card">
-                  <p className="font-semibold text-slate-800 text-sm mb-1 flex items-center gap-1.5">
+                <div className="rounded-xl border-2 border-slate-200 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-800/80 hover:border-[#0EA5E9]/30 transition velocity-card">
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1 flex items-center gap-1.5">
                     <Car className="w-4 h-4 text-[#0EA5E9]" /> Viajes
                   </p>
-                  <p className="text-xs text-slate-500">Viaja rápido y seguro</p>
-                  <p className="text-xs text-slate-600 mt-2">Usa el formulario de abajo ↓</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Viaja rápido y seguro</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-500 mt-2">Usa el formulario de abajo ↓</p>
                 </div>
-                <Link href="/app/envios" className="rounded-xl border-2 border-slate-200 p-3 bg-white hover:border-[#0EA5E9]/40 hover:shadow-md transition velocity-card flex flex-col">
-                  <p className="font-semibold text-slate-800 text-sm mb-1 flex items-center gap-1.5">
+                <Link href="/app/envios" className="rounded-xl border-2 border-slate-200 dark:border-slate-800 p-3 bg-white dark:bg-slate-900 hover:border-[#0EA5E9]/40 hover:shadow-md transition velocity-card flex flex-col">
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1 flex items-center gap-1.5">
                     <Package className="w-4 h-4" style={{ color: BRAND.colors.primary }} /> Envíos
                   </p>
-                  <p className="text-xs text-slate-500 flex-1">Mandaito: envía un paquete</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 flex-1">Mandaito: envía un paquete</p>
                   <span className="text-xs font-medium mt-2 flex items-center gap-0.5" style={{ color: BRAND.colors.primary }}>
                     Enviar paquete <ChevronRight className="w-3.5 h-3.5" />
                   </span>
@@ -202,9 +203,28 @@ export default function AppInicioPage() {
               </div>
             </section>
 
+            {/* Servicios Premium (Emergencias) */}
+            <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-500">
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">Servicios Premium</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/app/emergencia" className="rounded-xl border-2 border-red-100 dark:border-red-900/40 p-3 bg-red-50/50 dark:bg-red-950/20 hover:border-red-300 dark:hover:border-red-800/60 hover:shadow-md transition velocity-card flex flex-col justify-between">
+                  <div>
+                    <p className="font-semibold text-red-700 dark:text-red-400 text-sm mb-1 flex items-center gap-1.5">
+                      <ShieldAlert className="w-4 h-4" /> Emergencias
+                    </p>
+                    <p className="text-xs text-red-600/80 dark:text-red-300/80">Ambulancias y asistencia</p>
+                  </div>
+                  <span className="text-xs font-medium mt-2 flex items-center gap-0.5 text-red-600 dark:text-red-400">
+                    Solicitar <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </Link>
+                {/* Espacio para más servicios en el futuro, o solo Emergencias */}
+              </div>
+            </section>
+
             {negocioSeleccionado && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }}>
-                <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full overflow-hidden border border-slate-200 my-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto velocity-no-scrollbar" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }}>
+                <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-sm w-full overflow-hidden border border-slate-200 dark:border-slate-800 my-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
                   {/* Portada */}
                   <div className="h-28 bg-gradient-to-br from-[#0EA5E9]/30 to-slate-100 flex items-center justify-center">
                     {negocioSeleccionado.portada ? (
@@ -308,24 +328,22 @@ export default function AppInicioPage() {
               </div>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800">Pedir viaje</h2>
-            <h3 className="text-sm font-medium text-slate-600">¿Dónde te recogemos?</h3>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-2">Pedir viaje</h2>
+            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">¿Dónde te recogemos?</h3>
             <div className="flex gap-2 flex-wrap">
               <button
                 type="button"
                 onClick={() => setPickupType("parada")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${
-                  pickupType === "parada" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 bg-slate-100 text-slate-700"
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "parada" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
               >
                 Paradas
               </button>
               <button
                 type="button"
                 onClick={() => setPickupType("ubicacion")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 flex items-center gap-1 transition ${
-                  pickupType === "ubicacion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 bg-slate-100 text-slate-700"
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 flex items-center gap-1 transition ${pickupType === "ubicacion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
               >
                 <Navigation className="w-4 h-4" />
                 Mi ubicación
@@ -333,9 +351,8 @@ export default function AppInicioPage() {
               <button
                 type="button"
                 onClick={() => setPickupType("direccion")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${
-                  pickupType === "direccion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 bg-slate-100 text-slate-700"
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "direccion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
               >
                 Dirección
               </button>
@@ -347,9 +364,8 @@ export default function AppInicioPage() {
                     key={p.id}
                     type="button"
                     onClick={() => setPickupValue(p.name)}
-                    className={`p-3 rounded-lg border-2 text-left text-sm font-medium transition ${
-                      pickupValue === p.name ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
-                    }`}
+                    className={`p-3 rounded-lg border-2 text-left text-sm font-medium transition ${pickupValue === p.name ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                      }`}
                   >
                     <MapPin className="w-4 h-4 inline mr-1" />
                     {p.name}
@@ -380,7 +396,7 @@ export default function AppInicioPage() {
                       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
                   }}
-                  className="w-full px-3 py-2.5 rounded-lg border-2 border-[#0EA5E9] bg-[#0EA5E9]/10 text-slate-800 text-sm font-medium flex items-center justify-center gap-2"
+                  className="w-full px-3 py-2.5 rounded-lg border-2 border-[#0EA5E9] bg-[#0EA5E9]/10 text-slate-800 dark:text-slate-100 text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#0EA5E9]/20"
                 >
                   <Navigation className="w-4 h-4" />
                   Obtener mi ubicación ahora
@@ -407,13 +423,13 @@ export default function AppInicioPage() {
                     );
                     (window as any).__velocityWatchId = watchId;
                   }}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-50"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700"
                 >
                   <Navigation className="w-4 h-4" />
                   Compartir mi ubicación en tiempo real
                 </button>
                 {pickupValue && !pickupValue.startsWith("Obteniendo") && !pickupValue.startsWith("Compartiendo") && (
-                  <p className="text-xs text-slate-600 font-medium">{pickupValue}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{pickupValue}</p>
                 )}
               </div>
             )}
@@ -424,16 +440,16 @@ export default function AppInicioPage() {
                   placeholder="Escribe la dirección de recogida"
                   value={pickupValue}
                   onChange={(e) => setPickupValue(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 font-medium placeholder:text-slate-500 text-sm"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-500 text-sm"
                 />
-                <p className="text-xs text-slate-500 mt-1.5 mb-1">Zonas donde operamos:</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 mb-1">Zonas donde operamos:</p>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {ZONAS_VELOCITY.slice(0, 6).map((z) => (
                     <button
                       key={z.id}
                       type="button"
                       onClick={() => setPickupValue(z.nombre)}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-[#0EA5E9]/10 hover:border-[#0EA5E9]/40"
+                      className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10 hover:border-[#0EA5E9]/40"
                     >
                       {z.nombre.split(" - ")[0] || z.nombre}
                     </button>
@@ -442,29 +458,29 @@ export default function AppInicioPage() {
                 <button
                   type="button"
                   onClick={() => { setMapPickerFor("pickup"); setShowMapPicker(true); }}
-                  className="w-full py-2 rounded-lg border-2 border-dashed border-slate-300 text-slate-600 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5"
+                  className="w-full py-2 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5"
                 >
                   <MapPin className="w-4 h-4" />
                   Señalar ubicación en el mapa
                 </button>
               </div>
             )}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Destino</label>
+            <div className="mt-2">
+              <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Destino</label>
               <input
                 type="text"
                 placeholder="¿A dónde vas?"
                 value={dropoff}
                 onChange={(e) => setDropoff(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 font-medium placeholder:text-slate-500 text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-500 text-sm"
               />
-              <div className="flex flex-wrap gap-1.5 mt-1.5">
+              <div className="flex flex-wrap gap-1.5 mt-2">
                 {ZONAS_VELOCITY.slice(0, 5).map((z) => (
                   <button
                     key={z.id}
                     type="button"
                     onClick={() => setDropoff(z.nombre)}
-                    className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-[#0EA5E9]/10"
+                    className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10"
                   >
                     {z.nombre.split(" - ")[0] || z.nombre}
                   </button>
@@ -472,15 +488,15 @@ export default function AppInicioPage() {
                 <button
                   type="button"
                   onClick={() => { setMapPickerFor("dropoff"); setShowMapPicker(true); }}
-                  className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium text-slate-600 hover:bg-[#0EA5E9]/10 flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10 flex items-center gap-1"
                 >
                   <MapPin className="w-3 h-3" /> Mapa
                 </button>
               </div>
             </div>
 
-            <h2 className="text-base font-semibold text-slate-800 pt-2">Tipo de vehículo</h2>
-            <p className="text-xs text-slate-500 mb-2">Elige según pasajeros y equipaje. Solo negocios verificados.</p>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">Tipo de vehículo</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Elige según pasajeros y equipaje. Solo negocios verificados.</p>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: "moto" as const, Icon: Bike, label: "Moto", personas: "1", equipaje: "Ligero", extra: null },
@@ -492,17 +508,16 @@ export default function AppInicioPage() {
                   key={id}
                   type="button"
                   onClick={() => setVehicle(id)}
-                  className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border-2 text-left transition ${
-                    vehicle === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 shadow-sm" : "border-slate-200 text-slate-700 hover:border-slate-300"
-                  }`}
+                  className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border-2 text-left transition ${vehicle === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100 shadow-sm" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300"
+                    }`}
                 >
                   <div className="flex items-center gap-2 w-full">
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${vehicle === id ? "bg-[#0EA5E9]/20" : "bg-slate-100"}`}>
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${vehicle === id ? "bg-[#0EA5E9]/20" : "bg-slate-100 dark:bg-slate-700"}`}>
                       <Icon className="w-5 h-5" strokeWidth={2} style={vehicle === id ? { color: "#0EA5E9" } : {}} />
                     </div>
                     <span className="text-sm font-semibold">{label}</span>
                   </div>
-                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                     <span className="inline-flex items-center gap-0.5">
                       <Users className="w-3.5 h-3.5" /> {personas}
                     </span>
@@ -510,7 +525,7 @@ export default function AppInicioPage() {
                       <Briefcase className="w-3.5 h-3.5" /> {equipaje}
                     </span>
                     {extra && (
-                      <span className="inline-flex items-center gap-0.5 text-emerald-600">
+                      <span className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-500">
                         {id === "4x4" ? <Dog className="w-3.5 h-3.5" /> : null}
                         {extra}
                       </span>
@@ -520,19 +535,18 @@ export default function AppInicioPage() {
               ))}
             </div>
             {vehicle === "flete" && (
-              <p className="text-xs text-slate-500 rounded-lg bg-slate-50 p-2 border border-slate-100">
+              <p className="text-xs text-slate-500 dark:text-slate-400 rounded-lg bg-slate-50 dark:bg-slate-800 p-2 border border-slate-100 dark:border-slate-700 mt-2">
                 Ideal para mudanza, viajes largos o cargar algo grande. Vehículos tipo NPR disponibles.
               </p>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800">¿Cuándo?</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">¿Cuándo?</h2>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setTripMode("now")}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${
-                  tripMode === "now" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
-                }`}
+                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "now" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
+                  }`}
               >
                 <Zap className="w-4 h-4" />
                 Viajar ahora
@@ -540,20 +554,19 @@ export default function AppInicioPage() {
               <button
                 type="button"
                 onClick={() => setTripMode("reserve")}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${
-                  tripMode === "reserve" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
-                }`}
+                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "reserve" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
               >
                 <Calendar className="w-4 h-4" />
                 Reservar
               </button>
             </div>
             {tripMode === "reserve" && (
-              <div className="rounded-xl border-2 border-slate-200 bg-white p-4 space-y-4 overflow-hidden">
-                <label className="block text-sm font-semibold text-slate-800">Fecha</label>
-                <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-3">
+              <div className="rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 space-y-4 overflow-hidden mt-2">
+                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200">Fecha</label>
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-slate-800">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 capitalize">
                       {new Date(calendarYear, calendarMonth).toLocaleDateString("es", { month: "long", year: "numeric" })}
                     </span>
                     <div className="flex gap-1">
@@ -565,7 +578,7 @@ export default function AppInicioPage() {
                             setCalendarYear((y) => y - 1);
                           } else setCalendarMonth((m) => m - 1);
                         }}
-                        className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 text-sm"
+                        className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
                         aria-label="Mes anterior"
                       >
                         ‹
@@ -578,14 +591,14 @@ export default function AppInicioPage() {
                             setCalendarYear((y) => y + 1);
                           } else setCalendarMonth((m) => m + 1);
                         }}
-                        className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 text-sm"
+                        className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
                         aria-label="Mes siguiente"
                       >
                         ›
                       </button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-7 gap-0.5 text-center text-xs font-medium text-slate-500 mb-1">
+                  <div className="grid grid-cols-7 gap-0.5 text-center text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
                     {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
                       <span key={d}>{d}</span>
                     ))}
@@ -612,9 +625,8 @@ export default function AppInicioPage() {
                             type="button"
                             disabled={isPast}
                             onClick={() => setReserveDate(dateStr)}
-                            className={`w-8 h-8 rounded-lg text-sm font-medium transition ${
-                              isPast ? "text-slate-300 cursor-not-allowed" : "text-slate-800 hover:bg-[#0EA5E9]/20"
-                            } ${isSelected ? "bg-[#0EA5E9] text-white hover:bg-[#0EA5E9]" : ""}`}
+                            className={`flex items-center justify-center h-8 rounded-lg text-sm font-medium transition ${isPast ? "text-slate-300 dark:text-slate-600 cursor-not-allowed" : "text-slate-800 dark:text-slate-200 hover:bg-[#0EA5E9]/20"
+                              } ${isSelected ? "bg-[#0EA5E9] !text-white hover:bg-[#0EA5E9]" : ""}`}
                           >
                             {d}
                           </button>
@@ -623,11 +635,11 @@ export default function AppInicioPage() {
                     })()}
                   </div>
                 </div>
-                <label className="block text-sm font-semibold text-slate-800">Hora</label>
+                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mt-3 mb-1">Hora</label>
                 <select
                   value={reserveTime}
                   onChange={(e) => setReserveTime(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-slate-900 font-medium text-sm bg-white"
+                  className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium text-sm"
                 >
                   <option value="">Selecciona hora</option>
                   {Array.from({ length: 24 * 2 }, (_, i) => {
@@ -644,8 +656,8 @@ export default function AppInicioPage() {
               </div>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800">Método de pago</h2>
-            <div className="space-y-2">
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">Método de pago</h2>
+            <div className="space-y-2 mb-2">
               {[
                 { id: "efectivo" as const, label: "Efectivo", Icon: Banknote },
                 { id: "pago_movil" as const, label: "Pago móvil", Icon: Smartphone },
@@ -655,11 +667,10 @@ export default function AppInicioPage() {
                   key={id}
                   type="button"
                   onClick={() => setPayment(id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 text-left text-sm font-medium transition ${
-                    payment === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
-                  }`}
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 text-left text-sm font-medium transition ${payment === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                    }`}
                 >
-                  <Icon className="w-5 h-5 text-slate-500" />
+                  <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                   {label}
                 </button>
               ))}
@@ -679,7 +690,7 @@ export default function AppInicioPage() {
           </>
         )}
 
-{step === "confirm" && (
+        {step === "confirm" && (
           <>
             <p className="text-sm text-slate-600">Buscando conductor...</p>
             <button type="button" onClick={() => setStep("driver")} className="text-sm font-medium text-white py-2.5 px-4 rounded-xl" style={{ backgroundColor: BRAND.colors.primary }}>

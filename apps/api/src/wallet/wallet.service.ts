@@ -73,7 +73,7 @@ export class WalletService {
 
       // Calcular nuevo balance
       const balanceChange = (type === 'top_up' || type === 'refund') ? amount : -amount;
-      const newBalance = new Prisma.Decimal(Number(walletBalance.balance) + balanceChange);
+      const newBalance = Number(walletBalance.balance) + balanceChange;
 
       // Actualizar el balance
       const updatedBalance = await tx.walletBalance.update({
@@ -86,7 +86,7 @@ export class WalletService {
         data: {
           walletId: wallet.id,
           type,
-          amount: new Prisma.Decimal(amount),
+          amount: amount,
           currency,
           reference,
           status: 'completed',

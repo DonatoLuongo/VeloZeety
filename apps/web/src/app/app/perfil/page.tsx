@@ -57,7 +57,7 @@ export default function PerfilPage() {
         if (data.email) setEmail(data.email);
         if (data.phone) setTelefono(data.phone);
       }
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   const rolLabel = rol === "conductor" ? "Conductor" : rol === "emprendedor" ? "Emprendedor" : "Cliente";
@@ -87,9 +87,8 @@ export default function PerfilPage() {
           <button
             type="button"
             onClick={() => setSelectedSection("inicio")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${
-              selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
-            }`}
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+              }`}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 flex-shrink-0">
               <User className="w-6 h-6 text-slate-600" strokeWidth={2} />
@@ -105,9 +104,8 @@ export default function PerfilPage() {
               key={id}
               type="button"
               onClick={() => setSelectedSection(id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${
-                selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
-              }`}
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+                }`}
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 flex-shrink-0">
                 <Icon className="w-6 h-6 text-slate-600" strokeWidth={2} />
@@ -157,9 +155,27 @@ export default function PerfilPage() {
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-2xl text-slate-900">{nombre}</p>
                       <p className="text-slate-500 text-base mt-0.5">{rolLabel}</p>
-                      <span className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-white bg-slate-800 px-2.5 py-1 rounded-md">
-                        <BadgeCheck className="w-4 h-4" /> Verificado premium
-                      </span>
+                      <div className="flex gap-2 mt-3">
+                        <span className="inline-flex items-center gap-1 text-sm font-medium text-white bg-slate-800 px-2.5 py-1 rounded-md">
+                          <BadgeCheck className="w-4 h-4" /> Verificado premium
+                        </span>
+                        <select
+                          value={rol}
+                          onChange={(e) => {
+                            const next = e.target.value as Rol;
+                            setRol(next);
+                            const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
+                            localStorage.setItem("velocity_user", JSON.stringify({ ...user, rol: next }));
+                            // Reload to apply changes across layout
+                            window.location.reload();
+                          }}
+                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 border border-slate-200 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
+                        >
+                          <option value="cliente">Cliente</option>
+                          <option value="conductor">Conductor</option>
+                          <option value="emprendedor">Emprendedor</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                   <p className="text-slate-600 text-base mb-5">

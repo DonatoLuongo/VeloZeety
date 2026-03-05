@@ -151,14 +151,14 @@ export class RequestsService {
             // 4. DEBITAR al cliente
             await tx.walletBalance.update({
                 where: { id: clientBalance.id },
-                data: { balance: new Prisma.Decimal(Number(clientBalance.balance) - price) },
+                data: { balance: Number(clientBalance.balance) - price },
             });
 
             await tx.transaction.create({
                 data: {
                     walletId: clientWallet.id,
                     type: 'payment',
-                    amount: new Prisma.Decimal(price),
+                    amount: price,
                     currency,
                     status: 'completed',
                     metadata: { requestId, description: `Pago servicio #${requestId.slice(0, 8)}` },
@@ -170,11 +170,11 @@ export class RequestsService {
             if (driverBalance) {
                 await tx.walletBalance.update({
                     where: { id: driverBalance.id },
-                    data: { balance: new Prisma.Decimal(currentDriverBalance + price) },
+                    data: { balance: currentDriverBalance + price },
                 });
             } else {
                 await tx.walletBalance.create({
-                    data: { walletId: driverWallet.id, currency, balance: new Prisma.Decimal(price) },
+                    data: { walletId: driverWallet.id, currency, balance: price },
                 });
             }
 
@@ -182,7 +182,7 @@ export class RequestsService {
                 data: {
                     walletId: driverWallet.id,
                     type: 'payment',
-                    amount: new Prisma.Decimal(price),
+                    amount: price,
                     currency,
                     status: 'completed',
                     metadata: { requestId, description: `Cobro servicio #${requestId.slice(0, 8)}` },

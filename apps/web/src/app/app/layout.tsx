@@ -3,19 +3,22 @@
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Wallet, Package, User, Building2, LayoutGrid, AlertTriangle } from "lucide-react";
+import { Home, Wallet, Package, User, Building2, LayoutGrid, AlertTriangle, Instagram, Twitter } from "lucide-react";
 import { BRAND } from "@velocity/shared";
 import ExitButton from "@/components/ExitButton";
 import LocationIconOrange from "@/components/LocationIconOrange";
+import ThemeToggle from "@/components/ThemeToggle";
 
-const nav = [
-  { href: "/app", label: "Inicio", Icon: Home },
-  { href: "/app/envios", label: "Envíos", Icon: Package },
-  { href: "/app/billetera", label: "Billetera", Icon: Wallet },
-  { href: "/app/servicios", label: "Servicios", Icon: LayoutGrid },
-  { href: "/app/emergencia", label: "Emergencia", Icon: AlertTriangle },
-  { href: "/app/empresa", label: "Empresa", Icon: Building2 },
-  { href: "/app/perfil", label: "Perfil", Icon: User },
+import { useEffect, useState } from "react";
+
+const navBase = [
+  { href: "/app", label: "Inicio", Icon: Home, roles: ["cliente", "conductor", "emprendedor"] },
+  { href: "/app/envios", label: "Envíos", Icon: Package, roles: ["cliente", "conductor"] },
+  { href: "/app/billetera", label: "Billetera", Icon: Wallet, roles: ["cliente", "conductor", "emprendedor"] },
+  { href: "/app/servicios", label: "Servicios", Icon: LayoutGrid, roles: ["cliente"] },
+  { href: "/app/emergencia", label: "Emergencia", Icon: AlertTriangle, roles: ["cliente", "conductor"] },
+  { href: "/app/empresa", label: "Empresa", Icon: Building2, roles: ["emprendedor"] },
+  { href: "/app/perfil", label: "Perfil", Icon: User, roles: ["cliente", "conductor", "emprendedor"] },
 ];
 
 export default function AppLayout({
@@ -24,6 +27,15 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [rol, setRol] = useState<string>("cliente");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
+    if (user.rol) setRol(user.rol);
+  }, []);
+
+  const nav = navBase.filter(item => item.roles.includes(rol));
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#222831] transition-colors">
@@ -32,7 +44,7 @@ export default function AppLayout({
           <LocationIconOrange size={32} />
           <span className="font-semibold text-lg text-slate-800 dark:text-white">{BRAND.name}</span>
         </Link>
-        <nav className="flex gap-1">
+        <nav className="flex items-center gap-1">
           {nav.map(({ href, label, Icon }) => (
             <Link
               key={href}
@@ -46,6 +58,16 @@ export default function AppLayout({
               {label}
             </Link>
           ))}
+          <div className="mx-2 h-6 w-px bg-slate-200 dark:bg-white/10" />
+          <ThemeToggle />
+          <div className="flex items-center gap-2 ml-4">
+            <a href="https://x.com/VZeety" target="_blank" rel="noopener noreferrer" className="p-2 text-slate-500 hover:text-velocity-primary transition-colors">
+              <Twitter className="w-5 h-5" />
+            </a>
+            <a href="https://www.instagram.com/velozeety/" target="_blank" rel="noopener noreferrer" className="p-2 text-slate-500 hover:text-velocity-primary transition-colors">
+              <Instagram className="w-5 h-5" />
+            </a>
+          </div>
         </nav>
         <ExitButton href="/" />
       </header>
@@ -53,7 +75,7 @@ export default function AppLayout({
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
       <nav className="fixed bottom-0 left-0 right-0 md:hidden flex items-center justify-around py-2 px-2 bg-white dark:bg-[#393E46] border-t border-slate-200 dark:border-white/5 shadow-lg dark:shadow-none transition-colors">
-        {nav.map(({ href, label, Icon }) => (
+        {nav.slice(0, 4).map(({ href, label, Icon }) => (
           <Link
             key={href}
             href={href}
@@ -66,6 +88,11 @@ export default function AppLayout({
             <span className="text-xs">{label}</span>
           </Link>
         ))}
+        {/* Mobile Theme Toggle */}
+        <div className="flex flex-col items-center gap-1 min-w-[64px]">
+          <ThemeToggle />
+          <span className="text-xs text-slate-500">Tema</span>
+        </div>
       </nav>
     </div>
   );

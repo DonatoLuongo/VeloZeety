@@ -8,6 +8,7 @@ import {
   ArrowDownToLine,
   Copy,
   Shield,
+  User,
   Smartphone,
   Building2,
   ArrowUpFromLine,
@@ -51,195 +52,195 @@ export default function BilleteraPage() {
 
       {tab === "principal" && (
         <>
-          {/* Tarjeta virtual - más información, estilo tipo Apple */}
-          <div
-            className="rounded-2xl p-6 text-white mb-6 shadow-xl overflow-hidden relative min-h-[220px] flex flex-col justify-between"
-            style={{ background: `linear-gradient(145deg, #0c4a6e 0%, ${BRAND.colors.primary} 50%, #0284c7 100%)` }}
-          >
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.04\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-80" aria-hidden />
-            <div className="relative z-10 flex justify-between items-start">
-              <div>
-                <p className="text-white/90 text-[10px] uppercase tracking-[0.2em] font-medium">Tarjeta virtual</p>
-                <p className="font-bold text-xl mt-0.5">VeloCity</p>
-              </div>
-              <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur rounded-lg px-2 py-1">
-                <Shield className="w-4 h-4" />
-                <span className="text-xs font-medium">Segura</span>
-              </div>
+          {/* Nuevo Panel de Saldo Minimalista Multi-moneda */}
+          <div className="bg-white dark:bg-[#393E46] rounded-2xl p-8 mb-6 border border-slate-200 dark:border-white/5 transition-colors">
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Saldo Total Estimado</p>
+            <div className="flex items-baseline gap-2 mb-6">
+              <span className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">$ 1,250.00</span>
+              <span className="text-slate-400 font-medium">USD</span>
             </div>
-            <div className="relative z-10 mt-2">
-              <p className="text-white/70 text-[10px] tracking-widest font-mono">•••• •••• •••• 4242</p>
-              <p className="text-white/60 text-xs mt-1">Válida hasta 12/28 · USD</p>
-            </div>
-            <div className="relative z-10 mt-3">
-              <p className="text-white/80 text-xs mb-0.5">Saldo disponible</p>
-              <p className="text-2xl md:text-3xl font-bold tracking-tight">0.00 VELO</p>
-              <p className="text-white/70 text-sm mt-0.5">≈ 0.00 USD</p>
-            </div>
-            <div className="relative z-10 mt-4 pt-4 border-t border-white/20 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <div className="rounded-lg bg-white/20 p-1.5" aria-hidden>
-                  <NfcIcon className="w-6 h-6 text-white" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 dark:bg-emerald-500/20 rounded-lg">
+                    <Banknote className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">USDT / USDC</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">850.00</p>
+                  </div>
                 </div>
-                <span className="text-xs text-white/90">Paga con NFC en comercios o a otras cuentas.</span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg">
+                    <div className="font-bold text-blue-600 dark:text-blue-400 text-xs">VES</div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Bolívares</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">14,350.50</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-500/20 rounded-lg">
+                    <div className="font-bold text-amber-600 dark:text-amber-400 text-xs">EUR</div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Euros</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">120.00</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-slate-100 dark:bg-white/10 rounded-lg">
+                    <div className="font-bold text-slate-600 dark:text-slate-300 text-xs">USD</div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Efectivo / Otros</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">40.00</p>
+                  </div>
+                </div>
               </div>
             </div>
+
+            <button
+              onClick={() => window.location.href = "/app/perfil"}
+              className="mt-6 w-full py-3 px-4 rounded-xl border border-dashed border-slate-300 dark:border-white/20 text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+            >
+              + Gestionar métodos de pago
+            </button>
           </div>
 
-          {/* Acciones: Enviar, Recibir, Recargar, Retiro, Depósito */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+          {/* Acciones Rápidas */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <button
-              type="button"
               onClick={() => setTab("enviar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5 transition"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-velocity-primary text-white shadow-lg shadow-velocity-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BRAND.colors.primary}20` }}>
-                <Send className="w-5 h-5" style={{ color: BRAND.colors.primary }} />
-              </div>
-              <span className="text-sm font-medium text-slate-700">Enviar</span>
+              <Send className="w-5 h-5" />
+              <span className="text-xs font-semibold">Enviar</span>
             </button>
             <button
-              type="button"
               onClick={() => setTab("recibir")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5 transition"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
             >
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BRAND.colors.primary}20` }}>
-                <ArrowDownToLine className="w-5 h-5" style={{ color: BRAND.colors.primary }} />
-              </div>
-              <span className="text-sm font-medium text-slate-700">Recibir</span>
+              <ArrowDownToLine className="w-5 h-5" />
+              <span className="text-xs font-semibold">Recibir</span>
             </button>
             <button
-              type="button"
               onClick={() => setTab("recargar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5 transition"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
             >
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BRAND.colors.primary}20` }}>
-                <Wallet className="w-5 h-5" style={{ color: BRAND.colors.primary }} />
-              </div>
-              <span className="text-sm font-medium text-slate-700">Depósito</span>
+              <ArrowUpFromLine className="w-5 h-5" />
+              <span className="text-xs font-semibold">Recargar</span>
             </button>
             <button
-              type="button"
               onClick={() => setTab("retiro")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5 transition"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
             >
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BRAND.colors.primary}20` }}>
-                <ArrowUpFromLine className="w-5 h-5" style={{ color: BRAND.colors.primary }} />
-              </div>
-              <span className="text-sm font-medium text-slate-700">Retiro</span>
+              <Banknote className="w-5 h-5" />
+              <span className="text-xs font-semibold">Retirar</span>
             </button>
           </div>
 
-          <h2 className="text-lg font-semibold text-slate-800 mb-3">Últimas transacciones</h2>
-          <div className="bg-white rounded-xl border border-slate-200 p-4 text-center text-slate-500 text-sm">
-            No hay transacciones aún. Usa Enviar, Recibir o Recargar para empezar.
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Transacciones</h2>
+            <button className="text-xs text-velocity-primary font-bold hover:underline">Ver todo</button>
           </div>
 
-          <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
-            <h3 className="text-sm font-semibold text-slate-800 mb-2">Retiros (emprendedores y conductores)</h3>
-            <p className="text-xs text-slate-600 mb-2">
-              El saldo que recibes por ventas o viajes se puede retirar a tu cuenta:
-            </p>
-            <ul className="text-xs text-slate-600 space-y-1">
-              <li>• <strong>Desde 10 USD:</strong> retiro por pago móvil.</li>
-              <li>• <strong>Montos altos:</strong> por transferencia bancaria (datos seguros en la app).</li>
-            </ul>
+          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-8 text-center transition-colors">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Wallet className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+            </div>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Aún no tienes movimientos registrados.</p>
           </div>
         </>
       )}
 
       {tab === "recargar" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 mb-4 flex items-center gap-1">
+          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
             ← Volver
           </button>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">Recargar billetera</h2>
-          <p className="text-slate-500 text-sm mb-4">Usa uno de los métodos seguros para añadir VELO. Los datos están cifrados y son únicos por usuario.</p>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Recargar Billetera</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Usa uno de los métodos seguros para añadir fondos. Los datos están cifrados y son únicos por sesión.</p>
 
           <div className="space-y-4">
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Red de la criptomoneda</p>
-              <p className="text-sm font-medium text-slate-800">{DATOS_RECARGA.red}</p>
-              <p className="text-xs text-slate-500 mt-1">Solo envía VELO por esta red para evitar pérdidas.</p>
+            <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-4 border border-slate-200 dark:border-white/5">
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Red de la criptomoneda</p>
+              <p className="text-sm font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.red}</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
-                <Shield className="w-4 h-4 text-emerald-600" />
-                <span className="font-medium text-slate-800">Datos para depósito (prueba)</span>
+            <div className="bg-white dark:bg-[#393E46] rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+              <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span className="font-bold text-sm text-slate-800 dark:text-white">Datos para depósito</span>
               </div>
               <div className="p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-slate-600">Dirección wallet</span>
+                <div className="flex justify-between items-center group">
+                  <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Dirección wallet</span>
                   <div className="flex items-center gap-2">
-                    <code className="text-xs font-mono text-slate-700">{DATOS_RECARGA.wallet_cripto}</code>
-                    <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1 rounded hover:bg-slate-100">
-                      <Copy className="w-4 h-4" />
+                    <code className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded">{DATOS_RECARGA.wallet_cripto}</code>
+                    <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+                      <Copy className="w-4 h-4 text-slate-400 group-hover:text-velocity-primary transition-colors" />
                     </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-slate-600" />
-                <span className="font-medium text-slate-800">Pago móvil</span>
+            <div className="bg-white dark:bg-[#393E46] rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors">
+              <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                <Smartphone className="w-4 h-4 text-velocity-primary" />
+                <span className="font-bold text-sm text-slate-800 dark:text-white">Pago móvil (Venezuela)</span>
               </div>
-              <ul className="p-4 space-y-2 text-sm">
-                <li className="flex justify-between"><span className="text-slate-500">Banco</span><span className="font-medium">{DATOS_RECARGA.pago_movil.banco}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500">RIF</span><span className="font-mono">{DATOS_RECARGA.pago_movil.rif}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500">Teléfono</span><span className="font-mono">{DATOS_RECARGA.pago_movil.telefono}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500">Cédula titular</span><span className="font-mono">{DATOS_RECARGA.pago_movil.cedula}</span></li>
-              </ul>
-              <p className="px-4 pb-4 text-xs text-slate-500">Referencia: tu número de usuario en la app. Datos cifrados por sesión.</p>
-            </div>
-
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-slate-600" />
-                <span className="font-medium text-slate-800">Transferencia bancaria</span>
-              </div>
-              <ul className="p-4 space-y-2 text-sm">
-                <li className="flex justify-between"><span className="text-slate-500">Titular</span><span className="font-medium">{DATOS_RECARGA.transferencia.titular}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500">Cuenta</span><span className="font-mono">{DATOS_RECARGA.transferencia.cuenta}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500">RIF</span><span className="font-mono">{DATOS_RECARGA.transferencia.rif}</span></li>
+              <ul className="p-4 space-y-3 text-sm">
+                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Banco</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.banco}</span></li>
+                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.rif}</span></li>
+                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Teléfono</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.telefono}</span></li>
+                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Cédula</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.cedula}</span></li>
               </ul>
             </div>
           </div>
-          <button type="button" onClick={() => setTab("principal")} className="mt-6 w-full py-3 rounded-xl font-medium text-white" style={{ backgroundColor: BRAND.colors.primary }}>
-            Entendido, volver
+          <button type="button" onClick={() => setTab("principal")} className="mt-8 w-full py-4 rounded-xl font-bold text-white shadow-lg shadow-velocity-primary/20 hover:scale-[1.01] transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
+            Confirmar Depósito
           </button>
         </>
       )}
 
       {tab === "enviar" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 mb-4 flex items-center gap-1">
+          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1">
             ← Volver
           </button>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">Enviar</h2>
-          <p className="text-slate-500 text-sm mb-4">Envía VELO por ID o correo. Para mayor fluidez, usa la app móvil.</p>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Enviar Fondos</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Envía instantáneamente a otros usuarios de {BRAND.name}.</p>
 
-          <div className="rounded-xl border border-[#0EA5E9]/30 bg-[#0EA5E9]/5 p-3 mb-4 flex items-start gap-3">
-            <Smartphone className="w-5 h-5 text-[#0EA5E9] shrink-0 mt-0.5" />
-            <div className="text-sm text-slate-700">
-              <span className="font-medium">Para mayor fluidez, usa la app.</span> Abre Billetera → Enviar y escanea el QR del destinatario.
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
+          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">ID de usuario o correo</label>
-              <input type="text" placeholder="Ej: @velocity_xxx o correo@ejemplo.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-sm placeholder:text-slate-400" />
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Destinatario (ID o Correo)</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input type="text" placeholder="@usuario o correo@ejemplo.com" className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Monto (VELO)</label>
-              <input type="number" placeholder="0.00" step="0.01" min="0" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-sm" />
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Enviar</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
+                <input type="number" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+              </div>
             </div>
-            <button type="button" className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2" style={{ backgroundColor: BRAND.colors.primary }}>
+            <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/20 transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
               <Send className="w-4 h-4" />
-              Enviar
+              Enviar Dinero
             </button>
           </div>
         </>
@@ -247,25 +248,23 @@ export default function BilleteraPage() {
 
       {tab === "retiro" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 mb-4 flex items-center gap-1">
+          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
             ← Volver
           </button>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">Retiro</h2>
-          <p className="text-slate-500 text-sm mb-4">Retira VELO a USD o Bs. usando una cuenta agregada en Perfil → Métodos de pago.</p>
-          <div className="rounded-xl border border-[#0EA5E9]/30 bg-[#0EA5E9]/5 p-3 mb-4 flex items-start gap-3">
-            <Banknote className="w-5 h-5 text-[#0EA5E9] shrink-0 mt-0.5" />
-            <div className="text-sm text-slate-700">
-              <span className="font-medium">Mínimo según método:</span> Pago Móvil desde 10 USD, transferencia bancaria para montos mayores. Agrega tus cuentas en Perfil → Métodos de pago (Pago Móvil, Transferencia, Wally, PayPal, Zinli).
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Retirar Fondos</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Retira tus ganancias o fondos excedentes a tus métodos guardados.</p>
+
+          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Monto a retirar (VELO)</label>
-              <input type="number" placeholder="0.00" step="0.01" min="0" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-sm" />
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Retirar</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
+                <input type="number" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Destino (cuenta en Perfil)</label>
-              <select className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-sm bg-white">
+              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Método de Destino</label>
+              <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all appearance-none cursor-pointer">
                 <option value="">Selecciona un método de pago</option>
                 <option value="pago-movil">Pago Móvil</option>
                 <option value="transferencia">Transferencia bancaria</option>
@@ -274,9 +273,9 @@ export default function BilleteraPage() {
                 <option value="zinli">Zinli</option>
               </select>
             </div>
-            <button type="button" className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2" style={{ backgroundColor: BRAND.colors.primary }}>
+            <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/20 transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
               <ArrowUpFromLine className="w-4 h-4" />
-              Solicitar retiro
+              Solicitar Retiro
             </button>
           </div>
         </>
@@ -284,31 +283,48 @@ export default function BilleteraPage() {
 
       {tab === "recibir" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 mb-4 flex items-center gap-1">
+          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
             ← Volver
           </button>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">Recibir</h2>
-          <p className="text-slate-500 text-sm mb-4">Que te escaneen el código QR o compartan tu ID para recibir VELO.</p>
-          <div className="bg-white rounded-xl border border-slate-200 p-5 text-center">
-            <p className="text-sm font-medium text-slate-700 mb-3">Escanea para enviarme VELO</p>
-            <div className="inline-block p-3 bg-white rounded-xl border-2 border-slate-200 mb-3">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 tracking-tight">Recibir Pagos</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Muestra tu código QR para cobrar o recibir transferencias.</p>
+
+          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-8 text-center transition-colors shadow-sm">
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">Tu Código de Pago QR</p>
+            <div className="inline-block p-4 bg-white rounded-2xl border-2 border-slate-100 dark:border-white/5 mb-5 shadow-inner">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("@velocity_xxxx")}&format=svg`}
                 alt="Código QR de tu ID"
-                className="w-44 h-44 object-contain"
+                className="w-48 h-48 object-contain"
               />
             </div>
-            <p className="text-sm text-slate-500 mb-1">Tu ID de usuario</p>
-            <p className="font-mono font-semibold text-slate-800">@velocity_xxxx</p>
-            <button type="button" onClick={() => copyToClipboard("@velocity_xxxx", "user")} className="mt-2 text-sm flex items-center justify-center gap-1 mx-auto text-[#0EA5E9] font-medium">
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-1">ID de Usuario</p>
+            <p className="font-mono font-bold text-lg text-slate-800 dark:text-white">@velocity_xxxx</p>
+            <button type="button" onClick={() => copyToClipboard("@velocity_xxxx", "user")} className="mt-4 text-sm flex items-center justify-center gap-2 mx-auto text-velocity-primary font-bold hover:scale-105 transition-all">
               <Copy className="w-4 h-4" />
-              Copiar ID
+              Copiar ID para compartir
             </button>
           </div>
         </>
       )}
 
-      {copied && <p className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-xs py-2 px-3 rounded-lg bg-slate-800 text-white text-sm text-center">Copiado</p>}
+      <div className="mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 transition-colors">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-3">Información de Retiros</h3>
+        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Los fondos generados por servicios o ventas empresariales pueden ser liquidados diariamente.
+        </p>
+        <ul className="mt-4 space-y-2 text-xs text-slate-600 dark:text-slate-400">
+          <li className="flex gap-2"><span>•</span> <strong>Mínimo:</strong> 10 USD para liquidación inmediata vía Pago Móvil.</li>
+          <li className="flex gap-2"><span>•</span> <strong>Corporativo:</strong> Transferencias ACH para montos mayores a 500 USD.</li>
+        </ul>
+      </div>
+
+      {copied && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl bg-slate-900 border border-white/10 text-white text-sm font-bold shadow-2xl animate-bounce">
+          ✓ ¡Copiado al portapapeles!
+        </div>
+      )}
     </div>
   );
 }
+

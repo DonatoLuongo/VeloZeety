@@ -32,13 +32,13 @@ const CARRITO_KEY = "velocity_carrito_guardado";
 const SERVICIOS_PREMIUM = [
   {
     id: "emergencia",
-    title: "Emergencia",
-    short: "Ambulancia, bomberos, policía y organismos del Estado",
-    Icon: PhoneCall,
-    tag: "Nuevo" as const,
-    detail: "Servicio de emergencia para todos los usuarios (clientes y conductores). Solicita atención médica (ambulancia), bomberos u otro organismo público del Estado, o reporta novedades a la policía. Enlaces directos y guía para contactar a los entes competentes de forma rápida y segura.",
-    pricing: "Sin costo. Uso de líneas oficiales de emergencia.",
-    cta: "Ver opciones de emergencia",
+    title: "Emergencias y Salud",
+    short: "Ambulancia, auxilio médico vial y organismos del Estado",
+    Icon: ShieldAlert,
+    tag: "Nuevo" as "Nuevo" | "Aproximadamente" | "Futuro servicio" | undefined,
+    detail: "Acceso inmediato a servicios de rescate y salud. Solicita ambulancias privadas parientes de VeloCity, auxilio médico vial (paramédicos), bomberos o policía. También permite reportar fallas de infraestructura pública (semáforos, cables) directamente a los organismos competentes. Tu seguridad es nuestra prioridad.",
+    pricing: "Servicios públicos sin costo. Servicios privados según proveedor.",
+    cta: "Solicitar asistencia ahora",
   },
   {
     id: "agua-potable",
@@ -49,26 +49,6 @@ const SERVICIOS_PREMIUM = [
     detail: "Servicio de entrega de agua potable a domicilio en urbanizaciones, con horario fijo y flota verificada. Solicita desde la app la cantidad de botellones que necesites (1, 2, 3 o más); el camión pasa en la franja acordada. Pago mensual dentro de la aplicación: sin salir a la calle ni cargar bajo el sol. Incluye personal uniformado y estándares de calidad. Ideal para hogares y comunidades. Precio desde 15 USD/mes según plan y zona.",
     pricing: "Desde 15 USD/mes. Recargas según plan. Pago en app.",
     cta: "Solicitar servicio de agua",
-  },
-  {
-    id: "aceo",
-    title: "ACEO – Recolección de basura",
-    short: "El camión pasa a recoger la basura",
-    Icon: Trash2,
-    tag: "Futuro servicio" as const,
-    detail: "Recolección de basura a domicilio en día y horario acordados. El camión pasa por tu dirección según la frecuencia contratada (semanal o quincenal). Incluye seguimiento y facturación mensual. Dirigido a hogares y pequeños negocios. Contrato claro y precios por zona. Contribuye a mantener tu comunidad limpia.",
-    pricing: "Desde 12 USD/mes. Precio según frecuencia y zona.",
-    cta: "Contratar servicio",
-  },
-  {
-    id: "jardineria",
-    title: "Jardinería",
-    short: "Limpieza, poda y mantenimiento",
-    Icon: Leaf,
-    tag: "Aproximadamente" as const,
-    detail: "Servicio de jardinería por contrato: limpieza de jardines, poda de plantas, retiro de hojas y residuos, y disposición en el contenedor correspondiente. Contratos flexibles por visita única o plan mensual. Presupuesto sin compromiso. Profesionales con equipo adecuado.",
-    pricing: "Desde 25 USD por visita. Planes mensuales disponibles.",
-    cta: "Solicitar presupuesto",
   },
   {
     id: "autolavado",
@@ -233,7 +213,7 @@ export default function ServiciosPage() {
       if (!raw) return;
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) setCarrito(parsed);
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   const persistCarrito = (next: { product: ProductItem; qty: number }[]) => {
@@ -254,9 +234,8 @@ export default function ServiciosPage() {
           <button
             type="button"
             onClick={() => setPanelVista("tienda")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${
-              panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
-            }`}
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+              }`}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100">
               <ShoppingBag className="w-6 h-6 text-slate-600" strokeWidth={2} />
@@ -272,9 +251,8 @@ export default function ServiciosPage() {
               key={s.id}
               type="button"
               onClick={() => setPanelVista(s.id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${
-                panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
-              }`}
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+                }`}
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100">
                 <s.Icon className="w-6 h-6 text-slate-600" strokeWidth={2} />
@@ -309,148 +287,146 @@ export default function ServiciosPage() {
       {/* Columna derecha: contenido según selección (dashboard) */}
       <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0">
         {panelVista === "tienda" ? (
-        <section className="w-full max-w-5xl mx-auto">
-          <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">Tienda de accesorios</h2>
-        <p className="text-slate-500 text-base mb-2">
-          Pago con tu billetera VeloCity. El monto se descuenta de tu saldo al confirmar.
-        </p>
-        <p className="text-xs text-amber-700/80 mb-4 rounded-lg bg-amber-50/80 px-3 py-1.5 border border-amber-100 inline-block">Tasa BCV de referencia para tus pagos.</p>
+          <section className="w-full max-w-5xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">Tienda de accesorios</h2>
+            <p className="text-slate-500 text-base mb-2">
+              Pago con tu billetera VeloCity. El monto se descuenta de tu saldo al confirmar.
+            </p>
+            <p className="text-xs text-amber-700/80 mb-4 rounded-lg bg-amber-50/80 px-3 py-1.5 border border-amber-100 inline-block">Tasa BCV de referencia para tus pagos.</p>
 
-        <div className="mb-5">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400" />
-            <input
-              type="search"
-              placeholder="Buscar productos..."
-              value={searchTienda}
-              onChange={(e) => { setSearchTienda(e.target.value); setPagina(1); }}
-              className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-300"
-              aria-label="Buscar en la tienda"
-            />
-          </div>
-        </div>
-
-        {carrito.length > 0 && (
-          <Link
-            href="/app/perfil/carritos"
-            className="mb-4 flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-sky-600" />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="font-medium text-slate-800">Carrito guardado</p>
-              <p className="text-sm text-slate-500">{carrito.length} producto(s) · Ver y pagar</p>
-            </div>
-            <ChevronRight className="w-5 h-5 text-slate-400" />
-          </Link>
-        )}
-
-        <div className="flex flex-wrap gap-3 mb-5">
-          {CATEGORIAS_TIENDA.map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => { setFilter(f); setPagina(1); }}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium capitalize ${
-                filter === f ? "text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-              style={filter === f ? { backgroundColor: BRAND.colors.primary } : {}}
-            >
-              {f === "4x4" ? "4x4 / Pickup" : f}
-            </button>
-          ))}
-        </div>
-        {(() => {
-          const porCategoria = filter === "todos" ? PRODUCTOS_TIENDA : PRODUCTOS_TIENDA.filter((p) => p.categoria === filter);
-          const filtrados = !searchTienda.trim()
-            ? porCategoria
-            : porCategoria.filter(
-                (p) =>
-                  p.name.toLowerCase().includes(searchTienda.toLowerCase().trim()) ||
-                  p.desc.toLowerCase().includes(searchTienda.toLowerCase().trim())
-              );
-          const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
-          const desde = (pagina - 1) * POR_PAGINA;
-          const productosPagina = filtrados.slice(desde, desde + POR_PAGINA);
-          return (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {productosPagina.map((p) => (
-                  <div key={p.id} className="bg-white rounded-2xl border border-slate-200 p-6 flex gap-5 shadow-sm velocity-card">
-                    <div className="w-20 h-20 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
-                      <ShoppingBag className="w-10 h-10 text-slate-500" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-800 text-base">{p.name}</p>
-                      <p className="text-sm text-slate-500 line-clamp-2 mt-0.5">{p.desc}</p>
-                      <p className="text-lg font-bold mt-2" style={{ color: BRAND.colors.primary }}>
-                        ${p.price.toFixed(2)}
-                        {p.off > 0 && <span className="text-green-600 text-sm font-normal ml-1">{p.off}% OFF</span>}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setProductoSeleccionado(p)}
-                        className="mt-3 px-4 py-2 rounded-xl text-sm font-medium text-white"
-                        style={{ backgroundColor: BRAND.colors.primary }}
-                      >
-                        Ver perfil y comprar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Modal: solo el producto seleccionado */}
-              {productoSeleccionado && (
-                <NegocioModal
-                  productoInicial={productoSeleccionado}
-                  onClose={() => setProductoSeleccionado(null)}
-                  carrito={carrito}
-                  persistCarrito={persistCarrito}
+            <div className="mb-5">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400" />
+                <input
+                  type="search"
+                  placeholder="Buscar productos..."
+                  value={searchTienda}
+                  onChange={(e) => { setSearchTienda(e.target.value); setPagina(1); }}
+                  className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-300"
+                  aria-label="Buscar en la tienda"
                 />
-              )}
-              {totalPaginas > 1 && (
-                <div className="mt-6 flex items-center justify-center gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => setPagina((n) => Math.max(1, n - 1))}
-                    disabled={pagina === 1}
-                    className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
-                    aria-label="Página anterior"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
-                      <button
-                        key={n}
-                        type="button"
-                        onClick={() => setPagina(n)}
-                        className={`min-w-[2rem] py-1.5 px-2 rounded-lg text-sm font-medium transition ${
-                          pagina === n ? "text-white" : "text-slate-600 hover:bg-slate-100"
-                        }`}
-                        style={pagina === n ? { backgroundColor: BRAND.colors.primary } : {}}
-                      >
-                        {n}
-                      </button>
+              </div>
+            </div>
+
+            {carrito.length > 0 && (
+              <Link
+                href="/app/perfil/carritos"
+                className="mb-4 flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 text-sky-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-medium text-slate-800">Carrito guardado</p>
+                  <p className="text-sm text-slate-500">{carrito.length} producto(s) · Ver y pagar</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-slate-400" />
+              </Link>
+            )}
+
+            <div className="flex flex-wrap gap-3 mb-5">
+              {CATEGORIAS_TIENDA.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => { setFilter(f); setPagina(1); }}
+                  className={`px-5 py-2.5 rounded-full text-sm font-medium capitalize ${filter === f ? "text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                  style={filter === f ? { backgroundColor: BRAND.colors.primary } : {}}
+                >
+                  {f === "4x4" ? "4x4 / Pickup" : f}
+                </button>
+              ))}
+            </div>
+            {(() => {
+              const porCategoria = filter === "todos" ? PRODUCTOS_TIENDA : PRODUCTOS_TIENDA.filter((p) => p.categoria === filter);
+              const filtrados = !searchTienda.trim()
+                ? porCategoria
+                : porCategoria.filter(
+                  (p) =>
+                    p.name.toLowerCase().includes(searchTienda.toLowerCase().trim()) ||
+                    p.desc.toLowerCase().includes(searchTienda.toLowerCase().trim())
+                );
+              const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
+              const desde = (pagina - 1) * POR_PAGINA;
+              const productosPagina = filtrados.slice(desde, desde + POR_PAGINA);
+              return (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {productosPagina.map((p) => (
+                      <div key={p.id} className="bg-white rounded-2xl border border-slate-200 p-6 flex gap-5 shadow-sm velocity-card">
+                        <div className="w-20 h-20 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
+                          <ShoppingBag className="w-10 h-10 text-slate-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-800 text-base">{p.name}</p>
+                          <p className="text-sm text-slate-500 line-clamp-2 mt-0.5">{p.desc}</p>
+                          <p className="text-lg font-bold mt-2" style={{ color: BRAND.colors.primary }}>
+                            ${p.price.toFixed(2)}
+                            {p.off > 0 && <span className="text-green-600 text-sm font-normal ml-1">{p.off}% OFF</span>}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setProductoSeleccionado(p)}
+                            className="mt-3 px-4 py-2 rounded-xl text-sm font-medium text-white"
+                            style={{ backgroundColor: BRAND.colors.primary }}
+                          >
+                            Ver perfil y comprar
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setPagina((n) => Math.min(totalPaginas, n + 1))}
-                    disabled={pagina === totalPaginas}
-                    className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
-                    aria-label="Página siguiente"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              )}
-            </>
-          );
-        })()}
-        </section>
+
+                  {/* Modal: solo el producto seleccionado */}
+                  {productoSeleccionado && (
+                    <NegocioModal
+                      productoInicial={productoSeleccionado}
+                      onClose={() => setProductoSeleccionado(null)}
+                      carrito={carrito}
+                      persistCarrito={persistCarrito}
+                    />
+                  )}
+                  {totalPaginas > 1 && (
+                    <div className="mt-6 flex items-center justify-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => setPagina((n) => Math.max(1, n - 1))}
+                        disabled={pagina === 1}
+                        className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+                        aria-label="Página anterior"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setPagina(n)}
+                            className={`min-w-[2rem] py-1.5 px-2 rounded-lg text-sm font-medium transition ${pagina === n ? "text-white" : "text-slate-600 hover:bg-slate-100"
+                              }`}
+                            style={pagina === n ? { backgroundColor: BRAND.colors.primary } : {}}
+                          >
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setPagina((n) => Math.min(totalPaginas, n + 1))}
+                        disabled={pagina === totalPaginas}
+                        className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+                        aria-label="Página siguiente"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </section>
         ) : (() => {
           const s = SERVICIOS_PREMIUM.find((x) => x.id === panelVista);
           if (!s) return null;
@@ -465,11 +441,10 @@ export default function ServiciosPage() {
                     <div>
                       <h2 className="text-2xl font-bold text-slate-800">{s.title}</h2>
                       {s.tag && (
-                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${
-                          s.tag === "Nuevo" ? "bg-sky-100 text-sky-700 border border-sky-200" :
+                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${s.tag === "Nuevo" ? "bg-sky-100 text-sky-700 border border-sky-200" :
                           s.tag === "Aproximadamente" ? "bg-amber-100 text-amber-800 border border-amber-200" :
-                          "bg-violet-100 text-violet-700 border border-violet-200"
-                        }`}>
+                            "bg-violet-100 text-violet-700 border border-violet-200"
+                          }`}>
                           {s.tag === "Futuro servicio" ? "Aprox. / Futuro servicio" : s.tag}
                         </span>
                       )}
@@ -483,6 +458,11 @@ export default function ServiciosPage() {
                   </p>
                   <button
                     type="button"
+                    onClick={() => {
+                      if (s.id === "emergencia") {
+                        window.location.href = "/app/emergencia";
+                      }
+                    }}
                     className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
                     style={{ backgroundColor: BRAND.colors.primary }}
                   >
