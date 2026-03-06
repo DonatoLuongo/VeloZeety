@@ -23,8 +23,12 @@ import {
   Ambulance,
   Flame,
   ShieldAlert,
+  Bus,
+  CheckCircle2,
+  Truck,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LocationIconOrange from "@/components/LocationIconOrange";
 
 const CARRITO_KEY = "velocity_carrito_guardado";
@@ -39,6 +43,16 @@ const SERVICIOS_PREMIUM = [
     detail: "Acceso inmediato a servicios de rescate y salud. Solicita ambulancias privadas parientes de VeloCity, auxilio médico vial (paramédicos), bomberos o policía. También permite reportar fallas de infraestructura pública (semáforos, cables) directamente a los organismos competentes. Tu seguridad es nuestra prioridad.",
     pricing: "Servicios públicos sin costo. Servicios privados según proveedor.",
     cta: "Solicitar asistencia ahora",
+  },
+  {
+    id: "transporte-educativo",
+    title: "Transporte Educativo",
+    short: "Rutas escolares verificadas y seguras para tus hijos",
+    Icon: Bus,
+    tag: "Nuevo" as const,
+    detail: "Servicio de transporte escolar con conductores verificados, unidades rastreadas por GPS en tiempo real y comunicación directa con los padres. Rutas fijas o personalizadas desde tu hogar hasta el colegio. Incluye seguro de pasajeros, cinturones de seguridad y aire acondicionado. Monitoreo en vivo desde la app para que los padres sepan exactamente dónde están sus hijos. Disponible para jardines de infancia, primaria y secundaria.",
+    pricing: "Desde 40 USD/mes por ruta fija. Rutas personalizadas según distancia.",
+    cta: "Solicitar ruta escolar",
   },
   {
     id: "agua-potable",
@@ -59,6 +73,16 @@ const SERVICIOS_PREMIUM = [
     detail: "Lavado profesional de motos y carros en las instalaciones VeloCity. Dirección del local indicada en la app. Servicio para particulares y flotas, con descuentos por plan. Incluye productos de calidad y atención rápida.",
     pricing: "Moto desde 5 USD, carro desde 8 USD. Descuentos para flota.",
     cta: "Ver ubicación del local",
+  },
+  {
+    id: "grua",
+    title: "Servicio de Grúa 24/7",
+    short: "Asistencia vial y remolque para todo tipo de vehículos",
+    Icon: Truck,
+    tag: "Nuevo" as const,
+    detail: "Servicio de grúa profesional disponible las 24 horas del día. Contamos con grúas de plataforma y de gancho para motos, carros, camionetas y vehículos de carga pesada. Tiempo de respuesta optimizado según tu ubicación GPS. Personal capacitado para maniobras delicadas y traslados seguros.",
+    pricing: "Desde 30 USD según distancia y tipo de vehículo.",
+    cta: "Solicitar grúa ahora",
   },
 ];
 
@@ -128,68 +152,108 @@ function NegocioModal({
   const total = carrito.reduce((sum, i) => sum + i.product.price * i.qty, 0);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full overflow-hidden border border-slate-200 my-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <div className="h-28 bg-gradient-to-br from-[#F46E20]/20 to-slate-100 flex items-center justify-center flex-shrink-0">
-          <LocationIconOrange size={48} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm shadow-2xl overflow-y-auto transition-all animate-fade-in" onClick={onClose}>
+      <div className="bg-white dark:bg-[#1E293B] rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200 dark:border-white/10 my-4 max-h-[90vh] flex flex-col transition-all active:scale-[0.99]" onClick={(e) => e.stopPropagation()}>
+        <div className="h-32 bg-gradient-to-br from-[#F46E20]/20 to-slate-100 dark:from-[#F46E20]/10 dark:to-slate-800 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-slate-200/[0.1] [mask-image:linear-gradient(0deg,transparent,black)] dark:bg-grid-white/[0.05]" />
+          <LocationIconOrange size={56} />
         </div>
-        <div className="p-5 -mt-8 relative overflow-y-auto flex-1">
-          <div className="flex items-end gap-3 mb-3">
-            <div className="w-16 h-16 rounded-xl border-2 border-white bg-white shadow-md flex items-center justify-center overflow-hidden flex-shrink-0">
+        <div className="p-6 -mt-10 relative overflow-y-auto flex-1 bg-white dark:bg-[#1E293B] rounded-t-[2.5rem]">
+          <div className="flex items-end gap-4 mb-4">
+            <div className="w-20 h-20 rounded-2xl border-4 border-white dark:border-[#393E46] bg-white dark:bg-[#393E46] shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0 transition-transform hover:scale-105">
               <LocationIconOrange size={40} />
             </div>
-            <div className="flex-1 min-w-0 pb-0.5">
-              <h3 className="font-bold text-slate-800 text-lg">Tienda VeloCity</h3>
-              <p className="text-sm text-slate-500">Accesorios</p>
-              <span className="inline-flex items-center gap-1 text-amber-700 text-xs font-medium mt-1 px-2 py-0.5 rounded-md bg-amber-100 border border-amber-200">
+            <div className="flex-1 min-w-0 pb-1">
+              <h3 className="font-bold text-slate-900 dark:text-white text-xl leading-tight">Tienda VeloCity</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Accesorios</p>
+              <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400 text-[10px] font-bold mt-1 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30">
                 <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
               </span>
             </div>
           </div>
-          <p className="text-sm text-slate-600 mb-3">{NEGOCIO_TIENDA.descripcion}</p>
-          <div className="space-y-2 mb-4 text-sm text-slate-600">
-            <p className="flex items-center gap-2"><MapPin className="w-4 h-4 flex-shrink-0 text-slate-400" /> {NEGOCIO_TIENDA.direccion}</p>
-            <p className="flex items-center gap-2"><Clock className="w-4 h-4 flex-shrink-0 text-slate-400" /> {NEGOCIO_TIENDA.horario}</p>
-            <p className="flex items-center gap-2"><Wallet className="w-4 h-4 flex-shrink-0 text-slate-400" /> {NEGOCIO_TIENDA.pago}</p>
-          </div>
-          <p className="text-sm font-semibold text-slate-800 mb-2">Producto</p>
-          <div className="py-3 px-4 rounded-xl bg-slate-50 border border-slate-200 mb-4">
-            <p className="font-medium text-slate-800">{productoInicial.name}</p>
-            <p className="text-sm text-slate-500 mt-0.5">{productoInicial.desc}</p>
-            <p className="text-base font-bold mt-2" style={{ color: BRAND.colors.primary }}>${productoInicial.price.toFixed(2)}</p>
-            <div className="flex items-center gap-2 mt-3 flex-wrap">
-              <div className="flex items-center gap-1">
-                <button type="button" onClick={() => setCantidad((q) => Math.max(1, q - 1))} className="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium">−</button>
-                <span className="w-10 text-center font-medium text-slate-800">{cantidad}</span>
-                <button type="button" onClick={() => setCantidad((q) => q + 1)} className="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium">+</button>
-              </div>
-              <button type="button" onClick={addToCart} className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 active:scale-95 transition-all">Añadir al carrito</button>
+
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">{NEGOCIO_TIENDA.descripcion}</p>
+
+          <div className="grid grid-cols-1 gap-2 mb-5">
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              <MapPin className="w-5 h-5 text-slate-400" />
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">{NEGOCIO_TIENDA.direccion}</p>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              <Clock className="w-5 h-5 text-slate-400" />
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">{NEGOCIO_TIENDA.horario}</p>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              <Wallet className="w-5 h-5 text-slate-400" />
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">{NEGOCIO_TIENDA.pago}</p>
             </div>
           </div>
+
+          <div className="p-4 rounded-3xl bg-slate-50 dark:bg-white/5 border-2 border-slate-100 dark:border-white/5 mb-6">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Producto Seleccionado</p>
+                <p className="font-bold text-slate-900 dark:text-white text-base leading-tight">{productoInicial.name}</p>
+              </div>
+              <p className="text-xl font-black" style={{ color: BRAND.colors.primary }}>${productoInicial.price.toFixed(2)}</p>
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center bg-white dark:bg-[#393E46] rounded-2xl p-1 shadow-sm border border-slate-100 dark:border-white/5">
+                <button type="button" onClick={() => setCantidad((q) => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-all">−</button>
+                <span className="w-8 text-center font-bold text-slate-900 dark:text-white">{cantidad}</span>
+                <button type="button" onClick={() => setCantidad((q) => q + 1)} className="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-all">+</button>
+              </div>
+              <button
+                type="button"
+                onClick={addToCart}
+                className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-white shadow-lg shadow-velocity-primary/20 transition-all active:scale-[0.98] hover:opacity-90"
+                style={{ backgroundColor: BRAND.colors.primary }}
+              >
+                Añadir al carrito
+              </button>
+            </div>
+          </div>
+
           {carrito.length > 0 && (
-            <div className="mb-4 p-3 rounded-xl bg-slate-100 border border-slate-200">
-              <p className="text-sm font-semibold text-slate-800 mb-2 flex items-center gap-1"><ShoppingCart className="w-4 h-4" /> Tu carrito ({carrito.length} {carrito.length === 1 ? "ítem" : "ítems"})</p>
-              <ul className="space-y-1 text-sm text-slate-600 mb-2 max-h-24 overflow-y-auto">
-                {carrito.map((item, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{item.product.name} × {item.qty}</span>
-                    <span className="font-medium">${(item.product.price * item.qty).toFixed(2)}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="text-sm font-bold text-slate-800 flex justify-between">
-                Total <span style={{ color: BRAND.colors.primary }}>${total.toFixed(2)}</span>
+            <div className="mb-6 animate-slide-up-soft">
+              <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                <ShoppingCart className="w-3.5 h-3.5" /> Tu pedido ({carrito.length})
               </p>
-              <button type="button" onClick={() => persistCarrito([])} className="mt-2 w-full py-1.5 rounded-lg border border-slate-300 text-slate-600 text-xs font-medium">Vaciar carrito</button>
+              <div className="space-y-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                {carrito.map((item, i) => (
+                  <div key={i} className="flex justify-between text-xs font-medium">
+                    <span className="text-slate-600 dark:text-slate-300">{item.product.name} <span className="text-slate-400">×{item.qty}</span></span>
+                    <span className="text-slate-900 dark:text-white">${(item.product.price * item.qty).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 dark:border-white/5 flex justify-between items-center">
+                <span className="text-sm font-bold text-slate-900 dark:text-white">Total Carrito</span>
+                <span className="text-lg font-black" style={{ color: BRAND.colors.primary }}>${total.toFixed(2)}</span>
+              </div>
+              <button type="button" onClick={() => persistCarrito([])} className="mt-4 w-full py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 text-xs font-bold hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 transition-all">Vaciar pedido actual</button>
             </div>
           )}
-          <button type="button" className="w-full py-2.5 rounded-xl font-medium text-white text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style={{ backgroundColor: BRAND.colors.primary }} disabled={carrito.length === 0}>
-            <Wallet className="w-4 h-4" />
-            {carrito.length > 0 ? `Pagar con VELO ($${total.toFixed(2)})` : "Pagar con VELO"}
-          </button>
-          <button type="button" onClick={onClose} className="mt-2 w-full py-2 rounded-xl border border-slate-200 bg-white text-emerald-600 text-sm font-medium hover:bg-emerald-50 active:scale-[0.98] transition-all">
-            Cerrar
-          </button>
+
+          <div className="space-y-3">
+            <button
+              type="button"
+              className="w-full py-4 rounded-2xl font-black text-white text-base flex items-center justify-center gap-3 shadow-xl transition-all active:scale-[0.98] hover:brightness-110 disabled:opacity-30"
+              style={{ backgroundColor: BRAND.colors.primary }}
+              disabled={carrito.length === 0}
+            >
+              <Wallet className="w-5 h-5" />
+              {carrito.length > 0 ? `Pagar con Billetera ($${total.toFixed(2)})` : "Configurar pago"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full py-3.5 rounded-2xl border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
+            >
+              Cerrar tienda
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -199,12 +263,17 @@ function NegocioModal({
 type PanelVista = "tienda" | (typeof SERVICIOS_PREMIUM)[number]["id"];
 
 export default function ServiciosPage() {
+  const router = useRouter();
   const [panelVista, setPanelVista] = useState<PanelVista>("tienda");
   const [filter, setFilter] = useState<typeof CATEGORIAS_TIENDA[number]>("todos");
   const [pagina, setPagina] = useState(1);
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductItem | null>(null);
   const [searchTienda, setSearchTienda] = useState("");
   const [carrito, setCarrito] = useState<{ product: ProductItem; qty: number }[]>([]);
+  const [showSubscription, setShowSubscription] = useState<string | null>(null);
+  const [subscribed, setSubscribed] = useState<Record<string, boolean>>({});
+  const [aguaQuantityType, setAguaQuantityType] = useState("2");
+  const [aguaQuantityCustom, setAguaQuantityCustom] = useState("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -224,25 +293,25 @@ export default function ServiciosPage() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col md:flex-row md:max-w-none">
       {/* Columna izquierda: panel de control (dashboard) */}
-      <div className="md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 md:bg-slate-50/50 p-4 md:p-5">
-        <h1 className="text-xl md:text-lg font-bold text-slate-800 mb-1">Servicios</h1>
-        <p className="text-slate-500 text-sm mb-4 md:mb-5">Servicios premium y tienda. Pago con billetera VeloCity.</p>
-        <h2 className="text-base font-bold mb-3 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+      <div className="md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:bg-[#222831] p-4 md:p-5">
+        <h1 className="text-xl md:text-lg font-bold text-slate-800 dark:text-white mb-1">Servicios</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 md:mb-5">Servicios premium y tienda. Pago con billetera VeloCity.</p>
+        <h2 className="text-base font-bold mb-3 text-slate-700 dark:text-slate-300">
           Panel de control
         </h2>
         <nav className="space-y-2">
           <button
             type="button"
             onClick={() => setPanelVista("tienda")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
               }`}
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100">
-              <ShoppingBag className="w-6 h-6 text-slate-600" strokeWidth={2} />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10">
+              <ShoppingBag className="w-6 h-6 text-slate-600 dark:text-slate-300" strokeWidth={2} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-slate-800 text-sm">Tienda de accesorios</p>
-              <p className="text-xs text-slate-500 mt-0.5">Productos, carrito y pago con wallet</p>
+              <p className="font-semibold text-slate-800 dark:text-white text-sm">Tienda de accesorios</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Productos, carrito y pago con wallet</p>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </button>
@@ -251,32 +320,32 @@ export default function ServiciosPage() {
               key={s.id}
               type="button"
               onClick={() => setPanelVista(s.id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
                 }`}
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100">
-                <s.Icon className="w-6 h-6 text-slate-600" strokeWidth={2} />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10">
+                <s.Icon className="w-6 h-6 text-slate-600 dark:text-slate-300" strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="font-semibold text-slate-800 text-sm">{s.title}</p>
+                  <p className="font-semibold text-slate-800 dark:text-white text-sm">{s.title}</p>
                   {s.tag === "Nuevo" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-sky-100 text-sky-700 border border-sky-200">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-500/30">
                       Nuevo
                     </span>
                   )}
                   {s.tag === "Aproximadamente" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">
                       Aproximadamente
                     </span>
                   )}
                   {s.tag === "Futuro servicio" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-violet-100 text-violet-700 border border-violet-200">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30">
                       Aprox. / Futuro servicio
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">{s.short}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{s.short}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
             </button>
@@ -288,11 +357,11 @@ export default function ServiciosPage() {
       <main className="flex-1 overflow-y-auto p-4 md:p-6 min-w-0">
         {panelVista === "tienda" ? (
           <section className="w-full max-w-5xl mx-auto">
-            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">Tienda de accesorios</h2>
-            <p className="text-slate-500 text-base mb-2">
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-2">Tienda de accesorios</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-base mb-2">
               Pago con tu billetera VeloCity. El monto se descuenta de tu saldo al confirmar.
             </p>
-            <p className="text-xs text-amber-700/80 mb-4 rounded-lg bg-amber-50/80 px-3 py-1.5 border border-amber-100 inline-block">Tasa BCV de referencia para tus pagos.</p>
+            <p className="text-xs text-amber-700/80 dark:text-amber-400 mb-4 rounded-lg bg-amber-50/80 dark:bg-amber-500/10 px-3 py-1.5 border border-amber-100 dark:border-amber-500/20 inline-block">Tasa BCV de referencia para tus pagos.</p>
 
             <div className="mb-5">
               <div className="relative">
@@ -302,7 +371,7 @@ export default function ServiciosPage() {
                   placeholder="Buscar productos..."
                   value={searchTienda}
                   onChange={(e) => { setSearchTienda(e.target.value); setPagina(1); }}
-                  className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-300"
+                  className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-slate-800 dark:text-white text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-white/20 focus:border-slate-300 dark:focus:border-white/20 transition-colors"
                   aria-label="Buscar en la tienda"
                 />
               </div>
@@ -311,14 +380,14 @@ export default function ServiciosPage() {
             {carrito.length > 0 && (
               <Link
                 href="/app/perfil/carritos"
-                className="mb-4 flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition"
+                className="mb-4 flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition"
               >
-                <div className="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center">
-                  <ShoppingCart className="w-5 h-5 text-sky-600" />
+                <div className="w-10 h-10 rounded-lg bg-sky-100 dark:bg-sky-500/20 flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-slate-800">Carrito guardado</p>
-                  <p className="text-sm text-slate-500">{carrito.length} producto(s) · Ver y pagar</p>
+                  <p className="font-medium text-slate-800 dark:text-white text-base leading-tight">Carrito guardado</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-normal">{carrito.length} producto(s) · Ver y pagar</p>
                 </div>
                 <ChevronRight className="w-5 h-5 text-slate-400" />
               </Link>
@@ -330,7 +399,7 @@ export default function ServiciosPage() {
                   key={f}
                   type="button"
                   onClick={() => { setFilter(f); setPagina(1); }}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium capitalize ${filter === f ? "text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  className={`px-5 py-2.5 rounded-xl text-sm font-medium capitalize transition-all ${filter === f ? "text-white shadow-md scale-[1.02]" : "bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 active:scale-95"
                     }`}
                   style={filter === f ? { backgroundColor: BRAND.colors.primary } : {}}
                 >
@@ -354,21 +423,21 @@ export default function ServiciosPage() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {productosPagina.map((p) => (
-                      <div key={p.id} className="bg-white rounded-2xl border border-slate-200 p-6 flex gap-5 shadow-sm velocity-card">
-                        <div className="w-20 h-20 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
-                          <ShoppingBag className="w-10 h-10 text-slate-500" />
+                      <div key={p.id} className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-6 flex gap-5 shadow-sm hover:shadow-md transition-shadow velocity-card">
+                        <div className="w-20 h-20 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0 transition-colors">
+                          <ShoppingBag className="w-10 h-10 text-slate-500 dark:text-slate-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-800 text-base">{p.name}</p>
-                          <p className="text-sm text-slate-500 line-clamp-2 mt-0.5">{p.desc}</p>
-                          <p className="text-lg font-bold mt-2" style={{ color: BRAND.colors.primary }}>
+                          <p className="font-semibold text-slate-800 dark:text-white text-base">{p.name}</p>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">{p.desc}</p>
+                          <p className="text-lg font-bold mt-2 flex items-center gap-2" style={{ color: BRAND.colors.primary }}>
                             ${p.price.toFixed(2)}
-                            {p.off > 0 && <span className="text-green-600 text-sm font-normal ml-1">{p.off}% OFF</span>}
+                            {p.off > 0 && <span className="text-green-600 dark:text-green-400 text-sm font-normal px-2 py-0.5 rounded bg-green-50 dark:bg-green-500/10 border border-green-100 dark:border-green-500/20">{p.off}% OFF</span>}
                           </p>
                           <button
                             type="button"
                             onClick={() => setProductoSeleccionado(p)}
-                            className="mt-3 px-4 py-2 rounded-xl text-sm font-medium text-white"
+                            className="mt-4 w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
                             style={{ backgroundColor: BRAND.colors.primary }}
                           >
                             Ver perfil y comprar
@@ -393,18 +462,18 @@ export default function ServiciosPage() {
                         type="button"
                         onClick={() => setPagina((n) => Math.max(1, n - 1))}
                         disabled={pagina === 1}
-                        className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+                        className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 transition-colors"
                         aria-label="Página anterior"
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5 px-2">
                         {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
                           <button
                             key={n}
                             type="button"
                             onClick={() => setPagina(n)}
-                            className={`min-w-[2rem] py-1.5 px-2 rounded-lg text-sm font-medium transition ${pagina === n ? "text-white" : "text-slate-600 hover:bg-slate-100"
+                            className={`min-w-[2.5rem] py-2 px-2 rounded-xl text-sm font-semibold transition-all ${pagina === n ? "text-white shadow-md" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5"
                               }`}
                             style={pagina === n ? { backgroundColor: BRAND.colors.primary } : {}}
                           >
@@ -416,7 +485,7 @@ export default function ServiciosPage() {
                         type="button"
                         onClick={() => setPagina((n) => Math.min(totalPaginas, n + 1))}
                         disabled={pagina === totalPaginas}
-                        className="p-2 rounded-lg border border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+                        className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 transition-colors"
                         aria-label="Página siguiente"
                       >
                         <ChevronRight className="w-5 h-5" />
@@ -432,27 +501,27 @@ export default function ServiciosPage() {
           if (!s) return null;
           return (
             <section className="w-full max-w-3xl mx-auto">
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+              <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
                 <div className="p-6 md:p-8">
                   <div className="flex items-start gap-5 mb-5">
-                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-slate-100 flex-shrink-0">
-                      <s.Icon className="w-8 h-8 text-slate-600" strokeWidth={2} />
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
+                      <s.Icon className="w-8 h-8 text-slate-600 dark:text-slate-300" strokeWidth={2} />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-800">{s.title}</h2>
+                      <h2 className="text-2xl font-bold text-slate-800 dark:text-white">{s.title}</h2>
                       {s.tag && (
-                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${s.tag === "Nuevo" ? "bg-sky-100 text-sky-700 border border-sky-200" :
-                          s.tag === "Aproximadamente" ? "bg-amber-100 text-amber-800 border border-amber-200" :
-                            "bg-violet-100 text-violet-700 border border-violet-200"
+                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${s.tag === "Nuevo" ? "bg-sky-100 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-500/30" :
+                          s.tag === "Aproximadamente" ? "bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30" :
+                            "bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30"
                           }`}>
                           {s.tag === "Futuro servicio" ? "Aprox. / Futuro servicio" : s.tag}
                         </span>
                       )}
-                      <p className="text-slate-500 mt-2">{s.short}</p>
+                      <p className="text-slate-500 dark:text-slate-400 mt-2">{s.short}</p>
                     </div>
                   </div>
-                  <p className="text-slate-600 text-base leading-relaxed mb-4">{s.detail}</p>
-                  <p className="text-sm text-slate-500 flex items-center gap-2 mb-6">
+                  <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-4">{s.detail}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2 mb-6">
                     <FileText className="w-4 h-4 text-slate-400" />
                     {s.pricing}
                   </p>
@@ -460,20 +529,188 @@ export default function ServiciosPage() {
                     type="button"
                     onClick={() => {
                       if (s.id === "emergencia") {
-                        window.location.href = "/app/emergencia";
+                        router.push("/app/emergencia");
+                      } else {
+                        setShowSubscription(s.id);
                       }
                     }}
                     className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
                     style={{ backgroundColor: BRAND.colors.primary }}
                   >
                     {s.id === "emergencia" && <PhoneCall className="w-5 h-5" />}
+                    {s.id === "transporte-educativo" && <Bus className="w-5 h-5" />}
                     {s.id === "autolavado" && <MapPin className="w-5 h-5" />}
-                    {s.id === "jardineria" && <Calendar className="w-5 h-5" />}
-                    {(s.id === "agua-potable" || s.id === "aceo") && <Calendar className="w-5 h-5" />}
+                    {(s.id === "agua-potable") && <Calendar className="w-5 h-5" />}
                     {s.cta}
                   </button>
                 </div>
               </div>
+
+              {/* Modal de Suscripción / Registro */}
+              {showSubscription === s.id && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubscription(null)}>
+                  <div className="bg-white dark:bg-[#1E293B] rounded-2xl border border-slate-200 dark:border-white/10 p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">Suscribirse a {s.title}</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{s.pricing}</p>
+
+                    <div className="space-y-4 mb-6">
+                      {/* Campos comunes */}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nombre completo</label>
+                        <input type="text" placeholder="Tu nombre" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Teléfono de contacto</label>
+                        <input type="tel" placeholder="04141234567" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                      </div>
+
+                      {/* Campos específicos por servicio */}
+                      {s.id === "transporte-educativo" && (
+                        <>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nombre del estudiante</label>
+                            <input type="text" placeholder="Nombre del niño/a" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Colegio / Institución</label>
+                            <input type="text" placeholder="Nombre del colegio" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Dirección de recogida</label>
+                            <input type="text" placeholder="Av. Principal, Urbanización..." className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Grado / Nivel</label>
+                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
+                              <option value="">Selecciona</option>
+                              <option value="jardin">Jardín de infancia</option>
+                              <option value="primaria">Primaria</option>
+                              <option value="secundaria">Secundaria</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+
+                      {s.id === "agua-potable" && (
+                        <>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Dirección de entrega</label>
+                            <input type="text" placeholder="Urbanización, calle, casa/apto" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Cantidad de botellones/mes</label>
+                            <select
+                              value={aguaQuantityType}
+                              onChange={(e) => setAguaQuantityType(e.target.value)}
+                              className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 mb-2"
+                            >
+                              <option value="2">2 botellones</option>
+                              <option value="4">4 botellones</option>
+                              <option value="6">6 botellones</option>
+                              <option value="8">8 botellones</option>
+                              <option value="custom">Más (especificar)</option>
+                            </select>
+                            {aguaQuantityType === "custom" && (
+                              <input
+                                type="number"
+                                value={aguaQuantityCustom}
+                                onChange={(e) => setAguaQuantityCustom(e.target.value)}
+                                placeholder="Indica la cantidad"
+                                className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20"
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Horario preferido</label>
+                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
+                              <option value="manana">Mañana (8:00 - 12:00)</option>
+                              <option value="tarde">Tarde (12:00 - 17:00)</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+
+                      {s.id === "autolavado" && (
+                        <>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
+                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
+                              <option value="moto">Moto</option>
+                              <option value="carro">Carro</option>
+                              <option value="camioneta">Camioneta / 4x4</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Placa del vehículo</label>
+                            <input type="text" placeholder="ABC-123" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Fecha deseada</label>
+                            <input type="date" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                        </>
+                      )}
+
+                      {s.id === "grua" && (
+                        <>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo a remolcar</label>
+                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
+                              <option value="moto">Moto</option>
+                              <option value="carro">Carro sedán / Hatchback</option>
+                              <option value="camioneta">Camioneta / SUV / 4x4</option>
+                              <option value="pesado">Camión / Carga pesada</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ubicación exacta de la falla</label>
+                            <input type="text" placeholder="Ej: Autopista Prados del Este, salida Concresa" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Motivo del servicio</label>
+                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
+                              <option value="accidente">Accidente</option>
+                              <option value="falla-mecanica">Falla mecánica</option>
+                              <option value="neumatico">Neumático / Caucho</option>
+                              <option value="bateria">Bateria / Eléctrico</option>
+                              <option value="otro">Otro</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowSubscription(null)}
+                        className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowSubscription(null);
+                          setSubscribed((prev) => ({ ...prev, [s.id]: true }));
+                        }}
+                        className="flex-1 py-3 rounded-xl font-medium text-white text-sm transition hover:opacity-90"
+                        style={{ backgroundColor: BRAND.colors.primary }}
+                      >
+                        Confirmar suscripción
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Confirmación de suscripción */}
+              {subscribed[s.id] && (
+                <div className="mt-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/40 flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                  <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">¡Suscripción registrada! Un asesor de VeloZeety se comunicará contigo pronto.</p>
+                </div>
+              )}
             </section>
           );
         })()}
@@ -481,3 +718,4 @@ export default function ServiciosPage() {
     </div>
   );
 }
+

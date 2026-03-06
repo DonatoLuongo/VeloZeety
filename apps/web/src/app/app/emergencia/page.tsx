@@ -127,68 +127,71 @@ export default function EmergenciaPage() {
 
                 {/* ─── TAB: Emergency ─── */}
                 {tab === "emergency" && (
-                    <div className="animate-fade-in-up space-y-4">
-                        {/* Alert banner */}
-                        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/10 flex items-start gap-3">
-                            <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div className="animate-fade-in-up space-y-6">
+                        {/* Header de Seguridad */}
+                        <div className="p-5 rounded-2xl bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/5 flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex items-center justify-center flex-shrink-0">
+                                <Shield className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                            </div>
                             <div>
-                                <p className="text-sm font-semibold text-red-700 dark:text-red-400">¿Tienes una emergencia?</p>
-                                <p className="text-xs text-red-600 dark:text-red-300/70 mt-0.5">Selecciona el tipo de emergencia y llama directamente. Tu ubicación GPS se comparte con el operador.</p>
+                                <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-1">Centro de Respuesta Corporativa</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                    Todas las comunicaciones activan su geolocalización en tiempo real y son monitoreadas por el equipo de seguridad operativa de VeloZeety.
+                                </p>
                             </div>
                         </div>
 
-                        {/* Emergency lines */}
-                        <div className="space-y-3">
-                            {EMERGENCY_LINES.map((line) => (
-                                <div key={line.id}>
-                                    <button
-                                        onClick={() => setSelectedLine(selectedLine === line.id ? null : line.id)}
-                                        className={`w-full p-4 rounded-2xl border-2 text-left transition-all flex items-center gap-4 ${selectedLine === line.id
-                                            ? `${line.borderActive} bg-white dark:bg-[#393E46] shadow-lg`
-                                            : "border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20"
-                                            }`}
-                                    >
-                                        <div className={`w-12 h-12 rounded-xl ${line.bg} flex items-center justify-center flex-shrink-0`}>
-                                            <line.Icon className={`w-6 h-6 ${line.color}`} />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-[#3F474A] dark:text-[#EEEEEE]">{line.label}</p>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">{line.desc}</p>
-                                        </div>
-                                        <ChevronRight className={`w-5 h-5 text-slate-400 transition-transform ${selectedLine === line.id ? "rotate-90" : ""}`} />
-                                    </button>
-
-                                    {/* Expanded: call + details */}
-                                    {selectedLine === line.id && (
-                                        <div className="mt-2 ml-4 p-4 rounded-xl bg-slate-50 dark:bg-[#393E46]/50 border border-slate-200 dark:border-white/5 animate-fade-in-up space-y-3">
-                                            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                                <Phone className="w-4 h-4" /> Línea directa: <span className="font-bold">{line.phone}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                                <MapPin className="w-4 h-4" /> Se enviará tu ubicación GPS automáticamente
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                                <Clock className="w-4 h-4" /> Disponible 24 horas
-                                            </div>
-                                            <a
-                                                href={`tel:${line.phone}`}
-                                                className="w-full py-3 rounded-xl font-semibold text-white bg-red-500 hover:bg-red-600 transition shadow-lg shadow-red-500/20 flex items-center justify-center gap-2"
-                                            >
-                                                <Phone className="w-5 h-5" /> Llamar al {line.phone}
-                                            </a>
-                                        </div>
-                                    )}
+                        {/* Pilares de Emergencia */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Asistencia Médica */}
+                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-[#1E293B] border-2 border-slate-100 hover:border-rose-500/50 dark:border-slate-800 dark:hover:border-rose-500/50 transition-all shadow-sm">
+                                <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center mb-4 text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform">
+                                    <Ambulance className="w-7 h-7" />
                                 </div>
-                            ))}
+                                <h3 className="text-base font-bold text-slate-800 dark:text-white mb-1 text-center sm:text-left w-full">Asistencia Médica</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left mb-4">
+                                    Paramédicos y traslado en ambulancia para emergencias de salud inmediatas.
+                                </p>
+                                <a
+                                    href="tel:171"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-full mt-auto py-3 rounded-xl border border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors text-center text-sm flex items-center justify-center gap-2"
+                                >
+                                    <Phone className="w-4 h-4" /> Activar Protocolo Médico
+                                </a>
+                            </button>
+
+                            {/* Reporte Vial */}
+                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-[#1E293B] border-2 border-slate-100 hover:border-amber-500/50 dark:border-slate-800 dark:hover:border-amber-500/50 transition-all shadow-sm">
+                                <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center mb-4 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+                                    <AlertTriangle className="w-7 h-7" />
+                                </div>
+                                <h3 className="text-base font-bold text-slate-800 dark:text-white mb-1 text-center sm:text-left w-full">Incidente en Vía</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left mb-4">
+                                    Accidentes de tránsito, seguridad física o fallas mecánicas severas.
+                                </p>
+                                <a
+                                    href="tel:171"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-full mt-auto py-3 rounded-xl border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors text-center text-sm flex items-center justify-center gap-2"
+                                >
+                                    <Phone className="w-4 h-4" /> Reportar a Seguridad
+                                </a>
+                            </button>
                         </div>
 
-                        {/* Quick SOS button */}
-                        <a
-                            href="tel:911"
-                            className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition shadow-xl shadow-red-500/30 flex items-center justify-center gap-3 text-lg mt-6"
-                        >
-                            <Phone className="w-6 h-6" /> SOS — Llamar al 911
-                        </a>
+                        {/* Acción Secundaria: Soporte Estándar */}
+                        <div className="pt-4 mt-2 border-t border-slate-100 dark:border-white/5">
+                            <a
+                                href="tel:0800-VELOCITY"
+                                className="w-full py-4 rounded-xl border-2 border-[#2563EB]/20 dark:border-[#2563EB]/40 bg-transparent text-[#2563EB] dark:text-[#60A5FA] font-bold hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center justify-center gap-2 text-sm"
+                            >
+                                <Phone className="w-4 h-4" /> Llamada de Soporte Estándar
+                            </a>
+                            <p className="text-[11px] text-center text-slate-400 mt-3 px-4">
+                                Utilice la línea de soporte para incidencias menores con envíos, conductores o la aplicación.
+                            </p>
+                        </div>
                     </div>
                 )}
 

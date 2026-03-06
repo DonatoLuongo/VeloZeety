@@ -77,25 +77,25 @@ export default function PerfilPage() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col md:flex-row md:max-w-none">
       {/* En móvil: la tarjeta va arriba (order-1), el menú abajo (order-2). En escritorio: aside izquierda, main derecha. */}
-      <aside className="order-2 md:order-none md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 md:bg-slate-50/50 p-4 md:p-5">
-        <h1 className="text-xl md:text-lg font-bold text-slate-800 mb-1">Mi perfil</h1>
-        <p className="text-slate-500 text-sm mb-4 md:mb-5">Cuenta verificada · Gestión centralizada</p>
-        <h2 className="text-base font-bold mb-3 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+      <aside className="order-2 md:order-none md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:bg-[#222831] p-4 md:p-5">
+        <h1 className="text-xl md:text-lg font-bold text-slate-800 dark:text-white mb-1">Mi perfil</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 md:mb-5">Cuenta verificada · Gestión centralizada</p>
+        <h2 className="text-base font-bold mb-3 text-slate-700 dark:text-slate-300">
           Panel de cuenta
         </h2>
         <nav className="space-y-2">
           <button
             type="button"
             onClick={() => setSelectedSection("inicio")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
               }`}
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 flex-shrink-0">
-              <User className="w-6 h-6 text-slate-600" strokeWidth={2} />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
+              <User className="w-6 h-6 text-slate-600 dark:text-slate-300" strokeWidth={2} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-slate-800 text-sm">Resumen</p>
-              <p className="text-xs text-slate-500 mt-0.5">Tu cuenta y accesos rápidos</p>
+              <p className="font-semibold text-slate-800 dark:text-white text-sm">Resumen</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Tu cuenta y accesos rápidos</p>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
           </button>
@@ -104,15 +104,15 @@ export default function PerfilPage() {
               key={id}
               type="button"
               onClick={() => setSelectedSection(id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 shadow-sm" : "border-slate-200 bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50"
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
                 }`}
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 flex-shrink-0">
-                <Icon className="w-6 h-6 text-slate-600" strokeWidth={2} />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
+                <Icon className="w-6 h-6 text-slate-600 dark:text-slate-300" strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-slate-800 text-sm">{title}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{desc}</p>
+                <p className="font-semibold text-slate-800 dark:text-white text-sm">{title}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{desc}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
             </button>
@@ -121,15 +121,17 @@ export default function PerfilPage() {
             <button
               type="button"
               onClick={() => { if (typeof window !== "undefined") { localStorage.removeItem("velocity_user"); router.push("/"); } }}
-              className="w-full p-4 flex items-center gap-4 rounded-2xl border border-slate-200 bg-white hover:bg-red-50 hover:border-red-200 transition text-left"
+              className="w-full p-4 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left"
               aria-label="Cerrar sesión"
             >
-              <LogOut className="w-6 h-6 text-slate-600" />
-              <div className="flex-1 text-left">
-                <p className="font-semibold text-slate-800 text-sm">Cerrar sesión</p>
-                <p className="text-xs text-slate-500">Salir de tu cuenta</p>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
+                <LogOut className="w-6 h-6 text-slate-600 dark:text-red-400" />
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-400" />
+              <div className="flex-1 text-left min-w-0">
+                <p className="font-bold text-slate-800 dark:text-white text-sm">Cerrar sesión</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Salir de tu cuenta de forma segura</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
             </button>
           </div>
         </nav>
@@ -141,7 +143,7 @@ export default function PerfilPage() {
           {selectedSection === "inicio" && (
             <>
               <motion.div
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-6"
+                className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm mb-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
@@ -149,12 +151,14 @@ export default function PerfilPage() {
                 <div className="h-1 bg-sky-200" aria-hidden />
                 <div className="p-6 md:p-8">
                   <div className="flex items-center gap-5 mb-5">
-                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 border border-slate-200">
-                      <RolIcon className="w-10 h-10 text-slate-700" strokeWidth={2} />
+                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10">
+                      <RolIcon className="w-10 h-10 text-slate-700 dark:text-slate-300" strokeWidth={2} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-2xl text-slate-900">{nombre}</p>
-                      <p className="text-slate-500 text-base mt-0.5">{rolLabel}</p>
+                      <p className="font-bold text-2xl text-slate-900 dark:text-white leading-tight">{nombre}</p>
+                      <p className="text-slate-500 dark:text-slate-400 text-base mt-2 flex items-center gap-2">
+                        <BadgeCheck className="w-4 h-4 text-emerald-500" /> {rolLabel}
+                      </p>
                       <div className="flex gap-2 mt-3">
                         <span className="inline-flex items-center gap-1 text-sm font-medium text-white bg-slate-800 px-2.5 py-1 rounded-md">
                           <BadgeCheck className="w-4 h-4" /> Verificado premium
@@ -166,10 +170,9 @@ export default function PerfilPage() {
                             setRol(next);
                             const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
                             localStorage.setItem("velocity_user", JSON.stringify({ ...user, rol: next }));
-                            // Reload to apply changes across layout
-                            window.location.reload();
+                            // window.location.reload(); // Eliminado para evitar recarga brusca según pedido del usuario
                           }}
-                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 border border-slate-200 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
+                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-white/10 dark:text-white border border-slate-200 dark:border-white/20 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
                         >
                           <option value="cliente">Cliente</option>
                           <option value="conductor">Conductor</option>
@@ -178,72 +181,75 @@ export default function PerfilPage() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-slate-600 text-base mb-5">
+                  <p className="text-slate-600 dark:text-slate-300 text-base mb-6 leading-relaxed">
                     Cuenta corporativa con acceso a servicios, billetera y soporte prioritario.
                   </p>
-                  <div className="rounded-xl bg-stone-50 border border-stone-200 p-4 space-y-2 text-base">
-                    <p className="flex items-center gap-2 text-slate-700"><Mail className="w-5 h-5 flex-shrink-0 text-slate-500" /> {email}</p>
-                    <p className="flex items-center gap-2 text-slate-700"><Phone className="w-5 h-5 flex-shrink-0 text-slate-500" /> {telefono}</p>
+                  <div className="rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-5 space-y-3 text-base">
+                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Mail className="w-5 h-5 flex-shrink-0 text-slate-400" /> {email}</p>
+                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Phone className="w-5 h-5 flex-shrink-0 text-slate-400" /> {telefono}</p>
                   </div>
 
                   {rol === "conductor" && (
-                    <div className="mt-5 pt-5 border-t border-slate-100">
-                      <p className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Información de conductor</p>
-                      <ul className="text-base text-slate-600 space-y-1">
-                        <li>Vehículo: Toyota Corolla · ABC-123</li>
-                        <li>Viajes completados: 127</li>
-                        <li>Disponibilidad: Activo</li>
+                    <div className="mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
+                      <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Información de conductor</p>
+                      <ul className="text-base text-slate-600 dark:text-slate-300 space-y-2">
+                        <li className="flex items-center gap-2">
+                          <Car className="w-4 h-4 text-slate-400" /> Vehículo: Toyota Corolla · ABC-123
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <History className="w-4 h-4 text-slate-400" /> Viajes completados: 127
+                        </li>
+                        <li className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
+                          <BadgeCheck className="w-4 h-4" /> Disponibilidad: Activo
+                        </li>
                       </ul>
                     </div>
                   )}
 
                   {rol === "emprendedor" && (
-                    <div className="mt-5 pt-5 border-t border-slate-100">
-                      <p className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Información de emprendedor</p>
-                      <p className="text-base text-slate-600">Tu negocio y catálogo se gestionan en la sección Empresa.</p>
+                    <div className="mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">Información de emprendedor</p>
+                      <p className="text-base text-slate-600 dark:text-slate-300">Tu negocio y catálogo se gestionan en la sección Empresa.</p>
                       <Link href="/app/empresa" className="inline-flex items-center gap-1 mt-2 text-base font-medium text-sky-600 hover:text-sky-700">
                         Ir a Mi empresa <ChevronRight className="w-4 h-4" />
                       </Link>
                     </div>
                   )}
 
-                  <div className="flex gap-8 mt-5 pt-5 border-t border-slate-100">
+                  <div className="flex gap-10 mt-6 pt-6 border-t border-slate-100 dark:border-white/5">
                     {(rol === "cliente" || rol === "conductor") && (
                       <>
                         <div>
-                          <p className="text-3xl font-bold text-slate-900">15</p>
-                          <p className="text-sm text-slate-500">Viajes</p>
+                          <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">15</p>
+                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Viajes</p>
                         </div>
                         <div>
-                          <p className="text-3xl font-bold text-slate-900">2</p>
-                          <p className="text-sm text-slate-500">Gratis</p>
+                          <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">2</p>
+                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Gratis</p>
                         </div>
                       </>
                     )}
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex items-baseline gap-1.5">
                       <Star className="w-6 h-6 text-amber-500 fill-amber-500" />
-                      <p className="text-3xl font-bold text-slate-900">5.0</p>
-                      <p className="text-sm text-slate-500 ml-1">Valoración</p>
+                      <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">5.0</p>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1 mt-1">Puntos</p>
                     </div>
                   </div>
                 </div>
               </motion.div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-6">
-                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Accesos rápidos</p>
+              <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm mb-6">
+                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Accesos rápidos</p>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/app" className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-[#0EA5E9]/10 text-slate-800 font-medium text-base flex items-center gap-2 transition">
-                    <MapPin className="w-5 h-5" /> Viajar
+                  <Link href="/app" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+                    <MapPin className="w-5 h-5" /> Viajar ahora
                   </Link>
-                  <Link href="/app" className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-[#0EA5E9]/10 text-slate-800 font-medium text-base flex items-center gap-2 transition">
-                    Inicio
-                  </Link>
-                  <Link href="/app/billetera" className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-[#0EA5E9]/10 text-slate-800 font-medium text-base flex items-center gap-2 transition">
-                    Billetera
+                  <Link href="/app/billetera" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+                    <CreditCard className="w-5 h-5" /> Mi Billetera
                   </Link>
                   {rol === "emprendedor" && (
-                    <Link href="/app/empresa" className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-[#0EA5E9]/10 text-slate-800 font-medium text-base flex items-center gap-2 transition">
-                      Mi empresa
+                    <Link href="/app/empresa" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+                      <Building2 className="w-5 h-5" /> Panel Empresa
                     </Link>
                   )}
                 </div>
@@ -253,15 +259,17 @@ export default function PerfilPage() {
                 <button
                   type="button"
                   onClick={() => { if (typeof window !== "undefined") { localStorage.removeItem("velocity_user"); router.push("/"); } }}
-                  className="w-full p-5 flex items-center gap-4 rounded-2xl border border-slate-200 bg-white hover:bg-red-50 hover:border-red-200 transition text-left"
+                  className="w-full p-5 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left shadow-sm group"
                   aria-label="Cerrar sesión"
                 >
-                  <LogOut className="w-5 h-5 text-slate-500" />
-                  <div className="flex-1 text-left">
-                    <p className="font-medium text-slate-800 text-base">Cerrar sesión</p>
-                    <p className="text-slate-500">Salir de tu cuenta</p>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 transition-colors">
+                    <LogOut className="w-6 h-6 text-slate-500 dark:text-red-400 group-hover:text-red-600" />
                   </div>
-                  <ChevronRight className="w-5 h-5 text-slate-400" />
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="font-bold text-slate-800 dark:text-white text-base">Cerrar sesión</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Finalizar tu sesión actual</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </>
