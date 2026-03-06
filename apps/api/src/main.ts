@@ -15,7 +15,7 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN?.split(",") ?? ["http://localhost:3000"],
     credentials: true,
   });
-  const port = process.env.PORT ?? 4000;
+  const port = process.env.PORT ?? 3000;
   await app.listen(port);
   console.log(`VeloCity API running at http://localhost:${port}`);
 }
