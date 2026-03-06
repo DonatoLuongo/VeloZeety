@@ -34,7 +34,10 @@ import { validate } from "./env.validation";
       useFactory: async (configService: ConfigService) => {
         return {
           store: await redisStore({
-            url: configService.get<string>("REDIS_URL", "redis://localhost:6379"),
+            url: configService.get<string>("REDIS_URL") || "redis://localhost:6379",
+            socket: {
+              reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
+            },
             ttl: 3600000
           }),
         };

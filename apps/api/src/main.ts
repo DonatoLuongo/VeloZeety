@@ -24,6 +24,7 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN?.split(",") ?? ["http://localhost:3000"],
     credentials: true,
   });
+<<<<<<< HEAD
 
   const config = new DocumentBuilder()
     .setTitle('VeloCity API')
@@ -36,6 +37,9 @@ async function bootstrap() {
   SwaggerModule.setup('api/v1/docs', app, document);
 
   const port = process.env.PORT ?? 4000;
+=======
+  const port = process.env.PORT ?? 3000;
+>>>>>>> 61d7c7383719dabcf38f6efc60628919557b3e0c
   await app.listen(port);
   console.log(`VeloCity API running at http://localhost:${port}/api/v1`);
 }
