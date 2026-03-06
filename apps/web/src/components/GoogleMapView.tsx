@@ -60,6 +60,7 @@ export default function GoogleMapView() {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: apiKey || " ",
     id: "velocity-google-map",
+    mapIds: ["VELOCITY_MAP_ID_1"],
   });
 
   // Geolocalización
@@ -143,6 +144,7 @@ export default function GoogleMapView() {
         zoom={DEFAULT_ZOOM}
         onLoad={onLoad}
         options={{
+          mapId: "VELOCITY_MAP_ID_1",
           zoomControl: false,
           mapTypeControl: false,
           streetViewControl: false,
@@ -169,7 +171,7 @@ export default function GoogleMapView() {
           ],
         }}
       >
-        {/* OverlayView para el usuario — sin Marker deprecated */}
+        {/* OverlayView para el usuario */}
         {userPos && (
           <OverlayView
             position={userPos}
@@ -178,20 +180,31 @@ export default function GoogleMapView() {
             <div style={{ transform: "translate(-10px, -10px)", width: 20, height: 20 }} title="Tu ubicación">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
                 <circle cx="12" cy="12" r="10" fill="#2563EB" stroke="white" strokeWidth="3" />
+                <circle cx="12" cy="12" r="18" fill="none" stroke="#2563EB" strokeWidth="2" strokeOpacity="0.4" className="animate-ping" style={{ transformOrigin: 'center' }} />
               </svg>
             </div>
           </OverlayView>
         )}
 
-        {/* OverlayView para conductores — sin Marker deprecated */}
+        {/* OverlayView optimizado con transiciones CSS para evitar el teletransporte brusco */}
         {drivers.map((d) => (
           <OverlayView
             key={d.id}
             position={{ lat: d.lat, lng: d.lng }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <div style={{ transform: "translate(-18px, -18px)", width: 36, height: 36, cursor: "pointer" }} title={d.fullName || "Socio Logístico"}>
-              <img src={getSvgIcon(d.vehicleType)} alt={d.fullName || "Socio"} width={36} height={36} />
+            <div
+              style={{
+                transform: "translate(-20px, -20px)",
+                width: 40,
+                height: 40,
+                cursor: "pointer",
+                transition: "all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)" /* Transición fluida clave */
+              }}
+              title={d.fullName || "Socio Logístico"}
+              className="hover:scale-110 active:scale-95 drop-shadow-md z-10"
+            >
+              <img src={getSvgIcon(d.vehicleType)} alt={d.fullName || "Socio"} width={40} height={40} className="w-full h-full object-contain pointer-events-none" />
             </div>
           </OverlayView>
         ))}

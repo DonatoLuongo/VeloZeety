@@ -255,6 +255,6 @@ export const translations = {
 
 export type TranslationKey = keyof typeof translations.es;
 
-export function t(lang: "es" | "en", key: TranslationKey): string {
-    return (translations[lang] as Record<string, string>)[key] ?? key;
+export function t(lang: "es" | "en", key: TranslationKey): any {
+    return (translations[lang] as any)[key] ?? key;
 }
