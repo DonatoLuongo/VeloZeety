@@ -22,7 +22,7 @@ import { RequestsModule } from "./requests/requests.module";
       useFactory: async (configService: ConfigService) => {
         return {
           store: await redisStore({
-            url: configService.get<string>("REDIS_URL", "redis://localhost:6379"),
+            url: configService.get<string>("REDIS_URL") || "redis://velozeety_redis:6379",
             ttl: 3600000
           }),
         };
