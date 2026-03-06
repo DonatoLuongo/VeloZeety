@@ -24,7 +24,7 @@ export default function ReferidosPanel({ embedInDashboard }: ReferidosPanelProps
       <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">Referidos</h2>
       <p className="text-slate-500 dark:text-slate-400 text-base mb-6">Invita amigos a VeloCity y gana USD en tu billetera por cada uno que se registre y complete un viaje.</p>
 
-      <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-6 mb-6 transition-colors">
+      <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 mb-6 transition-colors">
         <div className="flex items-center gap-4 mb-5">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-emerald-100 dark:bg-emerald-500/10">
             <Gift className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
@@ -62,7 +62,7 @@ export default function ReferidosPanel({ embedInDashboard }: ReferidosPanelProps
       </div>
 
       <div className="bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 p-6 flex items-center gap-5 transition-colors">
-        <div className="w-14 h-14 rounded-xl bg-white dark:bg-[#393E46] flex items-center justify-center border border-slate-100 dark:border-white/5">
+        <div className="w-14 h-14 rounded-xl bg-white dark:bg-velocity-surface flex items-center justify-center border border-slate-100 dark:border-white/5">
           <Wallet className="w-8 h-8 text-slate-400 dark:text-slate-500" />
         </div>
         <div>

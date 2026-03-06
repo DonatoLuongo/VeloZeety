@@ -89,7 +89,7 @@ export default function TransportePage() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-56px)] bg-white dark:bg-[#222831] transition-colors">
+        <div className="min-h-[calc(100vh-56px)] bg-white dark:bg-velocity-bg transition-colors">
             {/* Header */}
             <div className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-slate-100 dark:border-white/5">
                 <div className="flex items-center gap-3">

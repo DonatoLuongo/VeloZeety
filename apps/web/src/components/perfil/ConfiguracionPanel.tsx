@@ -46,7 +46,7 @@ export default function ConfiguracionPanel({ embedInDashboard }: ConfiguracionPa
 
       <div className="space-y-6">
         {/* Sección de Documentación */}
-        <section className="bg-white dark:bg-[#393E46] rounded-3xl border border-slate-200 dark:border-white/5 p-6 md:p-8 shadow-sm">
+        <section className="bg-white dark:bg-velocity-surface rounded-3xl border border-slate-200 dark:border-white/5 p-6 md:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-velocity-primary/10 flex items-center justify-center">
               <ShieldCheck className="w-5 h-5 text-velocity-primary" />
@@ -132,7 +132,7 @@ export default function ConfiguracionPanel({ embedInDashboard }: ConfiguracionPa
         </section>
 
         {/* Notificaciones (Simulado) */}
-        <section className="bg-white dark:bg-[#393E46] rounded-3xl border border-slate-200 dark:border-white/5 p-6 md:p-8 shadow-sm">
+        <section className="bg-white dark:bg-velocity-surface rounded-3xl border border-slate-200 dark:border-white/5 p-6 md:p-8 shadow-sm">
           <h3 className="font-bold text-slate-900 dark:text-white mb-4">Preferencias</h3>
           <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-white/5">
             <div>

@@ -91,21 +91,21 @@ export default function EmergenciaPage() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-56px)] bg-white dark:bg-[#222831] transition-colors">
+        <div className="min-h-[calc(100vh-56px)] bg-white dark:bg-velocity-bg transition-colors">
             {/* Header */}
             <div className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-slate-100 dark:border-white/5">
                 <div className="flex items-center gap-3">
                     <Link href="/app" className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition">
-                        <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-[#EEEEEE]" />
+                        <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-velocity-text" />
                     </Link>
-                    <h1 className="text-lg font-bold text-[#3F474A] dark:text-[#EEEEEE]">Emergencias y Salud</h1>
+                    <h1 className="text-lg font-bold text-[#3F474A] dark:text-velocity-text">Emergencias y Salud</h1>
                 </div>
                 <ThemeToggle />
             </div>
 
             <div className="max-w-3xl mx-auto p-4 md:p-6">
                 {/* Tab bar */}
-                <div className="flex gap-1 p-1 rounded-xl bg-slate-100 dark:bg-[#393E46] mb-6">
+                <div className="flex gap-1 p-1 rounded-xl bg-slate-100 dark:bg-velocity-surface mb-6">
                     {[
                         { id: "emergency" as const, label: "Emergencia", Icon: AlertTriangle },
                         { id: "clinics" as const, label: "Clínicas", Icon: Stethoscope },
@@ -115,7 +115,7 @@ export default function EmergenciaPage() {
                             key={t.id}
                             onClick={() => setTab(t.id)}
                             className={`flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition ${tab === t.id
-                                ? "bg-white dark:bg-[#222831] text-[#3F474A] dark:text-[#EEEEEE] shadow-sm"
+                                ? "bg-white dark:bg-velocity-bg text-[#3F474A] dark:text-velocity-text shadow-sm"
                                 : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-[#EEEEEE]"
                                 }`}
                         >
@@ -129,7 +129,7 @@ export default function EmergenciaPage() {
                 {tab === "emergency" && (
                     <div className="animate-fade-in-up space-y-6">
                         {/* Header de Seguridad */}
-                        <div className="p-5 rounded-2xl bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/5 flex items-start gap-4">
+                        <div className="p-5 rounded-2xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 flex items-start gap-4">
                             <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex items-center justify-center flex-shrink-0">
                                 <Shield className="w-5 h-5 text-slate-700 dark:text-slate-300" />
                             </div>
@@ -144,7 +144,7 @@ export default function EmergenciaPage() {
                         {/* Pilares de Emergencia */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Asistencia Médica */}
-                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-[#1E293B] border-2 border-slate-100 hover:border-rose-500/50 dark:border-slate-800 dark:hover:border-rose-500/50 transition-all shadow-sm">
+                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-velocity-surface border-2 border-slate-100 hover:border-rose-500/50 dark:border-slate-800 dark:hover:border-rose-500/50 transition-all shadow-sm">
                                 <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center mb-4 text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform">
                                     <Ambulance className="w-7 h-7" />
                                 </div>
@@ -162,7 +162,7 @@ export default function EmergenciaPage() {
                             </button>
 
                             {/* Reporte Vial */}
-                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-[#1E293B] border-2 border-slate-100 hover:border-amber-500/50 dark:border-slate-800 dark:hover:border-amber-500/50 transition-all shadow-sm">
+                            <button className="text-left group flex flex-col items-center sm:items-start p-6 rounded-2xl bg-white dark:bg-velocity-surface border-2 border-slate-100 hover:border-amber-500/50 dark:border-slate-800 dark:hover:border-amber-500/50 transition-all shadow-sm">
                                 <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center mb-4 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
                                     <AlertTriangle className="w-7 h-7" />
                                 </div>
@@ -198,7 +198,7 @@ export default function EmergenciaPage() {
                 {/* ─── TAB: Clinics ─── */}
                 {tab === "clinics" && (
                     <div className="animate-fade-in-up space-y-4">
-                        <h2 className="text-xl font-bold text-[#3F474A] dark:text-[#EEEEEE]">Clínicas y paramédicos</h2>
+                        <h2 className="text-xl font-bold text-[#3F474A] dark:text-velocity-text">Clínicas y paramédicos</h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Centros de salud cercanos verificados por VeloZeety</p>
 
                         {/* Search */}
@@ -209,21 +209,21 @@ export default function EmergenciaPage() {
                                 placeholder="Buscar clínica o especialidad..."
                                 value={searchClinic}
                                 onChange={(e) => setSearchClinic(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-[#3F474A] dark:text-[#EEEEEE] placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
+                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-[#3F474A] dark:text-velocity-text placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
                             />
                         </div>
 
                         {/* Clinic cards */}
                         <div className="space-y-3">
                             {filteredClinics.map((clinic) => (
-                                <div key={clinic.id} className="p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:shadow-md transition">
+                                <div key={clinic.id} className="p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface hover:shadow-md transition">
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
                                             <Stethoscope className="w-6 h-6 text-emerald-600" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                                <p className="font-bold text-[#3F474A] dark:text-[#EEEEEE]">{clinic.name}</p>
+                                                <p className="font-bold text-[#3F474A] dark:text-velocity-text">{clinic.name}</p>
                                                 {clinic.available && (
                                                     <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
                                                         Disponible
@@ -242,7 +242,7 @@ export default function EmergenciaPage() {
                                         <button className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white bg-[var(--velocity-primary)] hover:opacity-90 transition flex items-center justify-center gap-1.5">
                                             <Calendar className="w-4 h-4" /> Agendar cita
                                         </button>
-                                        <a href="tel:0212-1234567" className="py-2.5 px-4 rounded-xl text-sm font-medium border border-slate-200 dark:border-white/10 text-slate-600 dark:text-[#EEEEEE] hover:bg-slate-50 dark:hover:bg-white/5 transition flex items-center gap-1.5">
+                                        <a href="tel:0212-1234567" className="py-2.5 px-4 rounded-xl text-sm font-medium border border-slate-200 dark:border-white/10 text-slate-600 dark:text-velocity-text hover:bg-slate-50 dark:hover:bg-white/5 transition flex items-center gap-1.5">
                                             <Phone className="w-4 h-4" /> Llamar
                                         </a>
                                     </div>
@@ -255,14 +255,14 @@ export default function EmergenciaPage() {
                 {/* ─── TAB: Medical Profile ─── */}
                 {tab === "profile" && (
                     <div className="animate-fade-in-up space-y-4">
-                        <h2 className="text-xl font-bold text-[#3F474A] dark:text-[#EEEEEE]">Ficha médica rápida</h2>
+                        <h2 className="text-xl font-bold text-[#3F474A] dark:text-velocity-text">Ficha médica rápida</h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400">
                             Esta información se comparte con paramédicos en caso de emergencia
                         </p>
 
                         {/* Blood type */}
                         <div>
-                            <label className="block text-sm font-medium text-[#3F474A] dark:text-[#EEEEEE] mb-1.5 flex items-center gap-1.5">
+                            <label className="block text-sm font-medium text-[#3F474A] dark:text-velocity-text mb-1.5 flex items-center gap-1.5">
                                 <Heart className="w-4 h-4 text-red-500" /> Tipo de sangre
                             </label>
                             <div className="flex flex-wrap gap-2">
@@ -272,7 +272,7 @@ export default function EmergenciaPage() {
                                         onClick={() => setBloodType(bt)}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium transition ${bloodType === bt
                                             ? "bg-[var(--velocity-primary)] text-white"
-                                            : "bg-slate-100 dark:bg-[#393E46] text-slate-600 dark:text-[#EEEEEE] hover:bg-slate-200 dark:hover:bg-white/10"
+                                            : "bg-slate-100 dark:bg-velocity-surface text-slate-600 dark:text-velocity-text hover:bg-slate-200 dark:hover:bg-white/10"
                                             }`}
                                     >
                                         {bt}
@@ -283,43 +283,43 @@ export default function EmergenciaPage() {
 
                         {/* Allergies */}
                         <div>
-                            <label className="block text-sm font-medium text-[#3F474A] dark:text-[#EEEEEE] mb-1.5">Alergias</label>
+                            <label className="block text-sm font-medium text-[#3F474A] dark:text-velocity-text mb-1.5">Alergias</label>
                             <input
                                 type="text"
                                 value={allergies}
                                 onChange={(e) => setAllergies(e.target.value)}
                                 placeholder="Ej: Penicilina, mariscos, polen"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-[#3F474A] dark:text-[#EEEEEE] placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-[#3F474A] dark:text-velocity-text placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
                             />
                         </div>
 
                         {/* Medications */}
                         <div>
-                            <label className="block text-sm font-medium text-[#3F474A] dark:text-[#EEEEEE] mb-1.5">Medicamentos actuales</label>
+                            <label className="block text-sm font-medium text-[#3F474A] dark:text-velocity-text mb-1.5">Medicamentos actuales</label>
                             <input
                                 type="text"
                                 value={medications}
                                 onChange={(e) => setMedications(e.target.value)}
                                 placeholder="Ej: Losartán 50mg, Metformina"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-[#3F474A] dark:text-[#EEEEEE] placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-[#3F474A] dark:text-velocity-text placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
                             />
                         </div>
 
                         {/* Conditions */}
                         <div>
-                            <label className="block text-sm font-medium text-[#3F474A] dark:text-[#EEEEEE] mb-1.5">Condiciones preexistentes</label>
+                            <label className="block text-sm font-medium text-[#3F474A] dark:text-velocity-text mb-1.5">Condiciones preexistentes</label>
                             <textarea
                                 value={conditions}
                                 onChange={(e) => setConditions(e.target.value)}
                                 placeholder="Ej: Diabetes tipo 2, hipertensión"
                                 rows={2}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-[#3F474A] dark:text-[#EEEEEE] placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition resize-none"
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-[#3F474A] dark:text-velocity-text placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition resize-none"
                             />
                         </div>
 
                         {/* Emergency contact */}
                         <div>
-                            <label className="block text-sm font-medium text-[#3F474A] dark:text-[#EEEEEE] mb-1.5 flex items-center gap-1.5">
+                            <label className="block text-sm font-medium text-[#3F474A] dark:text-velocity-text mb-1.5 flex items-center gap-1.5">
                                 <User className="w-4 h-4" /> Contacto de emergencia
                             </label>
                             <input
@@ -327,7 +327,7 @@ export default function EmergenciaPage() {
                                 value={emergencyContact}
                                 onChange={(e) => setEmergencyContact(e.target.value)}
                                 placeholder="Ej: 0414-1234567 (Mamá)"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-[#3F474A] dark:text-[#EEEEEE] placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-[#3F474A] dark:text-velocity-text placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--velocity-primary)]/20 focus:border-[var(--velocity-primary)] outline-none transition"
                             />
                         </div>
 

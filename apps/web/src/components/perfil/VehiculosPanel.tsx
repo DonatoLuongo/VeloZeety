@@ -26,7 +26,7 @@ export default function VehiculosPanel({ embedInDashboard }: VehiculosPanelProps
       </div>
 
       {adding ? (
-        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm animate-fade-in">
+        <div className="bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm animate-fade-in">
 
           {/* Alerta Institucional de Requisitos Legales */}
           <div className="p-4 mb-6 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex gap-3">
@@ -88,7 +88,7 @@ export default function VehiculosPanel({ embedInDashboard }: VehiculosPanelProps
       ) : (
         <div className="space-y-4">
           {/* Vehículo Activo Dummy */}
-          <div className="bg-white dark:bg-[#1E293B] border-2 border-[#10B981]/30 rounded-2xl p-5 shadow-sm flex items-start gap-4 transition-all">
+          <div className="bg-white dark:bg-velocity-surface border-2 border-[#10B981]/30 rounded-2xl p-5 shadow-sm flex items-start gap-4 transition-all">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-[#10B981]">
               <Car className="w-6 h-6" />
             </div>

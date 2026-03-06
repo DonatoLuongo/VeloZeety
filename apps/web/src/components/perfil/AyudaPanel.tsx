@@ -11,7 +11,7 @@ export default function AyudaPanel({ embedInDashboard }: AyudaPanelProps) {
       <p className="text-slate-500 dark:text-slate-400 text-base mb-6">Preguntas frecuentes y contacto</p>
 
       <div className="space-y-4 mb-6">
-        <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
+        <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
           <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
             <FileText className="w-6 h-6 text-slate-600 dark:text-slate-300" />
           </div>
@@ -20,7 +20,7 @@ export default function AyudaPanel({ embedInDashboard }: AyudaPanelProps) {
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Cómo pedir viajes, envíos, billetera y métodos de pago.</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
+        <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
           <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
             <Mail className="w-6 h-6 text-slate-600 dark:text-slate-300" />
           </div>
@@ -29,7 +29,7 @@ export default function AyudaPanel({ embedInDashboard }: AyudaPanelProps) {
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">soporte@velocity.com</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
+        <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-start gap-4 transition-colors">
           <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
             <MessageCircle className="w-6 h-6 text-slate-600 dark:text-slate-300" />
           </div>

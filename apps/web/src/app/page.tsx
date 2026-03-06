@@ -3,82 +3,83 @@
 import { BRAND } from "@velocity/shared";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { Car, Bike, Building2, ChevronDown, Store, UtensilsCrossed, Coffee, ShoppingBag, Pill, ChefHat } from "lucide-react";
-import { motion } from "framer-motion";
-import CascoVelocity from "@/components/CascoVelocity";
+import { Car, Bike, Package, Ambulance, ChevronDown, ChevronLeft, ChevronRight, PhoneOff, PhoneCall, ShieldAlert, Bus, ShoppingBag, Eye, EyeOff, Building2, Wallet, Users, Globe, ArrowRight, CheckCircle2, Shield, Zap, HeadphonesIcon, TrendingUp, Cpu, Activity } from "lucide-react";
 import LocationIconOrange from "@/components/LocationIconOrange";
+import ThemeToggle from "@/components/ThemeToggle";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLang } from "@/context/LanguageContext";
+import { t } from "@/lib/i18n";
 
-const NEGOCIOS_CARRUSEL = [
-  { name: "Panadería Central", Icon: UtensilsCrossed },
-  { name: "Pizza & Más", Icon: ChefHat },
-  { name: "Mini Market", Icon: Store },
-  { name: "Café del Centro", Icon: Coffee },
-  { name: "Farmacia San José", Icon: Pill },
-  { name: "Restaurante La Vía", Icon: UtensilsCrossed },
+/* ─── Slide data ─── */
+const SLIDES = [
+  {
+    tag_es: "Movilidad", tag_en: "Mobility",
+    h_es: "Tu ciudad,\na tu velocidad", h_en: "Your city,\nat your speed",
+    sub_es: "Pide un viaje en moto o carro en segundos. Conductores verificados, tarifa justa.",
+    sub_en: "Book a motorcycle or car ride in seconds. Verified drivers, fair pricing.",
+    cta_href: "/register?rol=cliente",
+    cta_es: "Pedir viaje", cta_en: "Book a ride",
+    accent: "#F46E20",
+    Icon: Bike,
+    bgLight: "#FFF7F2",
+    bgDark: "#1a1208",
+  },
+  {
+    tag_es: "Delivery", tag_en: "Delivery",
+    h_es: "Envíos rápidos\ndoor to door", h_en: "Fast deliveries\ndoor to door",
+    sub_es: "Mandaitos, fletes y paquetes en minutos. Rastrea en tiempo real.",
+    sub_en: "Errands, freight, and packages in minutes. Real-time tracking.",
+    cta_href: "/register",
+    cta_es: "Enviar ahora", cta_en: "Send now",
+    accent: "#059669",
+    Icon: Package,
+    bgLight: "#F0FDF9",
+    bgDark: "#071510",
+  },
+  {
+    tag_es: "Billetera Digital", tag_en: "Digital Wallet",
+    h_es: "Paga con tu\nbilletera digital", h_en: "Pay with your\ndigital wallet",
+    sub_es: "USDT, Bolívares, PayPal y más. Sin comisiones ocultas.",
+    sub_en: "USDT, Bolívares, PayPal and more. No hidden fees.",
+    cta_href: "/register",
+    cta_es: "Ver billetera", cta_en: "View wallet",
+    accent: "#F0B90B",
+    Icon: Wallet,
+    bgLight: "#FFFBEB",
+    bgDark: "#17120a",
+  },
 ];
-function FacebookIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-  );
-}
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-  );
-}
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-  );
-}
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-  );
-}
 
-function RegisterDropdown() {
+/* ─── Register dropdown (landing only) ─── */
+function RegisterDropdown({ lang }: { lang: "es" | "en" }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    function close(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
+    const close = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, []);
-
-  const options = [
-    { href: "/register?rol=cliente", label: "Viajes", desc: "Pedir viajes", Icon: Car },
-    { href: "/register?rol=conductor", label: "Conducir", desc: "Ganar con tu vehículo", Icon: Bike },
-    { href: "/register?rol=emprendedor", label: "Emprendedor", desc: "Tu negocio y delivery", Icon: Building2 },
-  ];
-
   return (
     <div className="relative" ref={ref}>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="px-4 py-2.5 rounded-lg text-sm font-semibold bg-white text-black hover:bg-white/95 transition flex items-center gap-2"
-      >
-        Registrarse
-        <ChevronDown className={`w-4 h-4 transition ${open ? "rotate-180" : ""}`} />
+      <button type="button" onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white transition hover:opacity-90"
+        style={{ backgroundColor: "#F46E20" }}>
+        {lang === "es" ? "Registrarse" : "Sign up"}
+        <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-64 rounded-xl bg-white shadow-xl border border-gray-100 py-2 z-50 text-black">
-          {options.map(({ href, label, desc, Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition"
-              onClick={() => setOpen(false)}
-            >
-              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                <Icon className="w-5 h-5 text-gray-700" />
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-[var(--velocity-surface)] shadow-2xl border border-[var(--velocity-border)] py-2 z-50">
+          {[
+            { href: "/register?rol=cliente", Icon: Car, es: "Viajar", en: "Ride", des: lang === "es" ? "Pedir viajes" : "Request rides" },
+            { href: "/register?rol=conductor", Icon: Bike, es: "Conducir", en: "Drive", des: lang === "es" ? "Ganar con tu vehículo" : "Earn with your vehicle" },
+          ].map(({ href, Icon, es, en, des }) => (
+            <Link key={href} href={href} className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--velocity-border)] transition" onClick={() => setOpen(false)}>
+              <div className="w-8 h-8 rounded-lg bg-[#F46E20]/10 flex items-center justify-center flex-shrink-0">
+                <Icon className="w-4 h-4 text-[#F46E20]" />
               </div>
               <div>
-                <p className="font-semibold text-sm">{label}</p>
-                <p className="text-xs text-gray-500">{desc}</p>
+                <p className="font-bold text-sm text-[var(--velocity-text)]">{lang === "es" ? es : en}</p>
+                <p className="text-xs text-[var(--velocity-muted)]">{des}</p>
               </div>
             </Link>
           ))}
@@ -88,166 +89,388 @@ function RegisterDropdown() {
   );
 }
 
-const QR_DOWNLOAD_URL = "https://velocity.app/download";
+/* ─── Hero Carousel — Xiaomi style ─── */
+function HeroCarousel({ lang, dark }: { lang: "es" | "en"; dark: boolean }) {
+  const [idx, setIdx] = useState(0);
+  const [fading, setFading] = useState(false);
+  const slide = SLIDES[idx];
 
-export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
-  const [showQrModal, setShowQrModal] = useState(false);
+  const go = (dir: number) => {
+    if (fading) return;
+    setFading(true);
+    setTimeout(() => {
+      setIdx((i) => (i + dir + SLIDES.length) % SLIDES.length);
+      setFading(false);
+    }, 200);
+  };
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const t = setInterval(() => go(1), 5500);
+    return () => clearInterval(t);
+  }, [idx, fading]);
+
+  const bg = dark ? slide.bgDark : slide.bgLight;
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
-      {/* Header: se difumina al bajar (estilo Stripe) */}
-      <header
-        className={`sticky top-0 z-50 border-b border-white/10 transition-all duration-300 ${
-          scrolled ? "bg-black/85 backdrop-blur-md" : "bg-black"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <LocationIconOrange size={36} className="flex-shrink-0" />
-              <span className="font-semibold text-lg hidden sm:inline">
-                {BRAND.name}
-              </span>
+    <section
+      className="relative w-full h-[480px] md:h-[540px] overflow-hidden transition-colors duration-500"
+      style={{ backgroundColor: bg }}>
+
+      {/* Content */}
+      <div className={`absolute inset-0 flex items-center transition-opacity duration-200 ${fading ? "opacity-0" : "opacity-100"}`}>
+        <div className="max-w-7xl mx-auto px-8 md:px-20 w-full flex items-center justify-between">
+
+          {/* Left text */}
+          <div className="max-w-[50%]">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-5 border"
+              style={{ color: slide.accent, borderColor: `${slide.accent}40`, backgroundColor: `${slide.accent}10` }}>
+              {lang === "es" ? slide.tag_es : slide.tag_en}
+            </span>
+            <h1 className="text-4xl md:text-6xl font-black leading-[1.05] mb-4 whitespace-pre-line"
+              style={{ color: dark ? "#EAECEF" : "#1E2329" }}>
+              {lang === "es" ? slide.h_es : slide.h_en}
+            </h1>
+            <p className="text-base mb-8 max-w-sm" style={{ color: dark ? "rgba(255,255,255,0.5)" : "#848E9C" }}>
+              {lang === "es" ? slide.sub_es : slide.sub_en}
+            </p>
+            <Link href={slide.cta_href}
+              className="inline-block px-7 py-3 rounded-lg font-bold text-white text-sm transition hover:opacity-90"
+              style={{ backgroundColor: slide.accent }}>
+              {lang === "es" ? slide.cta_es : slide.cta_en}
             </Link>
+          </div>
 
-            <nav className="hidden md:flex items-center gap-8">
-              <Link
-                href="/ride"
-                className="text-sm font-medium text-white/90 hover:text-white"
-              >
-                Viajes
-              </Link>
-              <Link
-                href="/driver"
-                className="text-sm font-medium text-white/70 hover:text-white"
-              >
-                Conducir
-              </Link>
-              <Link
-                href="/business"
-                className="text-sm font-medium text-white/70 hover:text-white"
-              >
-                Empresas
-              </Link>
-              <Link
-                href="/more"
-                className="text-sm font-medium text-white/70 hover:text-white"
-              >
-                Más
-              </Link>
-            </nav>
+          {/* Right: image placeholder */}
+          <div className="hidden md:flex items-center justify-center w-[42%] h-80 rounded-2xl relative overflow-hidden"
+            style={{ backgroundColor: `${slide.accent}0d`, border: `1px dashed ${slide.accent}30` }}>
+            <slide.Icon className="w-44 h-44 opacity-20" style={{ color: slide.accent }} />
+            <span className="absolute bottom-4 text-xs font-medium" style={{ color: dark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
+              {lang === "es" ? "[ Espacio para imagen ]" : "[ Image placeholder ]"}
+            </span>
+          </div>
+        </div>
+      </div>
 
-            <div className="flex items-center gap-4">
-              <Link href="/login" className="text-sm font-medium text-white/90 hover:text-white">
-                Iniciar sesión
+      {/* Prev/Next arrows */}
+      <button onClick={() => go(-1)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full border transition hover:scale-110"
+        style={{ borderColor: `${slide.accent}30`, color: dark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.3)", backgroundColor: "transparent" }}>
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button onClick={() => go(1)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full border transition hover:scale-110"
+        style={{ borderColor: `${slide.accent}30`, color: dark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.3)", backgroundColor: "transparent" }}>
+        <ChevronRight className="w-5 h-5" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+        {SLIDES.map((_, i) => (
+          <button key={i} onClick={() => { setFading(true); setTimeout(() => { setIdx(i); setFading(false); }, 200); }}
+            className="h-0.5 rounded-full transition-all duration-300"
+            style={{ width: i === idx ? 28 : 12, backgroundColor: i === idx ? slide.accent : (dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)") }} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── Services data ─── */
+const SERVICES = [
+  { Icon: Bike, color: "#F46E20", title_es: "Viajes en Moto", title_en: "Motorcycle Rides", sub_es: "Rápido, sin atascos", sub_en: "Fast, no traffic", href: "/ride" },
+  { Icon: Car, color: "#F0B90B", title_es: "Viajes en Carro", title_en: "Car Rides", sub_es: "Comodidad para todos", sub_en: "Comfort for all", href: "/ride" },
+  { Icon: Package, color: "#0EA5E9", title_es: "Delivery Express", title_en: "Express Delivery", sub_es: "Paquetes en minutos", sub_en: "Packages in minutes", href: "/app/envios" },
+  { Icon: Wallet, color: "#22C55E", title_es: "Billetera Digital", title_en: "Digital Wallet", sub_es: "USDT · Bs · PayPal", sub_en: "USDT · Bs · PayPal", href: "/app/billetera" },
+  { Icon: Ambulance, color: "#EF4444", title_es: "Emergencias", title_en: "Emergency", sub_es: "Protocolo médico", sub_en: "Medical protocol", href: "/app/emergencia" },
+  { Icon: Building2, color: "#A855F7", title_es: "Tu Negocio", title_en: "Your Business", sub_es: "Tienda + delivery", sub_en: "Store + delivery", href: "/business" },
+];
+
+/* ─── Business feature cards (Xiaomi product highlight) ─── */
+const BIZ_FEATURES = [
+  { Icon: Building2, color: "#F46E20", title_es: "Perfil de Empresa", title_en: "Business Profile", sub_es: "Crea tu página y catálogo de productos", sub_en: "Create your page and product catalog" },
+  { Icon: Package, color: "#0EA5E9", title_es: "Delivery Integrado", title_en: "Integrated Delivery", sub_es: "Nuestra flota entrega tus pedidos", sub_en: "Our fleet delivers your orders" },
+  { Icon: Wallet, color: "#22C55E", title_es: "Reportes y Pagos", title_en: "Reports & Payments", sub_es: "Facturación centralizada y pagos digitales", sub_en: "Centralized billing and digital payments" },
+  { Icon: Globe, color: "#F0B90B", title_es: "Mayor Alcance", title_en: "Wider Reach", sub_es: "Llega a más clientes con la app", sub_en: "Reach more customers through the app" },
+];
+
+/* ─── Social icons ─── */
+function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      className="p-2 rounded-lg text-[#848E9C] hover:text-white hover:bg-white/5 transition" aria-label={label}>
+      {children}
+    </a>
+  );
+}
+function FbIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>; }
+function XIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>; }
+function IgIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.28.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg>; }
+
+/* ═══════════════════════════════════════ */
+/*  PAGE                                   */
+/* ═══════════════════════════════════════ */
+export default function Home() {
+  const { lang } = useLang();
+  const [scrolled, setScrolled] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    // detect theme from document class
+    const observe = new MutationObserver(() => setDark(document.documentElement.classList.contains("dark")));
+    observe.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    setDark(document.documentElement.classList.contains("dark"));
+    return () => { window.removeEventListener("scroll", onScroll); observe.disconnect(); };
+  }, []);
+
+  const stats = [
+    { value: "10K+", label_es: "Viajes completados", label_en: "Completed rides", Icon: TrendingUp },
+    { value: "500+", label_es: "Conductores activos", label_en: "Active drivers", Icon: Bike },
+    { value: "200+", label_es: "Negocios registrados", label_en: "Registered businesses", Icon: Building2 },
+    { value: "24/7", label_es: "Disponibilidad", label_en: "Availability", Icon: Globe },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[var(--velocity-bg)] text-[var(--velocity-text)]">
+
+      {/* ─── HEADER ─── */}
+      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled
+        ? "bg-[var(--velocity-bg)]/80 backdrop-blur-md shadow-sm border-b border-[var(--velocity-border)]"
+        : "bg-transparent border-b border-transparent"
+        }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+          <Link href="/" className="flex items-center gap-2">
+            <LocationIconOrange size={28} className="flex-shrink-0" />
+            <span className="font-bold text-base text-[var(--velocity-text)] leading-none hidden sm:inline">VeloZeety</span>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-6">
+            {[
+              [lang === "es" ? "Viajes" : "Rides", "/ride"],
+              [lang === "es" ? "Conducir" : "Drive", "/driver"],
+              [lang === "es" ? "Empresas" : "Business", "/business"],
+              [lang === "es" ? "Nosotros" : "About", "/about"],
+            ].map(([label, href]) => (
+              <Link key={href} href={href}
+                className="text-sm font-medium text-[var(--velocity-muted)] hover:text-[var(--velocity-text)] transition">
+                {label}
               </Link>
-              <Link href="/app" className="text-sm font-medium text-white/80 hover:text-white hidden sm:inline">
-                Entrar a la app
-              </Link>
-              <RegisterDropdown />
-            </div>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+            <Link href="/login"
+              className="hidden sm:inline text-sm font-semibold text-[var(--velocity-muted)] hover:text-[var(--velocity-text)] transition px-3 py-1.5 rounded-lg hover:bg-[var(--velocity-border)] cursor-pointer relative z-20">
+              {lang === "es" ? "Iniciar sesión" : "Sign in"}
+            </Link>
+            <RegisterDropdown lang={lang} />
           </div>
         </div>
       </header>
 
-      {/* Hero: título + card (animación tecnológica) */}
-      <section className="relative flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-20">
-        <motion.h1
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-2 max-w-3xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Ve a donde quieras con VeloCity
-        </motion.h1>
-        <motion.p
-          className="text-white/70 text-center text-lg mb-10 max-w-xl"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          Moto o carro, en el momento. Paga con tu wallet, gana viajes gratis.
-        </motion.p>
+      {/* Spacer */}
+      <div className="h-14" />
 
-        {/* Card tipo Uber: origen, destino, CTA */}
-        <motion.div
-          className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden text-black animate-float"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-        >
-          <div className="flex flex-col sm:flex-row sm:divide-x sm:divide-gray-200">
-            <div className="flex-1 p-4 sm:p-5">
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                Recogida
-              </label>
-              <input
-                type="text"
-                placeholder="¿Dónde estás?"
-                className="w-full text-base font-medium placeholder:text-gray-400 focus:outline-none bg-transparent"
-                readOnly
-              />
-            </div>
-            <div className="flex-1 p-4 sm:p-5 border-t sm:border-t-0 border-gray-100">
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                Destino
-              </label>
-              <input
-                type="text"
-                placeholder="¿A dónde vas?"
-                className="w-full text-base font-medium placeholder:text-gray-400 focus:outline-none bg-transparent"
-                readOnly
-              />
-            </div>
-          </div>
-          <div className="px-4 sm:px-5 pb-5 flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/ride"
-              className="flex-1 py-3.5 px-4 rounded-lg font-semibold text-center text-white transition hover:opacity-95"
-              style={{ backgroundColor: BRAND.colors.primary }}
-            >
-              Ver precios
-            </Link>
-            <Link
-              href="/ride"
-              className="flex-1 py-3.5 px-4 rounded-lg font-semibold text-center bg-black text-white border border-gray-300 hover:bg-gray-900 transition"
-            >
-              Pedir viaje ahora
-            </Link>
-          </div>
-        </motion.div>
+      {/* ─── HERO CAROUSEL ─── */}
+      <HeroCarousel lang={lang} dark={dark} />
 
-        <motion.p
-          className="mt-6 text-sm text-white/60"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Link href="/login" className="underline hover:text-white/80">
-            Inicia sesión
-          </Link>{" "}
-          para ver tu actividad reciente
-        </motion.p>
+      {/* ─── STATS ─── */}
+      <section className="border-y border-[var(--velocity-border)] bg-[var(--velocity-surface)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[var(--velocity-border)]">
+            {stats.map(({ value, label_es, label_en, Icon }, i) => (
+              <div key={i} className="flex items-center gap-3 px-5 py-4">
+                <div className="w-9 h-9 rounded-lg bg-[#F46E20]/10 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-4 h-4 text-[#F46E20]" />
+                </div>
+                <div>
+                  <p className="text-lg font-black text-[var(--velocity-text)]">{value}</p>
+                  <p className="text-[11px] text-[var(--velocity-muted)] font-medium">{lang === "es" ? label_es : label_en}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Carrusel automático: negocios con iconos (estilo Stripe) */}
-      <section className="py-10 border-y border-white/10 overflow-hidden">
+      {/* ─── PARTNERS MARQUEE ─── */}
+      <section className="py-10 border-b border-[var(--velocity-border)] bg-[var(--velocity-surface)] overflow-hidden flex items-center gap-12 whitespace-nowrap hidden sm:flex">
+        <div className="flex gap-16 items-center animate-scroll shrink-0 pl-12">
+          {[
+            { icon: Building2, name: "SuperMarket+" },
+            { icon: ShoppingBag, name: "ModaExpress" },
+            { icon: Bus, name: "Transporte Nacional" },
+            { icon: Shield, name: "Seguros Andes" },
+            { icon: Cpu, name: "ElectroTec" },
+            { icon: TrendingUp, name: "Finanzas Capital" },
+            { icon: Activity, name: "Clinica Salud" },
+            // Repeat for smooth loop effect
+            { icon: Building2, name: "SuperMarket+" },
+            { icon: ShoppingBag, name: "ModaExpress" },
+            { icon: Bus, name: "Transporte Nacional" },
+            { icon: Shield, name: "Seguros Andes" },
+          ].map((partner, i) => (
+            <div key={i} className="flex items-center gap-3 text-[var(--velocity-muted)] hover:text-[#F46E20] transition-colors cursor-pointer group">
+              <partner.icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <span className="font-bold text-lg tracking-tight">{partner.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── SERVICES GRID ─── */}
+      <section className="py-16 bg-[var(--velocity-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-white/60 text-sm mb-6">Negocios en VeloCity</p>
-          <div className="relative">
-            <div className="flex animate-carousel gap-8 w-max">
-              {[...NEGOCIOS_CARRUSEL, ...NEGOCIOS_CARRUSEL].map((item, i) => (
-                <div key={i} className="flex-shrink-0 flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white/90 font-medium text-sm whitespace-nowrap">
-                  <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center">
-                    <item.Icon className="w-4 h-4 text-[#0EA5E9]" />
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="text-xs font-bold text-[#F46E20] uppercase tracking-widest mb-1">
+                {lang === "es" ? "Nuestros servicios" : "Our services"}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-black text-[var(--velocity-text)]">
+                {lang === "es" ? "Todo en una sola app" : "Everything in one app"}
+              </h2>
+            </div>
+            <Link href="/about" className="text-sm font-bold text-[#F46E20] hover:underline flex items-center gap-1">
+              {lang === "es" ? "Ver todos" : "See all"} <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* 2 large cards */}
+          <div className="grid md:grid-cols-2 gap-3 mb-3">
+            {SERVICES.slice(0, 2).map(({ Icon, color, title_es, title_en, sub_es, sub_en, href }, i) => (
+              <Link key={i} href={href}
+                className="group relative rounded-lg border border-[var(--velocity-border)] bg-[var(--velocity-surface)] p-7 overflow-hidden flex items-start justify-between hover:border-[#F46E20]/30 transition">
+                <div className="z-10">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: `${color}18` }}>
+                    <Icon className="w-5 h-5" style={{ color }} />
                   </div>
-                  {item.name}
+                  <h3 className="text-lg font-black text-[var(--velocity-text)] mb-1">{lang === "es" ? title_es : title_en}</h3>
+                  <p className="text-sm text-[var(--velocity-muted)] mb-4">{lang === "es" ? sub_es : sub_en}</p>
+                  <span className="text-sm font-bold flex items-center gap-1 transition-colors" style={{ color }}>
+                    {lang === "es" ? "Empezar" : "Get started"} <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                {/* Large icon placeholder (right side) */}
+                <div className="hidden md:flex items-center justify-center w-28 h-24 rounded-lg ml-4 flex-shrink-0"
+                  style={{ backgroundColor: `${color}0a`, border: `1px dashed ${color}25` }}>
+                  <Icon className="w-14 h-14 opacity-15" style={{ color }} />
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* 4 smaller cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {SERVICES.slice(2).map(({ Icon, color, title_es, title_en, sub_es, sub_en, href }, i) => (
+              <Link key={i} href={href}
+                className="group rounded-lg border border-[var(--velocity-border)] bg-[var(--velocity-surface)] p-5 hover:border-[#F46E20]/30 transition">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${color}18` }}>
+                  <Icon className="w-4 h-4" style={{ color }} />
+                </div>
+                <h3 className="font-black text-sm text-[var(--velocity-text)] mb-0.5">{lang === "es" ? title_es : title_en}</h3>
+                <p className="text-xs text-[var(--velocity-muted)]">{lang === "es" ? sub_es : sub_en}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DRIVER FEATURE ─── */}
+      <section className="border-t border-[var(--velocity-border)] bg-[var(--velocity-surface)] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Copy */}
+            <div>
+              <p className="text-xs font-bold text-[#F46E20] uppercase tracking-widest mb-3">
+                {lang === "es" ? "Para conductores" : "For drivers"}
+              </p>
+              <h2 className="text-2xl md:text-4xl font-black text-[var(--velocity-text)] mb-4 leading-tight">
+                {lang === "es" ? "Conduce cuando quieras,\ngana lo que necesitas" : "Drive when you want,\nearn what you need"}
+              </h2>
+              <p className="text-[var(--velocity-muted)] mb-7 max-w-sm">
+                {lang === "es"
+                  ? "Horario 100% flexible. Pagos semanales. Soporte 24/7."
+                  : "100% flexible schedule. Weekly payments. 24/7 support."}
+              </p>
+              <div className="flex flex-wrap gap-2 mb-7">
+                {(lang === "es"
+                  ? ["✓ Sin mínimo de horas", "✓ Pagos semanales", "✓ Seguro"]
+                  : ["✓ No minimum hours", "✓ Weekly payments", "✓ Insurance"]
+                ).map((item) => (
+                  <span key={item} className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--velocity-border)] text-[var(--velocity-muted)]">{item}</span>
+                ))}
+              </div>
+              <Link href="/driver"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-white text-sm transition hover:opacity-90"
+                style={{ backgroundColor: "#F46E20" }}>
+                {lang === "es" ? "Comenzar a conducir" : "Start driving"} <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            {/* Image placeholder */}
+            <div className="rounded-lg border border-dashed border-[var(--velocity-border)] flex items-center justify-center h-64 relative overflow-hidden bg-[var(--velocity-bg)]">
+              <Car className="w-24 h-24 text-[#F46E20] opacity-15" />
+              <span className="absolute bottom-4 text-xs text-[var(--velocity-muted)]">
+                {lang === "es" ? "[ Imagen del conductor ]" : "[ Driver image ]"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BUSINESS — Xiaomi "featured products" style ─── */}
+      <section className="py-16 bg-[var(--velocity-bg)] border-t border-[var(--velocity-border)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10">
+            <p className="text-xs font-bold text-[#F0B90B] uppercase tracking-widest mb-1">
+              {lang === "es" ? "Para emprendedores" : "For entrepreneurs"}
+            </p>
+            <div className="flex items-end justify-between">
+              <h2 className="text-2xl md:text-3xl font-black text-[var(--velocity-text)]">
+                {lang === "es" ? "VeloZeety para tu empresa" : "VeloZeety for your business"}
+              </h2>
+              <Link href="/business" className="text-sm font-bold text-[#F0B90B] hover:underline flex items-center gap-1">
+                {lang === "es" ? "Más info" : "Learn more"} <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Hero card + 4 features (Xiaomi product-highlight style) */}
+          <div className="grid lg:grid-cols-5 gap-3">
+            {/* Main promo card */}
+            <div className="lg:col-span-2 rounded-lg border border-[var(--velocity-border)] bg-[var(--velocity-surface)] p-7 flex flex-col justify-between relative overflow-hidden min-h-[260px]">
+              <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10"
+                style={{ background: "#F0B90B", transform: "translate(30%,-30%)" }} />
+              <div>
+                <div className="w-10 h-10 rounded-lg bg-[#F0B90B]/15 flex items-center justify-center mb-4">
+                  <Building2 className="w-5 h-5 text-[#F0B90B]" />
+                </div>
+                <h3 className="font-black text-xl text-[var(--velocity-text)] mb-2">
+                  {lang === "es" ? "Abre tu tienda hoy" : "Open your store today"}
+                </h3>
+                <p className="text-sm text-[var(--velocity-muted)]">
+                  {lang === "es"
+                    ? "Crea tu perfil de negocio, sube tu catálogo y empieza a vender con delivery integrado."
+                    : "Create your business profile, upload your catalog and start selling with integrated delivery."}
+                </p>
+              </div>
+              <Link href="/register"
+                className="mt-6 inline-flex items-center gap-2 text-sm font-bold transition" style={{ color: "#F0B90B" }}>
+                {lang === "es" ? "Registrar mi negocio" : "Register my business"} <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* 4 feature cards */}
+            <div className="lg:col-span-3 grid sm:grid-cols-2 gap-3">
+              {BIZ_FEATURES.map(({ Icon, color, title_es, title_en, sub_es, sub_en }, i) => (
+                <div key={i} className="rounded-lg border border-[var(--velocity-border)] bg-[var(--velocity-surface)] p-5 hover:border-[#F0B90B]/30 transition">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${color}15` }}>
+                    <Icon className="w-4 h-4" style={{ color }} />
+                  </div>
+                  <h4 className="font-black text-sm text-[var(--velocity-text)] mb-1">{lang === "es" ? title_es : title_en}</h4>
+                  <p className="text-xs text-[var(--velocity-muted)]">{lang === "es" ? sub_es : sub_en}</p>
                 </div>
               ))}
             </div>
@@ -255,360 +478,157 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Sección: Conduce cuando quieras */}
-      <section className="py-16 md:py-24 bg-white text-black overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Conduce cuando quieras, gana lo que necesites
-              </h2>
-              <p className="text-gray-600 text-lg mb-8">
-                Gana dinero con tu moto o tu carro. Horario flexible, pagos semanales y beneficios en la tienda VeloCity.
-              </p>
-              <Link
-                href="/driver"
-                className="inline-block py-3.5 px-6 rounded-lg font-semibold text-white transition hover:opacity-95"
-                style={{ backgroundColor: BRAND.colors.primary }}
-              >
-                Comenzar a conducir
-              </Link>
-              <p className="mt-4 text-sm text-gray-500">
-                <Link href="/driver/login" className="underline">
-                  ¿Ya tienes cuenta? Inicia sesión
-                </Link>
-              </p>
-            </motion.div>
-            <motion.div className="rounded-2xl bg-gray-100 border border-gray-200 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
-              <div>
-                <h3 className="font-bold text-xl text-black mb-1">Conducir</h3>
-                <p className="text-gray-600 text-sm mb-4">Gana con tu moto o carro. Horario flexible, pagos semanales y beneficios.</p>
-                <Link href="/driver" className="inline-block py-2.5 px-4 rounded-lg text-sm font-medium border border-gray-300 bg-white text-black hover:bg-gray-50 transition">
-                  Detalles
-                </Link>
-              </div>
-              <div className="flex-shrink-0 w-24 h-24 rounded-xl bg-white border border-gray-200 flex items-center justify-center">
-                <Car className="w-12 h-12 text-gray-500" />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* ─── TRUST STRIP — animated and alive ─── */}
+      <section className="py-20 bg-[var(--velocity-surface)] relative overflow-hidden">
+        {/* Subtle background glows */}
+        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-[#F46E20]/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
-      {/* Sección: Para empresas - mockup app profesional */}
-      <section className="py-16 md:py-24 bg-gray-50 text-black overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              className="order-2 md:order-1 rounded-2xl bg-gray-100 border border-gray-200 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-              initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div>
-                <h3 className="font-bold text-xl text-black mb-1">Para empresas</h3>
-                <p className="text-gray-600 text-sm mb-4">Tu negocio en la app: tienda virtual, catálogo y delivery con nuestra flota.</p>
-                <Link href="/business" className="inline-block py-2.5 px-4 rounded-lg text-sm font-medium border border-gray-300 bg-white text-black hover:bg-gray-50 transition">
-                  Detalles
-                </Link>
-              </div>
-              <div className="flex-shrink-0 w-24 h-24 rounded-xl bg-white border border-gray-200 flex items-center justify-center">
-                <Building2 className="w-12 h-12 text-gray-500" />
-              </div>
-            </motion.div>
-            <motion.div className="order-1 md:order-2" initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                VeloCity para tu empresa
-              </h2>
-              <p className="text-gray-600 text-lg mb-6">
-                ¿Tienes un negocio, tienda o comida rápida? Crea tu perfil de empresa en la app, abre tu tienda con catálogo y ofrece <strong>delivery incluido</strong>. Nuestras motos y carros son de la misma empresa: entregas rápidas y confiables para tus clientes.
-              </p>
-              <ul className="text-gray-600 mb-8 space-y-2">
-                <li>• Perfil de negocio y tienda virtual</li>
-                <li>• Delivery con nuestra flota (moto o carro)</li>
-                <li>• Reportes y facturación centralizada</li>
-              </ul>
-              <Link
-                href="/business"
-                className="inline-block py-3.5 px-6 rounded-lg font-semibold bg-black text-white hover:bg-gray-800 transition"
-              >
-                Más información
-              </Link>
-            </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-[var(--velocity-text)] mb-4 tracking-tight">
+              {lang === "es" ? "Seguridad y soporte en cada kilómetro" : "Safety and support in every mile"}
+            </h2>
+            <p className="text-[var(--velocity-muted)] max-w-2xl mx-auto text-lg">
+              {lang === "es"
+                ? "Diseñamos un ecosistema donde viajas y pagas con absoluta tranquilidad."
+                : "We designed an ecosystem where you travel and pay with absolute peace of mind."}
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Uniformes: estilo referencia — marco gris oscuro, área blanca, prendas con líneas naranja/azul */}
-      <section className="py-16 md:py-24 bg-slate-100 text-[#3F474A] animate-fade-in-up">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 text-[#3F474A]">
-            Uniformes
-          </h2>
-          <p className="text-slate-600 text-center text-lg mb-10 max-w-2xl mx-auto">
-            Equipamiento oficial. Gris carbón y negro con líneas naranja y azul. Logo en pecho.
-          </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Chaqueta con capucha — referencia imagen */}
-            <div className="rounded-2xl overflow-hidden bg-[#3F474A] p-2 shadow-lg">
-              <div className="rounded-xl bg-white aspect-[3/4] flex items-center justify-center p-4">
-                <img
-                  src="/images/uniformes/chaqueta-capucha.png"
-                  alt="Chaqueta con capucha VeloCity"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="p-3 text-center">
-                <h3 className="font-semibold text-white text-sm">Chaqueta con capucha</h3>
-                <p className="text-white/70 text-xs mt-0.5">Capucha y puños naranja · Líneas geométricas</p>
-              </div>
-            </div>
-            {/* Chaqueta dos tonos */}
-            <div className="rounded-2xl overflow-hidden bg-[#3F474A] p-2 shadow-lg">
-              <div className="rounded-xl bg-white aspect-[3/4] flex items-center justify-center p-4">
-                <img
-                  src="/images/uniformes/chaqueta-dos-tonos.png"
-                  alt="Chaqueta dos tonos VeloCity"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="p-3 text-center">
-                <h3 className="font-semibold text-white text-sm">Chaqueta dos tonos</h3>
-                <p className="text-white/70 text-xs mt-0.5">Gris y negro · Cierre naranja</p>
-              </div>
-            </div>
-            {/* Polo — mismo estilo de card */}
-            <div className="rounded-2xl overflow-hidden bg-[#3F474A] p-2 shadow-lg">
-              <div className="rounded-xl bg-white aspect-[3/4] flex items-center justify-center p-6 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-5" style={{ background: "linear-gradient(135deg, #F46E20 0%, #5BA4D4 100%)" }} />
-                <div className="w-full h-full rounded-lg border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400">
-                  <span className="text-xs font-medium text-slate-500">Polo oficial</span>
-                  <span className="text-[10px] mt-1">Cuello y puños naranja</span>
-                </div>
-              </div>
-              <div className="p-3 text-center">
-                <h3 className="font-semibold text-white text-sm">Polo oficial</h3>
-                <p className="text-white/70 text-xs mt-0.5">Cuello y puños naranja · Logo en pecho</p>
-              </div>
-            </div>
-            {/* Playera + Casco en una card o casco solo */}
-            <div className="rounded-2xl overflow-hidden bg-[#3F474A] p-2 shadow-lg">
-              <div className="rounded-xl bg-white aspect-[3/4] flex items-center justify-center p-4">
-                <CascoVelocity width={140} height={140} />
-              </div>
-              <div className="p-3 text-center">
-                <h3 className="font-semibold text-white text-sm">Casco integral</h3>
-                <p className="text-white/70 text-xs mt-0.5">Gris carbón · Bandas naranja y azul</p>
-              </div>
-            </div>
-          </div>
-          <p className="text-center mt-8">
-            <Link href="/store" className="text-sm font-semibold inline-flex items-center gap-1 hover:opacity-90 transition" style={{ color: BRAND.colors.primary }}>
-              Ver tienda →
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* Cómo usar la aplicación: imagen, animación y estructura profesional */}
-      <section className="py-16 md:py-24 bg-black text-white overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--velocity-primary)]/10 via-transparent to-transparent pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.h2
-            className="text-3xl md:text-4xl font-bold text-center mb-4"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-          >
-            Cómo usar la aplicación
-          </motion.h2>
-          <motion.p
-            className="text-white/70 text-center text-lg mb-12 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.05 }}
-          >
-            Viajes, billetera, negocios y más en un solo lugar. Así puedes sacarle partido.
-          </motion.p>
-
-          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: 1, title: "Pide un viaje", text: "Elige origen, destino y tipo de vehículo. Paga con efectivo, pago móvil o tu billetera." },
-              { step: 2, title: "Compra en negocios", text: "Explora negocios verificados, elige productos y paga con tu billetera. El emprendedor recibe el pago." },
-              { step: 3, title: "Billetera y NFC", text: "Recarga, envía y recibe VELO. Paga con NFC desde tu móvil en comercios o a otras cuentas." },
-            ].map((item, i) => (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.4, delay: 0.15 + i * 0.1 }}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-[var(--velocity-primary)]/30 hover:bg-white/[0.07] transition"
-              >
-                <div className="w-12 h-12 rounded-xl bg-[var(--velocity-primary)]/20 flex items-center justify-center mb-4 font-bold text-[var(--velocity-primary)]">{item.step}</div>
-                <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-white/70 text-sm">{item.text}</p>
-              </motion.div>
+              { Icon: Shield, label_es: "Conductores verificados", label_en: "Verified drivers", desc_es: "Auditoría de antecedentes, ID y validación facial cruzada para cada conductor en la plataforma.", desc_en: "Background audit, ID and cross-facial validation for every driver." },
+              { Icon: Wallet, label_es: "Pagos blindados", label_en: "Shielded payments", desc_es: "Tus fondos en USDT o Fiat están protegidos por encriptación bancaria de última generación.", desc_en: "Your USDT or Fiat funds are protected by next-gen bank encryption." },
+              { Icon: HeadphonesIcon, label_es: "Soporte inmediato", label_en: "Immediate support", desc_es: "Agentes en vivo 24/7 dispuestos a resolver cualquier inconveniente con tu viaje o billetera.", desc_en: "Live agents 24/7 ready to solve any issue with your ride or wallet." },
+              { Icon: Zap, label_es: "Infraestructura ágil", label_en: "Agile infrastructure", desc_es: "Asignación inteligente de tu viaje o delivery al socio más cercano para ahorrar tiempo valioso.", desc_en: "Smart assignment of your ride to the closest partner to save time." },
+            ].map(({ Icon, label_es, label_en, desc_es, desc_en }, i) => (
+              <div key={i} className="group bg-[var(--velocity-bg)] p-8 rounded-2xl border border-[var(--velocity-border)] hover:border-[#F46E20]/30 hover:shadow-2xl hover:shadow-[#F46E20]/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="w-14 h-14 rounded-xl bg-[var(--velocity-surface)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                  <Icon className="w-7 h-7 text-[#F46E20]" />
+                </div>
+                <h3 className="font-black text-xl text-[var(--velocity-text)] mb-3">{lang === "es" ? label_es : label_en}</h3>
+                <p className="text-sm text-[var(--velocity-muted)] leading-relaxed">{lang === "es" ? desc_es : desc_en}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Descarga la app: QR con modal para escanear */}
-      <section className="py-16 md:py-24 bg-gray-100 text-black animate-fade-in-up">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Todo es más fácil en la app
-          </h2>
-          <p className="text-gray-600 text-lg mb-10 max-w-xl mx-auto">
-            Una sola app: pide viajes, conduce, paga con tu wallet y sigue todo en tiempo real. Pasajeros y conductores en la misma aplicación.
-          </p>
-          <div className="max-w-md mx-auto bg-white rounded-2xl p-6 flex items-center gap-6 shadow-sm">
-            <button
-              type="button"
-              onClick={() => setShowQrModal(true)}
-              className="flex-shrink-0 rounded-lg border border-gray-200 p-1 hover:border-[#0EA5E9]/50 hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/30"
-              aria-label="Ver código QR en grande"
-            >
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(QR_DOWNLOAD_URL)}`}
-                alt="QR Descargar VeloCity"
-                className="w-32 h-32 rounded-lg bg-white"
-              />
-            </button>
-            <div className="text-left flex-1">
-              <p className="font-semibold text-xl">Descarga VeloCity</p>
-              <p className="text-sm text-gray-500 mt-1">Escanear para descargar</p>
-              <p className="text-sm text-gray-600 mt-3">Una app para viajes, conducir, empresas y más.</p>
-              <button
-                type="button"
-                onClick={() => setShowQrModal(true)}
-                className="mt-2 text-sm font-medium text-[#0EA5E9] hover:underline"
-              >
-                Ver QR en grande →
-              </button>
+      {/* ─── APP DOWNLOAD ─── */}
+      <section className="py-16 bg-[var(--velocity-bg)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-lg border border-[var(--velocity-border)] bg-[#0B0E11] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <p className="text-[#F46E20] text-xs font-bold uppercase tracking-widest mb-2">
+                {lang === "es" ? "Disponible ahora" : "Available now"}
+              </p>
+              <h2 className="text-2xl md:text-4xl font-black text-white mb-3">
+                {lang === "es" ? "Todo más fácil en la app" : "Everything easier in the app"}
+              </h2>
+              <p className="text-white/50 max-w-sm">
+                {lang === "es" ? "Pide viajes, paga con tu wallet y sigue todo en tiempo real." : "Request rides, pay with your wallet and track everything in real time."}
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="p-2 bg-white rounded-lg">
+                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent("https://velozeety.com/download")}&color=F46E20`}
+                  alt="QR VeloZeety" className="w-28 h-28 rounded" />
+              </div>
+              <div className="flex gap-2">
+                <a href="#" className="hover:opacity-80 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-9 w-auto" /></a>
+                <a href="#" className="hover:opacity-80 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-9 w-auto" /></a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Modal QR grande para escanear */}
-      {showQrModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowQrModal(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Código QR para descargar la app"
-        >
-          <div
-            className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="font-semibold text-lg text-center text-slate-800 mb-4">Escanear para descargar VeloCity</p>
-            <div className="flex justify-center p-4 bg-gray-50 rounded-xl">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(QR_DOWNLOAD_URL)}`}
-                alt="Código QR descarga app"
-                className="w-64 h-64 rounded-lg"
-              />
-            </div>
-            <p className="text-sm text-slate-500 text-center mt-2">Abre la cámara de tu móvil y apunta al código</p>
-            <button
-              type="button"
-              onClick={() => setShowQrModal(false)}
-              className="mt-4 w-full py-2.5 rounded-xl font-medium bg-slate-200 text-slate-800 hover:bg-slate-300 transition"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Footer: logo título de la empresa, tamaño destacado */}
-      <footer className="bg-black text-white pt-12 pb-8">
+      {/* ─── FOOTER — Restored, enterprise style ─── */}
+      <footer className="bg-[#0B0E11] text-[#EAECEF] pt-14 pb-8 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 mb-10">
-            <div className="flex flex-col items-start">
-              <Link href="/" className="group" aria-label={BRAND.name}>
-                <span className="text-3xl md:text-4xl font-bold text-white tracking-tight">{BRAND.name}</span>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10 mb-12">
+            {/* Brand + description */}
+            <div className="max-w-xs">
+              <Link href="/" className="flex items-center gap-2.5 mb-4">
+                <LocationIconOrange size={30} />
+                <span className="text-xl font-black text-white">VeloZeety</span>
               </Link>
+              <p className="text-sm text-[#848E9C] leading-relaxed">
+                {lang === "es"
+                  ? "La plataforma multi-servicios que mueve tu ciudad. Transporte, delivery, billetera digital y mucho más."
+                  : "The multi-service platform that moves your city. Transport, delivery, digital wallet and much more."}
+              </p>
+              <div className="flex gap-1 mt-5">
+                <SocialIcon href="https://x.com/VZeety" label="X"><XIcon /></SocialIcon>
+                <SocialIcon href="https://instagram.com/velozeety" label="Instagram"><IgIcon /></SocialIcon>
+                <SocialIcon href="https://linkedin.com/company/velozeety" label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg></SocialIcon>
+              </div>
             </div>
 
+            {/* Link columns */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-              <div>
-                <h4 className="font-semibold text-sm mb-4">Empresa</h4>
-                <ul className="space-y-3 text-sm text-white/70">
-                  <li><Link href="/about" className="hover:text-white">Nosotros</Link></li>
-                  <li><Link href="/offerings" className="hover:text-white">Servicios</Link></li>
-                  <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
-                  <li><Link href="/careers" className="hover:text-white">Empleos</Link></li>
-                  <li><Link href="/help" className="hover:text-white">Ayuda</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm mb-4">Productos</h4>
-                <ul className="space-y-3 text-sm text-white/70">
-                  <li><Link href="/app" className="hover:text-white">Viajes</Link></li>
-                  <li><Link href="/driver" className="hover:text-white">Conducir</Link></li>
-                  <li><Link href="/business" className="hover:text-white">VeloCity para empresas</Link></li>
-                  <li><Link href="/app/servicios" className="hover:text-white">Tienda y servicios</Link></li>
-                  <li><Link href="/app/servicios" className="hover:text-white">ACEO</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm mb-4">Ciudad</h4>
-                <ul className="space-y-3 text-sm text-white/70">
-                  <li><Link href="/cities" className="hover:text-white">Cobertura</Link></li>
-                  <li><Link href="/stops" className="hover:text-white">Paradas</Link></li>
-                  <li><Link href="/safety" className="hover:text-white">Seguridad</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm mb-4">Viajes</h4>
-                <ul className="space-y-3 text-sm text-white/70">
-                  <li><Link href="/app" className="hover:text-white">Reservar</Link></li>
-                  <li><Link href="/app" className="hover:text-white">Terminal</Link></li>
-                </ul>
-              </div>
+              {[
+                {
+                  title: lang === "es" ? "Empresa" : "Company", links: [
+                    [lang === "es" ? "Nosotros" : "About", "/about"],
+                    [lang === "es" ? "Blog" : "Blog", "/blog"],
+                    [lang === "es" ? "Empleos" : "Careers", "/careers"],
+                    [lang === "es" ? "Ayuda" : "Help", "/help"],
+                  ]
+                },
+                {
+                  title: lang === "es" ? "Productos" : "Products", links: [
+                    [lang === "es" ? "Viajes" : "Trips", "/app"],
+                    [lang === "es" ? "Conducir" : "Drive", "/driver"],
+                    [lang === "es" ? "VeloZeety Empresas" : "VeloZeety Business", "/business"],
+                    [lang === "es" ? "Tienda y servicios" : "Store & services", "/app/servicios"],
+                  ]
+                },
+                {
+                  title: lang === "es" ? "Ciudad" : "City", links: [
+                    [lang === "es" ? "Cobertura" : "Coverage", "/cities"],
+                    [lang === "es" ? "Paradas" : "Stops", "/stops"],
+                    [lang === "es" ? "Seguridad" : "Safety", "/safety"],
+                  ]
+                },
+                {
+                  title: lang === "es" ? "Viajes" : "Rides", links: [
+                    [lang === "es" ? "Reservar" : "Reserve", "/app"],
+                    [lang === "es" ? "Terminal" : "Terminal", "/app"],
+                    [lang === "es" ? "Privacidad" : "Privacy", "/privacy"],
+                    [lang === "es" ? "Términos" : "Terms", "/terms"],
+                  ]
+                },
+              ].map(({ title, links }) => (
+                <div key={title}>
+                  <h4 className="font-bold text-sm mb-4 text-white">{title}</h4>
+                  <ul className="space-y-2.5">
+                    {links.map(([label, href]) => (
+                      <li key={href}><Link href={href} className="text-sm text-[#848E9C] hover:text-white transition">{label}</Link></li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pt-8 border-t border-white/10">
-            <div className="flex items-center gap-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition" aria-label="Facebook">
-                <FacebookIcon className="w-5 h-5" />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition" aria-label="X">
-                <XIcon className="w-5 h-5" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition" aria-label="Instagram">
-                <InstagramIcon className="w-5 h-5" />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition" aria-label="LinkedIn">
-                <LinkedInIcon className="w-5 h-5" />
-              </a>
+          {/* Bottom bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/8">
+            <div className="flex gap-1 items-center">
+
             </div>
-            <div className="flex flex-wrap gap-4 items-center">
-              <a href="#" className="inline-block hover:opacity-90 transition-opacity" aria-label="Google Play">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-11 w-auto" />
-              </a>
-              <a href="#" className="inline-block hover:opacity-90 transition-opacity" aria-label="App Store">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-11 w-auto" />
-              </a>
+            <div className="flex gap-2">
+              <a href="#" className="hover:opacity-80 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-8 w-auto" /></a>
+              <a href="#" className="hover:opacity-80 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-8 w-auto" /></a>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm text-white/50">
-            <p>© {new Date().getFullYear()} VeloCity. {BRAND.tagline}.</p>
-            <div className="flex gap-6">
-              <Link href="/privacy" className="hover:text-white/70">Privacidad</Link>
-              <Link href="/accessibility" className="hover:text-white/70">Accesibilidad</Link>
-              <Link href="/terms" className="hover:text-white/70">Términos</Link>
-            </div>
-          </div>
+          <p className="mt-5 text-xs text-[#848E9C] text-center md:text-left">
+            © {new Date().getFullYear()} VeloZeety C.A. — {lang === "es" ? "Tu ciudad en movimiento" : "Your city in motion"}.
+            {" "}<Link href="/privacy" className="hover:text-white transition">{lang === "es" ? "Privacidad" : "Privacy"}</Link>
+            {" · "}<Link href="/terms" className="hover:text-white transition">{lang === "es" ? "Términos" : "Terms"}</Link>
+            {" · "}<Link href="/accessibility" className="hover:text-white transition">{lang === "es" ? "Accesibilidad" : "Accessibility"}</Link>
+          </p>
         </div>
       </footer>
     </div>

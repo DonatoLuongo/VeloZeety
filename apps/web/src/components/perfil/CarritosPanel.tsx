@@ -90,7 +90,7 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
             {items.map((it) => (
               <div
                 key={it.product.id}
-                className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center gap-4 shadow-sm transition-colors"
+                className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center gap-4 shadow-sm transition-colors"
               >
                 <button
                   type="button"

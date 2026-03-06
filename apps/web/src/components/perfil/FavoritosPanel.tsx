@@ -22,14 +22,14 @@ export default function FavoritosPanel({ embedInDashboard }: FavoritosPanelProps
       <p className="text-slate-500 dark:text-slate-400 text-base mb-6">Conductores que guardaste para pedir viaje más rápido.</p>
       <div className="space-y-4">
         {FAVORITOS_MOCK.length === 0 ? (
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-10 text-center transition-colors">
+          <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-10 text-center transition-colors">
             <Heart className="w-14 h-14 text-slate-200 dark:text-slate-600 mx-auto mb-4" />
             <p className="text-slate-600 dark:text-slate-300 font-semibold text-lg">Aún no tienes conductores favoritos</p>
             <p className="text-slate-500 dark:text-slate-400 mt-1">Después de un viaje puedes guardar al conductor como favorito.</p>
           </div>
         ) : (
           FAVORITOS_MOCK.map((c) => (
-            <div key={c.id} className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center gap-5 transition-colors">
+            <div key={c.id} className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center gap-5 transition-colors">
               <div className="w-14 h-14 rounded-full bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center flex-shrink-0">
                 <User className="w-7 h-7 text-sky-600 dark:text-sky-400" />
               </div>

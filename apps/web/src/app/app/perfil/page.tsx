@@ -77,7 +77,7 @@ export default function PerfilPage() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col md:flex-row md:max-w-none">
       {/* En móvil: la tarjeta va arriba (order-1), el menú abajo (order-2). En escritorio: aside izquierda, main derecha. */}
-      <aside className="order-2 md:order-none md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:bg-[#222831] p-4 md:p-5">
+      <aside className="order-2 md:order-none md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:md:bg-velocity-bg p-4 md:p-5">
         <h1 className="text-xl md:text-lg font-bold text-slate-800 dark:text-white mb-1">Mi perfil</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 md:mb-5">Cuenta verificada · Gestión centralizada</p>
         <h2 className="text-base font-bold mb-3 text-slate-700 dark:text-slate-300">
@@ -87,7 +87,7 @@ export default function PerfilPage() {
           <button
             type="button"
             onClick={() => setSelectedSection("inicio")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === "inicio" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-transparent dark:bg-transparent bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
               }`}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
@@ -104,7 +104,7 @@ export default function PerfilPage() {
               key={id}
               type="button"
               onClick={() => setSelectedSection(id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${selectedSection === id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-transparent dark:bg-transparent bg-white hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
                 }`}
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
@@ -121,7 +121,7 @@ export default function PerfilPage() {
             <button
               type="button"
               onClick={() => { if (typeof window !== "undefined") { localStorage.removeItem("velocity_user"); router.push("/"); } }}
-              className="w-full p-4 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left"
+              className="w-full p-4 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-transparent dark:bg-transparent bg-white hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left"
               aria-label="Cerrar sesión"
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
@@ -143,7 +143,7 @@ export default function PerfilPage() {
           {selectedSection === "inicio" && (
             <>
               <motion.div
-                className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm mb-6"
+                className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm mb-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
@@ -170,9 +170,8 @@ export default function PerfilPage() {
                             setRol(next);
                             const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
                             localStorage.setItem("velocity_user", JSON.stringify({ ...user, rol: next }));
-                            // window.location.reload(); // Eliminado para evitar recarga brusca según pedido del usuario
                           }}
-                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-white/10 dark:text-white border border-slate-200 dark:border-white/20 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
+                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-velocity-surface dark:[&>option]:bg-velocity-surface dark:text-white border border-slate-200 dark:border-white/20 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
                         >
                           <option value="cliente">Cliente</option>
                           <option value="conductor">Conductor</option>
@@ -238,7 +237,7 @@ export default function PerfilPage() {
                 </div>
               </motion.div>
 
-              <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm mb-6">
+              <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm mb-6">
                 <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Accesos rápidos</p>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/app" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
@@ -259,7 +258,7 @@ export default function PerfilPage() {
                 <button
                   type="button"
                   onClick={() => { if (typeof window !== "undefined") { localStorage.removeItem("velocity_user"); router.push("/"); } }}
-                  className="w-full p-5 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left shadow-sm group"
+                  className="w-full p-5 flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-transparent bg-white dark:bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 transition-all text-left shadow-sm group"
                   aria-label="Cerrar sesión"
                 >
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 transition-colors">

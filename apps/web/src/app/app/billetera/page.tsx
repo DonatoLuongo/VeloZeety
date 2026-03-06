@@ -10,12 +10,10 @@ import {
   Shield,
   User,
   Smartphone,
-  Building2,
   ArrowUpFromLine,
   Banknote,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import NfcIcon from "../../../components/NfcIcon";
 
 type Tab = "principal" | "recargar" | "enviar" | "recibir" | "retiro" | "deposito";
 
@@ -41,6 +39,13 @@ export default function BilleteraPage() {
   const [tab, setTab] = useState<Tab>("principal");
   const [copied, setCopied] = useState<string | null>(null);
   const [showBalance, setShowBalance] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleTabChange = (newTab: Tab) => {
+    setIsTransitioning(true);
+    setTab(newTab);
+    setTimeout(() => setIsTransitioning(false), 300);
+  };
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -53,11 +58,11 @@ export default function BilleteraPage() {
       <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">Finanzas Corporativas</h1>
       <p className="text-slate-500 text-sm mb-6">Gestione su liquidez y pagos corporativos con máxima seguridad.</p>
 
+      {/* ─── TAB: PRINCIPAL ─── */}
       {tab === "principal" && (
         <>
           {/* Dashboard Financiero Hero Card */}
           <div className="bg-[#1E293B] rounded-2xl p-8 mb-6 border border-slate-700 shadow-xl transition-colors relative overflow-hidden">
-            {/* Efecto de luz sutil */}
             <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px]" />
 
             <div className="flex justify-between items-start mb-1 relative z-10">
@@ -74,6 +79,7 @@ export default function BilleteraPage() {
                 )}
               </button>
             </div>
+
             <div className="flex items-baseline gap-2 mb-6 relative z-10">
               <span className="text-4xl md:text-5xl font-bold text-white tabular-nums tracking-tight">
                 {showBalance ? "$ 1,250.00" : "$ •••••••"}
@@ -82,8 +88,7 @@ export default function BilleteraPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-              {/* Bloque USD */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-slate-100 dark:bg-slate-700/50 rounded-lg">
                     <div className="font-bold text-slate-700 dark:text-slate-300 text-xs">EUR</div>
@@ -95,8 +100,7 @@ export default function BilleteraPage() {
                 </div>
               </div>
 
-              {/* Bloque USDT */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg">
                     <div className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">USDT</div>
@@ -111,8 +115,7 @@ export default function BilleteraPage() {
                 </div>
               </div>
 
-              {/* Bloque USDC */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
                     <div className="font-bold text-blue-600 dark:text-blue-400 text-xs">USDC</div>
@@ -127,8 +130,7 @@ export default function BilleteraPage() {
                 </div>
               </div>
 
-              {/* Bloque VES */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-red-50 dark:bg-red-500/10 rounded-lg">
                     <div className="font-bold text-red-600 dark:text-red-400 text-xs">VES</div>
@@ -152,29 +154,29 @@ export default function BilleteraPage() {
           {/* Acciones Rápidas */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <button
-              onClick={() => setTab("enviar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-velocity-primary text-white shadow-lg shadow-velocity-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              onClick={() => handleTabChange("enviar")}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-velocity-primary text-white shadow-lg shadow-velocity-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <Send className="w-5 h-5" />
               <span className="text-xs font-semibold">Enviar</span>
             </button>
             <button
-              onClick={() => setTab("recibir")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
+              onClick={() => handleTabChange("recibir")}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
             >
               <ArrowDownToLine className="w-5 h-5" />
               <span className="text-xs font-semibold">Recibir</span>
             </button>
             <button
-              onClick={() => setTab("recargar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
+              onClick={() => handleTabChange("recargar")}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
             >
               <ArrowUpFromLine className="w-5 h-5" />
               <span className="text-xs font-semibold">Recargar</span>
             </button>
             <button
-              onClick={() => setTab("retiro")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-[#393E46] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
+              onClick={() => handleTabChange("retiro")}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
             >
               <Banknote className="w-5 h-5" />
               <span className="text-xs font-semibold">Retirar</span>
@@ -186,7 +188,7 @@ export default function BilleteraPage() {
             <button className="text-xs text-velocity-primary font-bold hover:underline">Ver todo</button>
           </div>
 
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-8 text-center transition-colors">
+          <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-8 text-center transition-colors">
             <div className="w-16 h-16 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
               <Wallet className="w-8 h-8 text-slate-400 dark:text-slate-500" />
             </div>
@@ -195,126 +197,155 @@ export default function BilleteraPage() {
         </>
       )}
 
+      {/* ─── TAB: RECARGAR ─── */}
       {tab === "recargar" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
+          <button type="button" onClick={() => handleTabChange("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors font-medium">
             ← Volver
           </button>
           <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Recargar Billetera</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Usa uno de los métodos seguros para añadir fondos. Los datos están cifrados y son únicos por sesión.</p>
 
-          <div className="space-y-4">
-            <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-4 border border-slate-200 dark:border-white/5">
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Red de la criptomoneda</p>
-              <p className="text-sm font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.red}</p>
+          {isTransitioning ? (
+            <div className="space-y-4 animate-pulse">
+              <div className="bg-slate-200 dark:bg-slate-700 h-24 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-32 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-48 rounded-xl w-full"></div>
             </div>
-
-            <div className="bg-white dark:bg-[#393E46] rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="font-bold text-sm text-slate-800 dark:text-white">Datos para depósito</span>
+          ) : (
+            <div className="space-y-4 animate-fade-in-up">
+              <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-4 border border-slate-200 dark:border-white/5">
+                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Red de la criptomoneda</p>
+                <p className="text-sm font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.red}</p>
               </div>
-              <div className="p-4 space-y-3">
-                <div className="flex justify-between items-center group">
-                  <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Dirección wallet</span>
-                  <div className="flex items-center gap-2">
-                    <code className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded">{DATOS_RECARGA.wallet_cripto}</code>
-                    <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-                      <Copy className="w-4 h-4 text-slate-400 group-hover:text-velocity-primary transition-colors" />
-                    </button>
+
+              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                  <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-bold text-sm text-slate-800 dark:text-white">Datos para depósito</span>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-between items-center group">
+                    <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Dirección wallet</span>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded">{DATOS_RECARGA.wallet_cripto}</code>
+                      <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+                        <Copy className="w-4 h-4 text-slate-400 group-hover:text-velocity-primary transition-colors" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-white dark:bg-[#393E46] rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors">
-              <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                <Smartphone className="w-4 h-4 text-velocity-primary" />
-                <span className="font-bold text-sm text-slate-800 dark:text-white">Pago móvil (Venezuela)</span>
+              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                  <Smartphone className="w-4 h-4 text-velocity-primary" />
+                  <span className="font-bold text-sm text-slate-800 dark:text-white">Pago móvil (Venezuela)</span>
+                </div>
+                <ul className="p-4 space-y-3 text-sm">
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Banco</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.banco}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.rif}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Teléfono</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.telefono}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Cédula</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.cedula}</span></li>
+                </ul>
               </div>
-              <ul className="p-4 space-y-3 text-sm">
-                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Banco</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.banco}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.rif}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Teléfono</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.telefono}</span></li>
-                <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Cédula</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.cedula}</span></li>
-              </ul>
+
+              <button type="button" onClick={() => handleTabChange("principal")} className="mt-4 w-full py-4 rounded-xl font-bold text-white shadow-xl shadow-velocity-primary/40 hover:scale-[1.01] transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
+                Confirmar Depósito
+              </button>
             </div>
-          </div>
-          <button type="button" onClick={() => setTab("principal")} className="mt-8 w-full py-4 rounded-xl font-bold text-white shadow-lg shadow-velocity-primary/20 hover:scale-[1.01] transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
-            Confirmar Depósito
-          </button>
+          )}
         </>
       )}
 
+      {/* ─── TAB: ENVIAR ─── */}
       {tab === "enviar" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1">
+          <button type="button" onClick={() => handleTabChange("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 font-medium">
             ← Volver
           </button>
           <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Enviar Fondos</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Envía instantáneamente a otros usuarios de {BRAND.name}.</p>
 
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Destinatario (ID o Correo)</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input type="text" placeholder="@usuario o correo@ejemplo.com" className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
-              </div>
+          {isTransitioning ? (
+            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
+              <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-12 rounded-xl w-full mt-4"></div>
             </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Enviar</label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
-                <input type="number" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+          ) : (
+            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Destinatario (ID o Correo)</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input type="text" placeholder="@usuario o correo@ejemplo.com" className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all font-medium" />
+                </div>
               </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Enviar</label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
+                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-lg font-bold focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+                </div>
+              </div>
+              <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-velocity-primary/40 transition-all hover:scale-[1.02]" style={{ backgroundColor: BRAND.colors.primary }}>
+                <Send className="w-4 h-4" />
+                Enviar Dinero
+              </button>
             </div>
-            <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/20 transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
-              <Send className="w-4 h-4" />
-              Enviar Dinero
-            </button>
-          </div>
+          )}
         </>
       )}
 
+      {/* ─── TAB: RETIRO ─── */}
       {tab === "retiro" && (
         <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
+          <button type="button" onClick={() => handleTabChange("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors font-medium">
             ← Volver
           </button>
           <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Retirar Fondos</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Retira tus ganancias o fondos excedentes a tus métodos guardados.</p>
 
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Retirar</label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
-                <input type="number" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+          {isTransitioning ? (
+            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
+              <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
+              <div className="bg-slate-200 dark:bg-slate-700 h-12 rounded-xl w-full mt-4"></div>
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Retirar</label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
+                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-lg font-bold focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+                </div>
               </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Método de Destino</label>
+                <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm font-medium focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all appearance-none cursor-pointer">
+                  <option value="">Selecciona un método de pago</option>
+                  <option value="pago-movil">Pago Móvil</option>
+                  <option value="transferencia">Transferencia bancaria</option>
+                  <option value="wally">Wally</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="zinli">Zinli</option>
+                </select>
+              </div>
+              <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-velocity-primary/40 transition-all hover:scale-[1.02]" style={{ backgroundColor: BRAND.colors.primary }}>
+                <ArrowUpFromLine className="w-4 h-4" />
+                Solicitar Retiro
+              </button>
             </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Método de Destino</label>
-              <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all appearance-none cursor-pointer">
-                <option value="">Selecciona un método de pago</option>
-                <option value="pago-movil">Pago Móvil</option>
-                <option value="transferencia">Transferencia bancaria</option>
-                <option value="wally">Wally</option>
-                <option value="paypal">PayPal</option>
-                <option value="zinli">Zinli</option>
-              </select>
-            </div>
-            <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/20 transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
-              <ArrowUpFromLine className="w-4 h-4" />
-              Solicitar Retiro
-            </button>
-          </div>
+          )}
         </>
       )}
 
+      {/* ─── TAB: RECIBIR (modal) ─── */}
       {tab === "recibir" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setTab("principal")}>
-          <div className="bg-white dark:bg-[#1E293B] rounded-2xl border border-slate-200 dark:border-white/10 p-8 max-w-sm w-full text-center shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => handleTabChange("principal")}>
+          <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-8 max-w-sm w-full text-center shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">Tu Código de Pago QR</p>
             <div className="inline-block p-4 bg-white rounded-2xl border-2 border-slate-100 dark:border-white/10 mb-5 shadow-inner">
               <img
@@ -329,13 +360,14 @@ export default function BilleteraPage() {
               <Copy className="w-4 h-4" />
               Copiar ID para compartir
             </button>
-            <button type="button" onClick={() => setTab("principal")} className="mt-6 w-full py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition">
+            <button type="button" onClick={() => handleTabChange("principal")} className="mt-6 w-full py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition">
               Cerrar
             </button>
           </div>
         </div>
       )}
 
+      {/* ─── INFO RETIROS (siempre visible) ─── */}
       <div className="mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 transition-colors">
         <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-3">Información de Retiros</h3>
         <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -355,4 +387,3 @@ export default function BilleteraPage() {
     </div>
   );
 }
-

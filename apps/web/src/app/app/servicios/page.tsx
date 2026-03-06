@@ -153,14 +153,14 @@ function NegocioModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm shadow-2xl overflow-y-auto transition-all animate-fade-in" onClick={onClose}>
-      <div className="bg-white dark:bg-[#1E293B] rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200 dark:border-white/10 my-4 max-h-[90vh] flex flex-col transition-all active:scale-[0.99]" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white dark:bg-velocity-surface rounded-[2.5rem] shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200 dark:border-white/10 my-4 max-h-[90vh] flex flex-col transition-all active:scale-[0.99]" onClick={(e) => e.stopPropagation()}>
         <div className="h-32 bg-gradient-to-br from-[#F46E20]/20 to-slate-100 dark:from-[#F46E20]/10 dark:to-slate-800 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-slate-200/[0.1] [mask-image:linear-gradient(0deg,transparent,black)] dark:bg-grid-white/[0.05]" />
           <LocationIconOrange size={56} />
         </div>
-        <div className="p-6 -mt-10 relative overflow-y-auto flex-1 bg-white dark:bg-[#1E293B] rounded-t-[2.5rem]">
+        <div className="p-6 -mt-10 relative overflow-y-auto flex-1 bg-white dark:bg-velocity-surface rounded-t-[2.5rem]">
           <div className="flex items-end gap-4 mb-4">
-            <div className="w-20 h-20 rounded-2xl border-4 border-white dark:border-[#393E46] bg-white dark:bg-[#393E46] shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0 transition-transform hover:scale-105">
+            <div className="w-20 h-20 rounded-2xl border-4 border-white dark:border-[#393E46] bg-white dark:bg-velocity-surface shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0 transition-transform hover:scale-105">
               <LocationIconOrange size={40} />
             </div>
             <div className="flex-1 min-w-0 pb-1">
@@ -199,7 +199,7 @@ function NegocioModal({
             </div>
 
             <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center bg-white dark:bg-[#393E46] rounded-2xl p-1 shadow-sm border border-slate-100 dark:border-white/5">
+              <div className="flex items-center bg-white dark:bg-velocity-surface rounded-2xl p-1 shadow-sm border border-slate-100 dark:border-white/5">
                 <button type="button" onClick={() => setCantidad((q) => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-all">−</button>
                 <span className="w-8 text-center font-bold text-slate-900 dark:text-white">{cantidad}</span>
                 <button type="button" onClick={() => setCantidad((q) => q + 1)} className="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-all">+</button>
@@ -293,7 +293,7 @@ export default function ServiciosPage() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col md:flex-row md:max-w-none">
       {/* Columna izquierda: panel de control (dashboard) */}
-      <div className="md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:bg-[#222831] p-4 md:p-5">
+      <div className="md:w-[340px] md:flex-shrink-0 md:border-r md:border-slate-200 dark:border-white/5 md:bg-slate-50/50 dark:bg-velocity-bg p-4 md:p-5">
         <h1 className="text-xl md:text-lg font-bold text-slate-800 dark:text-white mb-1">Servicios</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 md:mb-5">Servicios premium y tienda. Pago con billetera VeloCity.</p>
         <h2 className="text-base font-bold mb-3 text-slate-700 dark:text-slate-300">
@@ -303,7 +303,7 @@ export default function ServiciosPage() {
           <button
             type="button"
             onClick={() => setPanelVista("tienda")}
-            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
+            className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === "tienda" ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
               }`}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10">
@@ -320,7 +320,7 @@ export default function ServiciosPage() {
               key={s.id}
               type="button"
               onClick={() => setPanelVista(s.id)}
-              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
+              className={`w-full p-4 flex items-center gap-4 rounded-2xl border text-left transition ${panelVista === s.id ? "border-[#0EA5E9] bg-sky-50/80 dark:bg-[#0EA5E9]/10 shadow-sm" : "border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface hover:border-[#0EA5E9]/30 hover:bg-sky-50/50 dark:hover:bg-white/5"
                 }`}
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10">
@@ -371,7 +371,7 @@ export default function ServiciosPage() {
                   placeholder="Buscar productos..."
                   value={searchTienda}
                   onChange={(e) => { setSearchTienda(e.target.value); setPagina(1); }}
-                  className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] text-slate-800 dark:text-white text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-white/20 focus:border-slate-300 dark:focus:border-white/20 transition-colors"
+                  className="w-full pl-12 pr-5 py-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-velocity-surface text-slate-800 dark:text-white text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-white/20 focus:border-slate-300 dark:focus:border-white/20 transition-colors"
                   aria-label="Buscar en la tienda"
                 />
               </div>
@@ -423,7 +423,7 @@ export default function ServiciosPage() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {productosPagina.map((p) => (
-                      <div key={p.id} className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-6 flex gap-5 shadow-sm hover:shadow-md transition-shadow velocity-card">
+                      <div key={p.id} className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 flex gap-5 shadow-sm hover:shadow-md transition-shadow velocity-card">
                         <div className="w-20 h-20 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0 transition-colors">
                           <ShoppingBag className="w-10 h-10 text-slate-500 dark:text-slate-400" />
                         </div>
@@ -501,7 +501,7 @@ export default function ServiciosPage() {
           if (!s) return null;
           return (
             <section className="w-full max-w-3xl mx-auto">
-              <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
+              <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
                 <div className="p-6 md:p-8">
                   <div className="flex items-start gap-5 mb-5">
                     <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-slate-100 dark:bg-white/10 flex-shrink-0">
@@ -549,7 +549,7 @@ export default function ServiciosPage() {
               {/* Modal de Suscripción / Registro */}
               {showSubscription === s.id && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubscription(null)}>
-                  <div className="bg-white dark:bg-[#1E293B] rounded-2xl border border-slate-200 dark:border-white/10 p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                  <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">Suscribirse a {s.title}</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{s.pricing}</p>
 
