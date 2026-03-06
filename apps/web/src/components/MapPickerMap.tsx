@@ -1,29 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { useState, useCallback, useRef } from "react";
+import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/zonas-venezuela";
+import { env } from "../env.mjs";
 
-function LocationMarker({
-  onPosition,
-  controlledPosition,
-}: {
-  onPosition: (lat: number, lng: number) => void;
-  controlledPosition?: [number, number] | null;
-}) {
-  const [internalPosition, setInternalPosition] = useState<[number, number] | null>(DEFAULT_MAP_CENTER);
-  const position = controlledPosition ?? internalPosition;
-  useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng;
-      const next: [number, number] = [lat, lng];
-      setInternalPosition(next);
-      onPosition(lat, lng);
-    },
-  });
-  return position ? <Marker position={position} /> : null;
-}
+const MAP_CONTAINER_STYLE = { width: "100%", height: "100%" };
 
 export default function MapPickerMap({
   onPositionSelect,
@@ -34,26 +16,29 @@ export default function MapPickerMap({
   onSelect?: (lat: number, lng: number) => void;
   controlledPosition?: [number, number] | null;
 }) {
-  const [ready, setReady] = useState(false);
+  const mapRef = useRef<google.maps.Map | null>(null);
   const [selectedPoint, setSelectedPoint] = useState<[number, number] | null>(null);
 
-  // Support both prop names
   const handleSelect = onPositionSelect || onSelect;
+  const currentPosition = controlledPosition ?? selectedPoint;
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const L = require("leaflet");
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-      iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    });
-    setReady(true);
+  const apiKey = typeof process !== "undefined" ? env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "" : "";
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: apiKey || " ",
+    id: "velocity-google-map-picker",
+  });
+
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
   }, []);
 
-  const handleMapClick = (lat: number, lng: number) => {
-    setSelectedPoint([lat, lng]);
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    if (e.latLng) {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      setSelectedPoint([lat, lng]);
+      if (handleSelect) handleSelect(lat, lng);
+    }
   };
 
   const confirmSelection = () => {
@@ -62,31 +47,50 @@ export default function MapPickerMap({
     }
   };
 
-  if (!ready) return <div className="h-full w-full flex items-center justify-center bg-slate-100 dark:bg-[#222831] text-slate-500 text-sm">Cargando mapa...</div>;
+  if (loadError) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-slate-200">
+        <p className="text-slate-600 text-sm text-center px-4">Error al cargar el mapa. Verifica tu API key.</p>
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-slate-100 dark:bg-[#222831]">
+        <p className="text-slate-500 text-sm">Cargando mapa...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex-1 relative">
-        <MapContainer
-          center={DEFAULT_MAP_CENTER}
+        <GoogleMap
+          mapContainerStyle={MAP_CONTAINER_STYLE}
+          center={currentPosition ? { lat: currentPosition[0], lng: currentPosition[1] } : { lat: DEFAULT_MAP_CENTER[0], lng: DEFAULT_MAP_CENTER[1] }}
           zoom={DEFAULT_MAP_ZOOM}
-          className="h-full w-full"
-          zoomControl
+          onLoad={onLoad}
+          onClick={handleMapClick}
+          options={{
+            zoomControl: true,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+          }}
         >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <LocationMarker onPosition={handleMapClick} controlledPosition={controlledPosition ?? selectedPoint} />
-        </MapContainer>
+          {currentPosition && (
+            <Marker position={{ lat: currentPosition[0], lng: currentPosition[1] }} />
+          )}
+        </GoogleMap>
       </div>
 
       {/* Confirm button */}
-      <div className="p-4 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46]">
-        {selectedPoint ? (
+      <div className="p-4 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#393E46] z-10 relative">
+        {currentPosition ? (
           <div className="space-y-2">
             <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
-              📍 {selectedPoint[0].toFixed(4)}, {selectedPoint[1].toFixed(4)}
+              📍 {currentPosition[0].toFixed(4)}, {currentPosition[1].toFixed(4)}
             </p>
             <button
               onClick={confirmSelection}

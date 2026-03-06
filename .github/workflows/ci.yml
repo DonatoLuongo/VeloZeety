@@ -1,0 +1,49 @@
+name: VeloZeety CI/CD
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revertir y escanear repositorio
+        uses: actions/checkout@v3
+
+      - name: Utilizar Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Instalar dependencias raízes y de workspaces
+        run: npm ci
+
+      - name: Compilar librería compartida
+        run: npm run build --workspace=@velocity/shared
+      
+      - name: Ejecutar la revisión de sintaxis (Linter)
+        run: npm run lint --if-present
+        
+      - name: Construir la API (NestJS y Prisma)
+        run: |
+          cd apps/api
+          npx prisma generate
+          cd ../..
+          npm run build --workspace=api
+          
+      - name: Construir el Frontend (Next.js Web)
+        run: npm run build --workspace=web
+
+  docker:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Setup y Check GitHub Actions
+        uses: actions/checkout@v3
+      - name: Simulando Pipeline de Contenedor Docker 🐳
+        run: echo "Acá configuraremos la publicación de la imagen o despliegue en Vercel/Railway"

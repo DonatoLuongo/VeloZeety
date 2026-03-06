@@ -29,7 +29,7 @@ export class ExchangeRateService {
                 this.httpService.get('https://ve.dolarapi.com/v1/dolares/oficial')
             );
 
-            const rateValue = response.data.promedio;
+            let rateValue = response.data?.promedio;
 
             if (rateValue) {
                 // Actualizar en base de datos de forma asíncrona

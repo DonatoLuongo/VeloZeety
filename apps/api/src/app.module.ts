@@ -10,10 +10,22 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { redisStore } from "cache-manager-redis-yet";
 import { TrackingModule } from "./tracking/tracking.module";
 import { RequestsModule } from "./requests/requests.module";
+import { LoggerModule } from "nestjs-pino";
+import { ThrottlerModule } from "@nestjs/throttler";
+import { validate } from "./env.validation";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: process.env.NODE_ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
+      },
+    }),
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 100,
+    }]),
+    ConfigModule.forRoot({ isGlobal: true, validate }),
     ScheduleModule.forRoot(),
     CacheModule.registerAsync({
       isGlobal: true,

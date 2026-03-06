@@ -14,6 +14,7 @@ import {
   ArrowUpFromLine,
   Banknote,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import NfcIcon from "../../../components/NfcIcon";
 
 type Tab = "principal" | "recargar" | "enviar" | "recibir" | "retiro" | "deposito";
@@ -36,8 +37,10 @@ const DATOS_RECARGA = {
 };
 
 export default function BilleteraPage() {
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("principal");
   const [copied, setCopied] = useState<string | null>(null);
+  const [showBalance, setShowBalance] = useState(true);
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -47,74 +50,102 @@ export default function BilleteraPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-4 md:p-6">
-      <h1 className="text-2xl font-bold text-slate-800 mb-1">Billetera</h1>
-      <p className="text-slate-500 text-sm mb-6">Enviar, recibir y recargar. Usa tu tarjeta virtual con NFC en comercios.</p>
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">Finanzas Corporativas</h1>
+      <p className="text-slate-500 text-sm mb-6">Gestione su liquidez y pagos corporativos con máxima seguridad.</p>
 
       {tab === "principal" && (
         <>
-          {/* Nuevo Panel de Saldo Minimalista Multi-moneda */}
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl p-8 mb-6 border border-slate-200 dark:border-white/5 transition-colors">
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Saldo Total Estimado</p>
-            <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">$ 1,250.00</span>
+          {/* Dashboard Financiero Hero Card */}
+          <div className="bg-[#1E293B] rounded-2xl p-8 mb-6 border border-slate-700 shadow-xl transition-colors relative overflow-hidden">
+            {/* Efecto de luz sutil */}
+            <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px]" />
+
+            <div className="flex justify-between items-start mb-1 relative z-10">
+              <p className="text-slate-400 text-sm font-medium">Balance Total Replicado</p>
+              <button
+                onClick={() => setShowBalance(!showBalance)}
+                className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                aria-label="Alternar visibilidad de saldo"
+              >
+                {showBalance ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                )}
+              </button>
+            </div>
+            <div className="flex items-baseline gap-2 mb-6 relative z-10">
+              <span className="text-4xl md:text-5xl font-bold text-white tabular-nums tracking-tight">
+                {showBalance ? "$ 1,250.00" : "$ •••••••"}
+              </span>
               <span className="text-slate-400 font-medium">USD</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+              {/* Bloque USD */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-emerald-100 dark:bg-emerald-500/20 rounded-lg">
-                    <Banknote className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <div className="p-2 bg-slate-100 dark:bg-slate-700/50 rounded-lg">
+                    <div className="font-bold text-slate-700 dark:text-slate-300 text-xs">EUR</div>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">USDT / USDC</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">850.00</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Euros (EUR)</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "100.00" : "••••"}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+              {/* Bloque USDT */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg">
-                    <div className="font-bold text-blue-600 dark:text-blue-400 text-xs">VES</div>
+                  <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg">
+                    <div className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">USDT</div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Tether</p>
+                      <span className="text-[9px] font-bold text-emerald-600/70 border border-emerald-200 bg-emerald-50 px-1 rounded">TRC-20</span>
+                    </div>
+                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "850.00" : "••••"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bloque USDC */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
+                    <div className="font-bold text-blue-600 dark:text-blue-400 text-xs">USDC</div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">USD Coin</p>
+                      <span className="text-[9px] font-bold text-blue-600/70 border border-blue-200 bg-blue-50 px-1 rounded">ERC-20</span>
+                    </div>
+                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "300.00" : "••••"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bloque VES */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-[#2A3648] dark:border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-red-50 dark:bg-red-500/10 rounded-lg">
+                    <div className="font-bold text-red-600 dark:text-red-400 text-xs">VES</div>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Bolívares</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">14,350.50</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-amber-100 dark:bg-amber-500/20 rounded-lg">
-                    <div className="font-bold text-amber-600 dark:text-amber-400 text-xs">EUR</div>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Euros</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">120.00</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-100 dark:bg-white/10 rounded-lg">
-                    <div className="font-bold text-slate-600 dark:text-slate-300 text-xs">USD</div>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Efectivo / Otros</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">40.00</p>
+                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "0.00" : "••••"}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <button
-              onClick={() => window.location.href = "/app/perfil"}
-              className="mt-6 w-full py-3 px-4 rounded-xl border border-dashed border-slate-300 dark:border-white/20 text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+              onClick={() => router.push("/app/perfil/metodos-pago")}
+              className="mt-6 w-full py-3 px-4 rounded-xl border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
             >
-              + Gestionar métodos de pago
+              + Gestionar métodos de cobro corporativos
             </button>
           </div>
 
@@ -282,16 +313,10 @@ export default function BilleteraPage() {
       )}
 
       {tab === "recibir" && (
-        <>
-          <button type="button" onClick={() => setTab("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors">
-            ← Volver
-          </button>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 tracking-tight">Recibir Pagos</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Muestra tu código QR para cobrar o recibir transferencias.</p>
-
-          <div className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/5 p-8 text-center transition-colors shadow-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setTab("principal")}>
+          <div className="bg-white dark:bg-[#1E293B] rounded-2xl border border-slate-200 dark:border-white/10 p-8 max-w-sm w-full text-center shadow-2xl animate-fade-in" onClick={(e) => e.stopPropagation()}>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">Tu Código de Pago QR</p>
-            <div className="inline-block p-4 bg-white rounded-2xl border-2 border-slate-100 dark:border-white/5 mb-5 shadow-inner">
+            <div className="inline-block p-4 bg-white rounded-2xl border-2 border-slate-100 dark:border-white/10 mb-5 shadow-inner">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("@velocity_xxxx")}&format=svg`}
                 alt="Código QR de tu ID"
@@ -304,8 +329,11 @@ export default function BilleteraPage() {
               <Copy className="w-4 h-4" />
               Copiar ID para compartir
             </button>
+            <button type="button" onClick={() => setTab("principal")} className="mt-6 w-full py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition">
+              Cerrar
+            </button>
           </div>
-        </>
+        </div>
       )}
 
       <div className="mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 transition-colors">

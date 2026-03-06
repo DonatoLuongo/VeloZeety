@@ -25,7 +25,6 @@ import {
   Briefcase,
   Dog,
   Boxes,
-  ShieldAlert,
 } from "lucide-react";
 import AppMap from "@/components/AppMap";
 import MapPickerModal from "@/components/MapPickerModal";
@@ -175,10 +174,7 @@ export default function AppInicioPage() {
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Todos los conductores han sido verificados</p>
             </div>
 
-            <div className="rounded-xl py-2.5 px-3 flex items-center gap-2 text-sm font-medium text-slate-800 dark:text-slate-200 border border-amber-200 dark:border-amber-900/50 bg-amber-50/80 dark:bg-amber-900/20 animate-slide-up-soft animation-delay-300">
-              <Wallet className="w-4 h-4 text-amber-600 dark:text-amber-500" />
-              Paga con VELO y acumula beneficios en cada viaje y envío
-            </div>
+
 
             {/* ¿Qué necesitas hoy? — Viajes y Envíos (Mandaito) */}
             <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-400">
@@ -200,25 +196,6 @@ export default function AppInicioPage() {
                     Enviar paquete <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </Link>
-              </div>
-            </section>
-
-            {/* Servicios Premium (Emergencias) */}
-            <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-500">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">Servicios Premium</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <Link href="/app/emergencia" className="rounded-xl border-2 border-red-100 dark:border-red-900/40 p-3 bg-red-50/50 dark:bg-red-950/20 hover:border-red-300 dark:hover:border-red-800/60 hover:shadow-md transition velocity-card flex flex-col justify-between">
-                  <div>
-                    <p className="font-semibold text-red-700 dark:text-red-400 text-sm mb-1 flex items-center gap-1.5">
-                      <ShieldAlert className="w-4 h-4" /> Emergencias
-                    </p>
-                    <p className="text-xs text-red-600/80 dark:text-red-300/80">Ambulancias y asistencia</p>
-                  </div>
-                  <span className="text-xs font-medium mt-2 flex items-center gap-0.5 text-red-600 dark:text-red-400">
-                    Solicitar <ChevronRight className="w-3.5 h-3.5" />
-                  </span>
-                </Link>
-                {/* Espacio para más servicios en el futuro, o solo Emergencias */}
               </div>
             </section>
 
@@ -545,7 +522,7 @@ export default function AppInicioPage() {
               <button
                 type="button"
                 onClick={() => setTripMode("now")}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "now" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800" : "border-slate-200 text-slate-700"
+                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "now" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-white" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                   }`}
               >
                 <Zap className="w-4 h-4" />

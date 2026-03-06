@@ -31,7 +31,7 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
           setSelected(new Set(parsed.map((i) => i.product.id)));
         }
       }
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   const updateQty = (productId: string, delta: number) => {
@@ -66,22 +66,22 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
             ← Volver
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Carritos guardados</h1>
-            <p className="text-sm text-slate-500">Tienda VeloCity · Elige cantidades y paga con tu wallet</p>
+            <h1 className="text-xl font-bold text-slate-800 dark:text-white">Carritos guardados</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Tienda VeloCity · Elige productos y paga sin recargas</p>
           </div>
         </div>
       )}
       {items.length === 0 ? (
-        <div className="bg-slate-50 rounded-2xl border border-slate-200 p-8 text-center">
-          <ShoppingCart className="w-14 h-14 text-slate-400 mx-auto mb-4" />
-          <p className="font-semibold text-slate-700 text-lg">No tienes carritos guardados</p>
-          <p className="text-slate-500 mt-1">Añade productos desde la tienda de accesorios.</p>
+        <div className="bg-slate-50 dark:bg-white/5 rounded-[2.5rem] border border-slate-200 dark:border-white/10 p-12 text-center transition-colors">
+          <ShoppingCart className="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-5" />
+          <p className="font-bold text-slate-700 dark:text-white text-xl">Tu carrito está vacío</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-[240px] mx-auto">Explora nuestra tienda de accesorios y guarda tus favoritos aquí.</p>
           <Link
             href="/app/servicios"
-            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-medium"
+            className="mt-8 inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl text-white text-sm font-black shadow-lg shadow-velocity-primary/20 transition-all active:scale-95 hover:brightness-110"
             style={{ backgroundColor: BRAND.colors.primary }}
           >
-            Ir a la tienda →
+            Explorar Tienda <ShoppingCart className="w-4 h-4" />
           </Link>
         </div>
       ) : (
@@ -90,21 +90,20 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
             {items.map((it) => (
               <div
                 key={it.product.id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4 shadow-sm"
+                className="bg-white dark:bg-[#393E46] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center gap-4 shadow-sm transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => toggleSelect(it.product.id)}
-                  className={`w-6 h-6 rounded border-2 flex-shrink-0 flex items-center justify-center ${
-                    selected.has(it.product.id) ? "border-emerald-600 bg-emerald-600" : "border-slate-300"
-                  }`}
+                  className={`w-6 h-6 rounded-lg border-2 flex-shrink-0 flex items-center justify-center transition-all ${selected.has(it.product.id) ? "border-emerald-600 bg-emerald-600 shadow-md shadow-emerald-500/20" : "border-slate-300 dark:border-slate-700 bg-transparent"
+                    }`}
                   aria-label={selected.has(it.product.id) ? "Quitar de la compra" : "Incluir en la compra"}
                 >
-                  {selected.has(it.product.id) && <span className="text-white text-xs">✓</span>}
+                  {selected.has(it.product.id) && <span className="text-white text-[10px] font-black italic">✓</span>}
                 </button>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800 text-base">{it.product.name}</p>
-                  <p className="text-slate-600 text-sm" style={{ color: BRAND.colors.primary }}>
+                  <p className="font-bold text-slate-800 dark:text-white text-base leading-tight">{it.product.name}</p>
+                  <p className="text-xs font-bold mt-1" style={{ color: BRAND.colors.primary }}>
                     ${it.product.price.toFixed(2)} c/u
                   </p>
                 </div>
@@ -112,15 +111,15 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
                   <button
                     type="button"
                     onClick={() => updateQty(it.product.id, -1)}
-                    className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50"
+                    className="w-10 h-10 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-95"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="w-10 text-center font-semibold text-slate-800 text-base">{it.qty}</span>
+                  <span className="w-8 text-center font-black text-slate-900 dark:text-white text-base">{it.qty}</span>
                   <button
                     type="button"
                     onClick={() => updateQty(it.product.id, 1)}
-                    className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50"
+                    className="w-10 h-10 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-95"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -136,19 +135,22 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
               </div>
             ))}
           </div>
-          <div className="bg-slate-50 rounded-2xl border border-slate-200 p-5 sticky bottom-0">
-            <p className="text-base text-slate-600 mb-1">{selectedItems.length} producto(s) seleccionado(s)</p>
-            <p className="text-2xl font-bold text-slate-800">
-              Total: <span style={{ color: BRAND.colors.primary }}>${total.toFixed(2)}</span>
-            </p>
+          <div className="bg-white dark:bg-[#1E293B] rounded-[2.5rem] border-2 border-slate-100 dark:border-white/5 p-6 shadow-2xl sticky bottom-4 transition-all">
+            <div className="flex justify-between items-end mb-5">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{selectedItems.length} items seleccionados</p>
+                <p className="text-2xl font-black text-slate-900 dark:text-white">Subtotal</p>
+              </div>
+              <p className="text-3xl font-black" style={{ color: BRAND.colors.primary }}>${total.toFixed(2)}</p>
+            </div>
             <button
               type="button"
               onClick={() => router.push("/app/billetera")}
-              className="mt-4 w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 text-base"
+              className="w-full py-4.5 rounded-2xl font-black text-white flex items-center justify-center gap-3 text-base shadow-xl transition-all active:scale-[0.98] hover:brightness-110"
               style={{ backgroundColor: BRAND.colors.primary }}
             >
-              <Wallet className="w-5 h-5" />
-              Pagar con VELO (${total.toFixed(2)})
+              <Wallet className="w-6 h-6" />
+              Pagar con Billetera (${total.toFixed(2)})
             </button>
           </div>
         </>

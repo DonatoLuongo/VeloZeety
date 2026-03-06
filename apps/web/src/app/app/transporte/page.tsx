@@ -60,7 +60,7 @@ export default function TransportePage() {
         setLoading(true);
         try {
             const token = localStorage.getItem("velocity_token");
-            const res = await fetch("http://localhost:3001/requests", {
+            const res = await fetch("http://localhost:3001/api/v1/requests", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({
