@@ -31,6 +31,8 @@ import {
 import AppMap from "@/components/AppMap";
 import MapPickerModal from "@/components/MapPickerModal";
 import BcvWidget from "@/components/BcvWidget";
+import { t } from "@/lib/i18n";
+import { useLang } from "@/context/LanguageContext";
 import { ZONAS_VELOCITY } from "@/lib/zonas-venezuela";
 
 const NEGOCIOS_VERIFICADOS = [
@@ -87,6 +89,9 @@ type TripMode = "now" | "reserve";
 type PaymentMethod = "efectivo" | "pago_movil" | "wallet";
 
 export default function AppInicioPage() {
+  const { lang } = useLang();
+
+  // Estados
   const [vehicle, setVehicle] = useState<VehicleType>("moto");
   const [pickupType, setPickupType] = useState<"parada" | "ubicacion" | "direccion">("parada");
   const [pickupValue, setPickupValue] = useState("");
@@ -105,7 +110,20 @@ export default function AppInicioPage() {
   const [showMapPicker, setShowMapPicker] = useState(false);
   const [mapPickerFor, setMapPickerFor] = useState<"pickup" | "dropoff" | null>(null);
   const [carrito, setCarrito] = useState<{ nombre: string; precio: string; cantidad: number }[]>([]);
-  const [cantidades, setCantidades] = useState<Record<string, number>>({});
+
+  const updateCartItem = (p: { nombre: string; precio: string }, delta: number) => {
+    setCarrito((prev) => {
+      const existing = prev.find((item) => item.nombre === p.nombre);
+      if (existing) {
+        const newQty = existing.cantidad + delta;
+        if (newQty <= 0) return prev.filter((item) => item.nombre !== p.nombre);
+        return prev.map((item) => (item.nombre === p.nombre ? { ...item, cantidad: newQty } : item));
+      } else if (delta > 0) {
+        return [...prev, { nombre: p.nombre, precio: p.precio, cantidad: delta }];
+      }
+      return prev;
+    });
+  };
 
   return (
     <div className="min-h-full flex flex-col md:flex-row">
@@ -117,7 +135,7 @@ export default function AppInicioPage() {
             <LocationIconOrange size={40} />
             <div>
               <p className="font-semibold text-slate-800">{BRAND.name}</p>
-              <p className="text-xs text-slate-500">Tu viaje, tu ciudad</p>
+              <p className="text-xs text-slate-500">{t(lang, "footer_copy")}</p>
             </div>
           </div>
         </div>
@@ -128,8 +146,8 @@ export default function AppInicioPage() {
         {step === "select" && (
           <>
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft">
-              <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">Inicio</h1>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">Tu panel principal</span>
+              <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">{t(lang, "home_title")}</h1>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">{t(lang, "home_subtitle")}</span>
             </div>
             <div className="animate-slide-up-soft animation-delay-100">
               <BcvWidget />
@@ -138,10 +156,10 @@ export default function AppInicioPage() {
             <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-200">
               <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-2">
                 <Building2 className="w-4 h-4" />
-                Negocios verificados
+                {t(lang, "home_verified_biz")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Compra y paga con tu billetera. El pago va al emprendedor.</p>
-              <p className="text-[10px] text-amber-700/80 dark:text-amber-500 mb-2 flex items-center gap-1 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1 border border-amber-100 dark:border-amber-900/30">Tasa BCV de referencia para tus pagos.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">{t(lang, "home_verified_biz_desc")}</p>
+              <p className="text-[10px] text-amber-700/80 dark:text-amber-500 mb-2 flex items-center gap-1 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1 border border-amber-100 dark:border-amber-900/30">{t(lang, "home_bcv_ref")}</p>
               <div className="space-y-3 max-h-[280px] overflow-y-auto overflow-x-hidden velocity-no-scrollbar">
                 {NEGOCIOS_VERIFICADOS.map((neg) => (
                   <div key={neg.id} className="rounded-xl border border-slate-200 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-800 hover:border-[#0EA5E9]/30 transition velocity-card">
@@ -175,36 +193,36 @@ export default function AppInicioPage() {
               <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-600">
                 <BadgeCheck className="w-4 h-4" />
               </span>
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Todos los conductores han sido verificados</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t(lang, "home_verified_drivers")}</p>
             </div>
 
 
 
             {/* ¿Qué necesitas hoy? — Viajes y Envíos (Mandaito) */}
             <section className="pb-4 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft animation-delay-400">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">¿Qué necesitas hoy?</h2>
+              <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">{t(lang, "home_what_need")}</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-xl border-2 border-slate-200 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-800/80 hover:border-[#0EA5E9]/30 transition velocity-card">
                   <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1 flex items-center gap-1.5">
-                    <Car className="w-4 h-4 text-[#0EA5E9]" /> Viajes
+                    <Car className="w-4 h-4 text-[#0EA5E9]" /> {t(lang, "home_rides")}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Viaja rápido y seguro</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-500 mt-2">Usa el formulario de abajo ↓</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{t(lang, "home_rides_desc")}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-500 mt-2">{t(lang, "home_rides_hint")}</p>
                 </div>
                 <Link href="/app/envios" className="rounded-xl border-2 border-slate-200 dark:border-slate-800 p-3 bg-white dark:bg-slate-900 hover:border-[#0EA5E9]/40 hover:shadow-md transition velocity-card flex flex-col">
                   <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1 flex items-center gap-1.5">
-                    <Package className="w-4 h-4" style={{ color: BRAND.colors.primary }} /> Envíos
+                    <Package className="w-4 h-4" style={{ color: BRAND.colors.primary }} /> {t(lang, "nav_shipments")}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 flex-1">Mandaito: envía un paquete</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 flex-1">{t(lang, "home_shipments_desc")}</p>
                   <span className="text-xs font-medium mt-2 flex items-center gap-0.5" style={{ color: BRAND.colors.primary }}>
-                    Enviar paquete <ChevronRight className="w-3.5 h-3.5" />
+                    {t(lang, "home_send_pkg")} <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </Link>
               </div>
             </section>
 
             {negocioSeleccionado && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto velocity-no-scrollbar" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }}>
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto velocity-no-scrollbar" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); }}>
                 <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-sm w-full overflow-hidden border border-slate-200 dark:border-slate-800 my-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
                   {/* Portada */}
                   <div className="h-28 bg-gradient-to-br from-[#0EA5E9]/30 to-slate-100 flex items-center justify-center">
@@ -259,58 +277,69 @@ export default function AppInicioPage() {
                         </p>
                       )}
                     </div>
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">Catálogo — Selecciona cantidad y añade al carrito</p>
-                    <ul className="space-y-2 mb-4 max-h-44 overflow-y-auto">
-                      {negocioSeleccionado.productos.map((p, i) => {
-                        const key = `${negocioSeleccionado.id}-${p.nombre}`;
-                        const q = cantidades[key] ?? 1;
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">{t(lang, "biz_catalog")}</p>
+                    <ul className="space-y-2 mb-4 max-h-44 overflow-y-auto velocity-no-scrollbar">
+                      {negocioSeleccionado.productos.map((p: any, i: number) => {
+                        const cartItem = carrito.find((item) => item.nombre === p.nombre);
+                        const q = cartItem ? cartItem.cantidad : 0;
                         return (
-                          <li key={i} className="py-2 px-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-sm flex flex-wrap items-center gap-2">
+                          <li key={i} className="py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-sm flex justify-between items-center gap-2 group hover:border-[#0EA5E9]/30 transition-colors">
                             <div className="flex-1 min-w-0">
-                              <span className="font-medium text-slate-800 dark:text-slate-100">{p.nombre}</span>
-                              <span className="ml-1 font-semibold" style={{ color: BRAND.colors.primary }}>${p.precio}</span>
+                              <span className="font-semibold text-slate-800 dark:text-slate-100 block truncate">{p.nombre}</span>
+                              <span className="font-extrabold" style={{ color: BRAND.colors.primary }}>${p.precio}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: Math.max(1, (c[key] ?? 1) - 1) }))} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">−</button>
-                              <span className="w-8 text-center font-medium text-slate-800 dark:text-slate-100">{q}</span>
-                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: (c[key] ?? 1) + 1 }))} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">+</button>
-                              <button type="button" onClick={() => setCarrito((prev) => [...prev, { nombre: p.nombre, precio: p.precio, cantidad: q }])} className="ml-1 px-2 py-1 rounded-lg text-xs font-medium text-white shadow-sm" style={{ backgroundColor: BRAND.colors.primary }}>Añadir</button>
+                            <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 rounded-lg p-1 border border-slate-200 dark:border-slate-700 shadow-sm">
+                              {q > 0 ? (
+                                <>
+                                  <button type="button" onClick={() => updateCartItem(p, -1)} className="w-8 h-8 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center">−</button>
+                                  <span className="w-6 text-center font-bold text-slate-800 dark:text-slate-100">{q}</span>
+                                  <button type="button" onClick={() => updateCartItem(p, 1)} className="w-8 h-8 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center">+</button>
+                                </>
+                              ) : (
+                                <button type="button" onClick={() => updateCartItem(p, 1)} className="px-4 py-1.5 h-8 rounded-md text-xs font-bold text-white shadow-sm flex items-center gap-1.5 hover:brightness-110 transition-all active:scale-95" style={{ backgroundColor: BRAND.colors.primary }}>
+                                  {t(lang, "biz_add")}
+                                </button>
+                              )}
                             </div>
                           </li>
                         );
                       })}
                     </ul>
                     {carrito.length > 0 && (
-                      <div className="mb-4 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1"><ShoppingBag className="w-4 h-4" /> Tu carrito ({carrito.length} {carrito.length === 1 ? "ítem" : "ítems"})</p>
-                        <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-300 mb-2 max-h-24 overflow-y-auto">
+                      <div className="mb-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-3 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5"><ShoppingBag className="w-4 h-4 text-[#0EA5E9]" /> {t(lang, "biz_cart")}</span>
+                          <span className="text-xs bg-[#0EA5E9]/10 text-[#0EA5E9] px-2 py-0.5 rounded-full">{carrito.length} {carrito.length === 1 ? t(lang, "biz_item") : t(lang, "biz_items")}</span>
+                        </p>
+                        <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300 mb-3 max-h-32 overflow-y-auto velocity-no-scrollbar pr-1">
                           {carrito.map((item, i) => (
-                            <li key={i} className="flex justify-between">
-                              <span>{item.nombre} × {item.cantidad}</span>
-                              <span className="font-medium text-slate-800 dark:text-slate-100">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}</span>
+                            <li key={i} className="flex justify-between items-center group">
+                              <span className="truncate pr-2 font-medium">{item.cantidad}x {item.nombre}</span>
+                              <span className="font-bold text-slate-800 dark:text-slate-100 flex-shrink-0">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}</span>
                             </li>
                           ))}
                         </ul>
-                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 flex justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700">
-                          Total <span style={{ color: BRAND.colors.primary }}>${carrito.reduce((sum, i) => sum + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)}</span>
-                        </p>
-                        <button type="button" onClick={() => setCarrito([])} className="mt-3 w-full py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition">Vaciar carrito</button>
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50">
+                          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{t(lang, "biz_total")}</span>
+                          <span className="text-xl font-black text-[#0EA5E9]">${carrito.reduce((sum, i) => sum + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)}</span>
+                        </div>
+                        <button type="button" onClick={() => setCarrito([])} className="mt-4 w-full py-2 rounded-xl text-xs font-bold text-red-500 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors uppercase tracking-widest">{t(lang, "biz_empty_cart")}</button>
                       </div>
                     )}
-                    <button type="button" className="w-full py-2.5 rounded-xl font-medium text-white text-sm flex items-center justify-center gap-2" style={{ backgroundColor: BRAND.colors.primary }} disabled={carrito.length === 0}>
-                      <Wallet className="w-4 h-4" />
-                      {carrito.length > 0 ? `Pagar con VELO ($${carrito.reduce((s, i) => s + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)})` : "Pagar con VELO"}
+                    <button type="button" className="w-full py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/30 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none" style={{ backgroundColor: BRAND.colors.primary }} disabled={carrito.length === 0}>
+                      <Wallet className="w-5 h-5" />
+                      {carrito.length > 0 ? `${t(lang, "biz_pay_velo")} ($${carrito.reduce((s, i) => s + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)})` : t(lang, "biz_cart_empty")}
                     </button>
-                    <button type="button" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }} className="mt-2 w-full py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 dark:bg-slate-800 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition">
-                      Cerrar
+                    <button type="button" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); }} className="mt-3 w-full py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all active:scale-[0.98]">
+                      {t(lang, "biz_close")}
                     </button>
                   </div>
                 </div>
               </div>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-2">Pedir viaje</h2>
-            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">¿Dónde te recogemos?</h3>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-2">{t(lang, "ride_req_title")}</h2>
+            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">{t(lang, "ride_where_pickup")}</h3>
             <div className="flex gap-2 flex-wrap">
               <button
                 type="button"
@@ -318,7 +347,7 @@ export default function AppInicioPage() {
                 className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "parada" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                   }`}
               >
-                Paradas
+                {t(lang, "ride_stops")}
               </button>
               <button
                 type="button"
@@ -327,7 +356,7 @@ export default function AppInicioPage() {
                   }`}
               >
                 <Navigation className="w-4 h-4" />
-                Mi ubicación
+                {t(lang, "ride_my_loc")}
               </button>
               <button
                 type="button"
@@ -335,7 +364,7 @@ export default function AppInicioPage() {
                 className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "direccion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                   }`}
               >
-                Dirección
+                {t(lang, "ride_address")}
               </button>
             </div>
             {pickupType === "parada" && (
@@ -421,9 +450,9 @@ export default function AppInicioPage() {
                   placeholder="Escribe la dirección de recogida"
                   value={pickupValue}
                   onChange={(e) => setPickupValue(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-500 text-sm"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition-all shadow-sm"
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 mb-1">Zonas donde operamos:</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 mb-1.5">{t(lang, "ride_zones")}</p>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {ZONAS_VELOCITY.slice(0, 6).map((z) => (
                     <button
@@ -442,7 +471,7 @@ export default function AppInicioPage() {
                   className="w-full py-2 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5"
                 >
                   <MapPin className="w-4 h-4" />
-                  Señalar ubicación en el mapa
+                  {t(lang, "ride_map_pin")}
                 </button>
               </div>
             )}
@@ -453,9 +482,9 @@ export default function AppInicioPage() {
                 placeholder="¿A dónde vas?"
                 value={dropoff}
                 onChange={(e) => setDropoff(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-500 text-sm"
+                className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition-all shadow-sm"
               />
-              <div className="flex flex-wrap gap-1.5 mt-2">
+              <div className="flex flex-wrap gap-1.5 mt-3">
                 {ZONAS_VELOCITY.slice(0, 5).map((z) => (
                   <button
                     key={z.id}
@@ -476,14 +505,14 @@ export default function AppInicioPage() {
               </div>
             </div>
 
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">Tipo de vehículo</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Elige según pasajeros y equipaje. Solo negocios verificados.</p>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_vehicle_type")}</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">{t(lang, "ride_vehicle_desc")}</p>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { id: "moto" as const, Icon: Bike, label: "Moto", personas: "1", equipaje: "Ligero", extra: null },
-                { id: "carro" as const, Icon: Car, label: "Carro", personas: "3", equipaje: "Moderado", extra: null },
-                { id: "4x4" as const, Icon: Truck, label: "4x4", personas: "4", equipaje: "Amplio", extra: "Mascota permitida" },
-                { id: "flete" as const, Icon: Boxes, label: "Flete", personas: "—", equipaje: "Cargas grandes", extra: "NPR" },
+                { id: "moto" as const, Icon: Bike, label: t(lang, "ride_v_moto"), personas: t(lang, "ride_v_moto_pass"), equipaje: t(lang, "ride_v_moto_lug"), extra: null },
+                { id: "carro" as const, Icon: Car, label: t(lang, "ride_v_carro"), personas: t(lang, "ride_v_carro_pass"), equipaje: t(lang, "ride_v_carro_lug"), extra: null },
+                { id: "4x4" as const, Icon: Truck, label: t(lang, "ride_v_4x4"), personas: t(lang, "ride_v_4x4_pass"), equipaje: t(lang, "ride_v_4x4_lug"), extra: t(lang, "ride_v_4x4_extra") },
+                { id: "flete" as const, Icon: Boxes, label: t(lang, "ride_v_flete"), personas: t(lang, "ride_v_flete_pass"), equipaje: t(lang, "ride_v_flete_lug"), extra: t(lang, "ride_v_flete_extra") },
               ].map(({ id, Icon, label, personas, equipaje, extra }) => (
                 <button
                   key={id}
@@ -517,11 +546,11 @@ export default function AppInicioPage() {
             </div>
             {vehicle === "flete" && (
               <p className="text-xs text-slate-500 dark:text-slate-400 rounded-lg bg-slate-50 dark:bg-slate-800 p-2 border border-slate-100 dark:border-slate-700 mt-2">
-                Ideal para mudanza, viajes largos o cargar algo grande. Vehículos tipo NPR disponibles.
+                {t(lang, "ride_flete_desc")}
               </p>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">¿Cuándo?</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_when")}</h2>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
@@ -530,7 +559,7 @@ export default function AppInicioPage() {
                   }`}
               >
                 <Zap className="w-4 h-4" />
-                Viajar ahora
+                {t(lang, "ride_now")}
               </button>
               <button
                 type="button"
@@ -539,16 +568,16 @@ export default function AppInicioPage() {
                   }`}
               >
                 <Calendar className="w-4 h-4" />
-                Reservar
+                {t(lang, "ride_reserve")}
               </button>
             </div>
             {tripMode === "reserve" && (
               <div className="rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 space-y-4 overflow-hidden mt-2">
-                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200">Fecha</label>
+                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200">{t(lang, "ride_date")}</label>
                 <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 capitalize">
-                      {new Date(calendarYear, calendarMonth).toLocaleDateString("es", { month: "long", year: "numeric" })}
+                      {new Date(calendarYear, calendarMonth).toLocaleDateString(lang, { month: "long", year: "numeric" })}
                     </span>
                     <div className="flex gap-1">
                       <button
@@ -575,12 +604,13 @@ export default function AppInicioPage() {
                         className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
                         aria-label="Mes siguiente"
                       >
-                        ›
                       </button>
                     </div>
                   </div>
                   <div className="grid grid-cols-7 gap-0.5 text-center text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
-                    {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
+                    {lang === "es" ? ["L", "M", "X", "J", "V", "S", "D"].map((d) => (
+                      <span key={d}>{d}</span>
+                    )) : ["M", "T", "W", "T", "F", "S", "S"].map((d) => (
                       <span key={d}>{d}</span>
                     ))}
                   </div>
@@ -616,13 +646,13 @@ export default function AppInicioPage() {
                     })()}
                   </div>
                 </div>
-                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mt-3 mb-1">Hora</label>
+                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mt-3 mb-1">{t(lang, "ride_time")}</label>
                 <select
                   value={reserveTime}
                   onChange={(e) => setReserveTime(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-medium text-sm"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all shadow-sm appearance-none"
                 >
-                  <option value="">Selecciona hora</option>
+                  <option value="">{t(lang, "ride_select_time")}</option>
                   {Array.from({ length: 24 * 2 }, (_, i) => {
                     const h = Math.floor(i / 2);
                     const m = (i % 2) * 30;
@@ -637,12 +667,12 @@ export default function AppInicioPage() {
               </div>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">Método de pago</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_payment")}</h2>
             <div className="space-y-2 mb-2">
               {[
-                { id: "efectivo" as const, label: "Efectivo", Icon: Banknote },
-                { id: "pago_movil" as const, label: "Pago móvil", Icon: Smartphone },
-                { id: "wallet" as const, label: "Descontar de mi billetera", Icon: Wallet },
+                { id: "efectivo" as const, label: t(lang, "ride_pay_cash"), Icon: Banknote },
+                { id: "pago_movil" as const, label: t(lang, "ride_pay_pm"), Icon: Smartphone },
+                { id: "wallet" as const, label: t(lang, "ride_pay_wallet"), Icon: Wallet },
               ].map(({ id, label, Icon }) => (
                 <button
                   key={id}
@@ -660,13 +690,14 @@ export default function AppInicioPage() {
             <button
               type="button"
               onClick={() => setStep("confirm")}
-              className="w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition hover:opacity-95"
+              disabled={!pickupValue.trim() || !dropoff.trim() || (tripMode === "reserve" && (!reserveDate || !reserveTime))}
+              className="w-full py-4 rounded-[18px] font-bold text-white text-[15px] flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none disabled:active:scale-100 disabled:cursor-not-allowed"
               style={{ backgroundColor: BRAND.colors.primary }}
             >
-              Solicitar viaje
+              {t(lang, "ride_req_btn")}
             </button>
             <p className="text-xs text-slate-500 text-center">
-              Al solicitar aceptas nuestros términos. Cobro según método elegido.
+              {t(lang, "ride_terms")}
             </p>
           </>
         )}

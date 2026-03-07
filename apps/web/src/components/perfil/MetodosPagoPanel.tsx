@@ -67,34 +67,34 @@ export default function MetodosPagoPanel({ embedInDashboard }: MetodosPagoPanelP
                     {m.id === "pago-movil" && (
                       <>
                         <div>
-                          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Banco</label>
-                          <select className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-white/20 bg-white dark:bg-velocity-bg text-sm text-slate-800 dark:text-slate-100">
-                            <option value="">Selecciona un banco</option>
-                            <option value="0102">Banco de Venezuela (0102)</option>
-                            <option value="0104">Venezolano de Crédito (0104)</option>
-                            <option value="0105">Mercantil (0105)</option>
-                            <option value="0108">Provincial (0108)</option>
-                            <option value="0134">Banesco (0134)</option>
-                            <option value="0191">BNC (0191)</option>
-                            <option value="0156">100% Banco (0156)</option>
-                            <option value="0114">Bancaribe (0114)</option>
-                            <option value="0172">Bancamiga (0172)</option>
+                          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Banco</label>
+                          <select className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-sm text-slate-800 dark:text-white outline-none focus:border-[#F46E20] appearance-none cursor-pointer">
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="">Selecciona un banco</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0102">Banco de Venezuela (0102)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0104">Venezolano de Crédito (0104)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0105">Mercantil (0105)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0108">Provincial (0108)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0134">Banesco (0134)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0191">BNC (0191)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0156">100% Banco (0156)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0114">Bancaribe (0114)</option>
+                            <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="0172">Bancamiga (0172)</option>
                           </select>
                         </div>
                         <div>
                           <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Teléfono</label>
-                          <input type="tel" placeholder="04141234567" className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-white/20 bg-white dark:bg-velocity-bg text-sm text-slate-800 dark:text-slate-100" />
+                          <input type="tel" placeholder="04141234567" className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-sm text-slate-800 dark:text-white outline-none focus:border-[#F46E20]" />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Cédula o RIF</label>
                           <div className="flex gap-2">
-                            <select className="px-3 py-2 rounded-lg border border-slate-300 dark:border-white/20 bg-white dark:bg-velocity-bg text-sm text-slate-800 dark:text-slate-100">
-                              <option value="V">V</option>
-                              <option value="E">E</option>
-                              <option value="J">J</option>
-                              <option value="P">P</option>
+                            <select className="px-3 py-2 rounded-lg border border-slate-300 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-sm text-slate-800 dark:text-white outline-none focus:border-[#F46E20]">
+                              <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="V">V</option>
+                              <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="E">E</option>
+                              <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="J">J</option>
+                              <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="P">P</option>
                             </select>
-                            <input type="text" placeholder="12345678" className="flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-white/20 bg-white dark:bg-velocity-bg text-sm text-slate-800 dark:text-slate-100" />
+                            <input type="text" placeholder="12345678" className="flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-sm text-slate-800 dark:text-white outline-none focus:border-[#F46E20]" />
                           </div>
                         </div>
                       </>

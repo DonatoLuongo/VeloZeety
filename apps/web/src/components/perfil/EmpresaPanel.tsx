@@ -61,15 +61,42 @@ export default function EmpresaPanel({ embedInDashboard }: EmpresaPanelProps) {
                             <input type="text" value={rif} onChange={(e) => setRif(e.target.value)} placeholder="J-12345678-9" className={INPUT} />
                         </div>
                         <div>
-                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">URL del Logo (Opcional)</label>
-                            <div className="relative">
-                                <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <input type="url" value={logo} onChange={(e) => setLogo(e.target.value)} placeholder="https://..." className={INPUT + " pl-10"} />
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 flex justify-between">
+                                <span>URL del Logo</span>
+                                <span className="text-slate-400 font-normal">Tamaño rec. 256x256</span>
+                            </label>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                        <input type="url" value={logo} onChange={(e) => setLogo(e.target.value)} placeholder="https://ejemplo.com/logo.png" className={INPUT + " pl-10"} />
+                                    </div>
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5">Pega el link de la imagen o sube un archivo (próximamente).</p>
+                                </div>
+                                <div className="w-16 h-16 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-800/50 shrink-0">
+                                    {logo ? (
+                                        <img src={logo} alt="Logo" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = "")} />
+                                    ) : (
+                                        <ImageIcon className="w-5 h-5 text-slate-300 dark:text-slate-600" />
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">URL del Banner/Portada (Opcional)</label>
-                            <input type="url" value={banner} onChange={(e) => setBanner(e.target.value)} placeholder="https://..." className={INPUT} />
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 flex justify-between">
+                                <span>URL del Banner/Portada</span>
+                                <span className="text-slate-400 font-normal">Tamaño rec. 1200x400</span>
+                            </label>
+                            <input type="url" value={banner} onChange={(e) => setBanner(e.target.value)} placeholder="https://ejemplo.com/banner.png" className={INPUT} />
+                            {banner ? (
+                                <div className="mt-3 w-full h-32 md:h-40 rounded-xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden shadow-inner">
+                                    <img src={banner} alt="Banner preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = "")} />
+                                </div>
+                            ) : (
+                                <div className="mt-3 w-full h-32 md:h-40 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50">
+                                    <p className="text-xs font-medium text-slate-400 dark:text-slate-500 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Vista previa del banner</p>
+                                </div>
+                            )}
                         </div>
                         <div className="md:col-span-2">
                             <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">Descripción o Eslogan</label>

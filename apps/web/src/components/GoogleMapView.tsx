@@ -74,44 +74,30 @@ export default function GoogleMapView() {
     }
   }, []);
 
-  // WebSockets para Rastreo
+  // Motores de Simulación Estética (Evita los parpadeos por StrictMode o fallas de red)
   useEffect(() => {
-    const wsUrl = typeof process !== "undefined" ? ((process.env as any).NEXT_PUBLIC_WS_URL || "") : "";
+    let currentDrivers = [
+      { id: "d1", lat: 10.4820, lng: -66.9050, vehicleType: "moto", fullName: "Carlos M." },
+      { id: "d2", lat: 10.4780, lng: -66.9010, vehicleType: "car", fullName: "María G." },
+      { id: "d3", lat: 10.4840, lng: -66.9080, vehicleType: "camion", fullName: "José R." },
+      { id: "d4", lat: 10.4860, lng: -66.9040, vehicleType: "moto", fullName: "Andres V." },
+      { id: "d5", lat: 10.4750, lng: -66.8990, vehicleType: "car", fullName: "Luis A." },
+    ];
 
-    if (!wsUrl) {
-      setDrivers([
-        { id: "d1", lat: 10.482, lng: -66.905, vehicleType: "moto", fullName: "Carlos M." },
-        { id: "d2", lat: 10.478, lng: -66.901, vehicleType: "car", fullName: "María G." },
-        { id: "d3", lat: 10.484, lng: -66.908, vehicleType: "camion", fullName: "José R." },
-      ]);
-      return;
-    }
+    // Asignación inicial sin parpadeos
+    setDrivers(currentDrivers);
 
-    try {
-      const ws = new WebSocket(wsUrl);
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === "driver_locations") {
-            setDrivers(data.drivers);
-          }
-        } catch { }
-      };
+    // Motor fluido para movimiento en el Frontend
+    const interval = setInterval(() => {
+      currentDrivers = currentDrivers.map(d => ({
+        ...d,
+        lat: d.lat + (Math.random() - 0.5) * 0.0004, // Movimiento muy sutil en latitud
+        lng: d.lng + (Math.random() - 0.5) * 0.0004, // Movimiento muy sutil en longitud
+      }));
+      setDrivers([...currentDrivers]); // Inmutabilidad para React
+    }, 4000); // 4 Segundos asegura que la transición CSS de 0.5s culmine suavemente
 
-      ws.onerror = () => {
-        setDrivers([
-          { id: "d1", lat: 10.482, lng: -66.905, vehicleType: "moto", fullName: "Carlos M." },
-          { id: "d2", lat: 10.478, lng: -66.901, vehicleType: "car", fullName: "María G." },
-          { id: "d3", lat: 10.484, lng: -66.908, vehicleType: "camion", fullName: "José R." },
-        ]);
-      };
-      return () => ws.close();
-    } catch {
-      setDrivers([
-        { id: "d1", lat: 10.482, lng: -66.905, vehicleType: "moto" },
-        { id: "d2", lat: 10.478, lng: -66.901, vehicleType: "car" },
-      ]);
-    }
+    return () => clearInterval(interval);
   }, []);
 
   const onLoad = useCallback((map: google.maps.Map) => {

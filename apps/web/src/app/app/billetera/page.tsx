@@ -1,7 +1,7 @@
 "use client";
 
 import { BRAND } from "@velocity/shared";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Wallet,
   Send,
@@ -41,6 +41,23 @@ export default function BilleteraPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showBalance, setShowBalance] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [userName, setUserName] = useState("Usuario VELO");
+  const [userHandle, setUserHandle] = useState("@usuario_velo");
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const raw = localStorage.getItem("velocity_user");
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (data.fullName) {
+            setUserName(data.fullName);
+            setUserHandle("@" + data.fullName.toLowerCase().replace(/\s+/g, "_"));
+          }
+        }
+      }
+    } catch (_) { }
+  }, []);
 
   const handleTabChange = (newTab: Tab) => {
     setIsTransitioning(true);
@@ -55,25 +72,24 @@ export default function BilleteraPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 md:p-6">
-      <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">Finanzas Corporativas</h1>
-      <p className="text-slate-500 text-sm mb-6">Gestione su liquidez y pagos corporativos con máxima seguridad.</p>
+    <div className="max-w-2xl mx-auto p-3 md:p-6 pb-24">
+      <h1 className="text-2xl font-extrabold text-slate-800 dark:text-white mt-2 mb-1">Mi Billetera</h1>
+      <p className="text-slate-500 text-xs mb-5">Gestione sus fondos y pagos con la economía VELO.</p>
 
       {/* ─── TAB: PRINCIPAL ─── */}
       {tab === "principal" && (
         <>
           {/* Dashboard Financiero Hero Card */}
-          <div className="bg-slate-900/80 dark:bg-[#1E2329]/80 backdrop-blur-xl rounded-2xl p-8 mb-6 border border-white/20 dark:border-white/10 shadow-2xl transition-all relative overflow-hidden group hover:bg-slate-900/90 dark:hover:bg-[#1E2329]/90">
-            <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-blue-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-emerald-500/10 rounded-full blur-[60px] group-hover:bg-emerald-500/20 transition-all duration-700" />
-            {/* Grid overlay for tech feel */}
-            <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-5 dark:opacity-10 mix-blend-overlay pointer-events-none" />
+          <div className="bg-slate-900/95 dark:bg-[#15191E] backdrop-blur-2xl rounded-[32px] p-6 mb-5 border border-slate-700/50 shadow-2xl transition-all relative overflow-hidden group">
+            <div className="absolute top-[-40%] right-[-20%] w-[300px] h-[300px] bg-[#0EA5E9]/20 rounded-full blur-[80px] group-hover:bg-[#0EA5E9]/30 transition-all duration-700 pointer-events-none" />
+            <div className="absolute bottom-[-20%] left-[-20%] w-[250px] h-[250px] bg-[#F46E20]/10 rounded-full blur-[70px] group-hover:bg-[#F46E20]/20 transition-all duration-700 pointer-events-none" />
+            <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
-            <div className="flex justify-between items-start mb-1 relative z-10">
-              <p className="text-slate-300 dark:text-slate-400 text-sm font-medium">Balance Total Replicado</p>
+            <div className="flex justify-between items-start mb-2 relative z-10">
+              <p className="text-slate-400 text-xs font-bold tracking-wide uppercase">Balance Principal</p>
               <button
                 onClick={() => setShowBalance(!showBalance)}
-                className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                className="p-1.5 bg-white/5 rounded-full hover:bg-white/10 transition-colors"
                 aria-label="Alternar visibilidad de saldo"
               >
                 {showBalance ? (
@@ -84,64 +100,45 @@ export default function BilleteraPage() {
               </button>
             </div>
 
-            <div className="flex items-baseline gap-2 mb-6 relative z-10">
-              <span className="text-4xl md:text-5xl font-bold text-white tabular-nums tracking-tight">
-                {showBalance ? "$ 1,250.00" : "$ •••••••"}
+            <div className="flex items-baseline gap-1.5 mb-6 relative z-10">
+              <span className="text-4xl md:text-5xl font-extrabold text-white tabular-nums tracking-tight">
+                {showBalance ? "1,250.00" : "•••••••"}
               </span>
-              <span className="text-slate-400 font-medium">USD</span>
+              <span className="text-[#F46E20] font-bold text-lg tracking-wide uppercase">Velo</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 relative z-10">
+              {/* EUR */}
+              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-100 dark:bg-slate-700/50 rounded-lg">
-                    <div className="font-bold text-slate-700 dark:text-slate-300 text-xs">EUR</div>
-                  </div>
+                  <div className="w-8 h-8 rounded-full bg-slate-100/10 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇪🇺</div>
                   <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Euros (EUR)</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "100.00" : "••••"}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Euros</p>
+                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "€ 100.00" : "••••"}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
+              {/* USDT */}
+              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg">
-                    <div className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">USDT</div>
+                  <div className="w-8 h-8 rounded-full bg-[#26A17B]/10 flex items-center justify-center shrink-0">
+                    <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=035" alt="Tether" className="w-5 h-5 opacity-90" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Tether</p>
-                      <span className="text-[9px] font-bold text-emerald-600/70 border border-emerald-200 bg-emerald-50 px-1 rounded">TRC-20</span>
-                    </div>
-                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "850.00" : "••••"}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Tether TRC-20</p>
+                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "₮ 850.00" : "••••"}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
+              {/* VES */}
+              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
-                    <div className="font-bold text-blue-600 dark:text-blue-400 text-xs">USDC</div>
-                  </div>
+                  <div className="w-8 h-8 rounded-full bg-slate-100/10 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇻🇪</div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">USD Coin</p>
-                      <span className="text-[9px] font-bold text-blue-600/70 border border-blue-200 bg-blue-50 px-1 rounded">ERC-20</span>
-                    </div>
-                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "300.00" : "••••"}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-100 shadow-sm dark:bg-velocity-surface dark:border-white/5">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-50 dark:bg-red-500/10 rounded-lg">
-                    <div className="font-bold text-red-600 dark:text-red-400 text-xs">VES</div>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Bolívares</p>
-                    <p className="text-lg font-bold text-slate-800 dark:text-white tabular-nums">{showBalance ? "0.00" : "••••"}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Bolívar BCV</p>
+                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "Bs. 53,875.00" : "••••"}</p>
                   </div>
                 </div>
               </div>
@@ -149,41 +146,41 @@ export default function BilleteraPage() {
 
             <button
               onClick={() => router.push("/app/perfil/metodos-pago")}
-              className="mt-6 w-full py-3 px-4 rounded-xl border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+              className="mt-5 w-full py-3.5 px-4 rounded-xl bg-white/5 border border-white/10 text-white text-[13px] font-bold hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
             >
-              + Gestionar métodos de cobro corporativos
+              + Gestionar métodos de cobro
             </button>
           </div>
 
           {/* Acciones Rápidas */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <div className="grid grid-cols-4 gap-2 mb-6">
             <button
               onClick={() => handleTabChange("enviar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-velocity-primary text-white shadow-lg shadow-velocity-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="flex flex-col items-center justify-center gap-1.5 p-3.5 rounded-[22px] bg-[#F46E20] text-white shadow-lg shadow-[#F46E20]/30 hover:scale-[1.02] active:scale-[0.95] transition-all"
             >
-              <Send className="w-5 h-5" />
-              <span className="text-xs font-semibold">Enviar</span>
+              <Send className="w-5 h-5 mb-0.5" />
+              <span className="text-[11px] font-bold">Enviar</span>
             </button>
             <button
               onClick={() => handleTabChange("recibir")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
+              className="flex flex-col items-center justify-center gap-1.5 p-3.5 rounded-[22px] bg-white dark:bg-[#1E2329] border border-slate-100 dark:border-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 active:scale-[0.95] transition-all shadow-sm"
             >
-              <ArrowDownToLine className="w-5 h-5" />
-              <span className="text-xs font-semibold">Recibir</span>
+              <ArrowDownToLine className="w-5 h-5 mb-0.5 text-slate-500 dark:text-slate-400" />
+              <span className="text-[11px] font-bold">Recibir</span>
             </button>
             <button
               onClick={() => handleTabChange("recargar")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
+              className="flex flex-col items-center justify-center gap-1.5 p-3.5 rounded-[22px] bg-white dark:bg-[#1E2329] border border-slate-100 dark:border-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 active:scale-[0.95] transition-all shadow-sm"
             >
-              <ArrowUpFromLine className="w-5 h-5" />
-              <span className="text-xs font-semibold">Recargar</span>
+              <ArrowUpFromLine className="w-5 h-5 mb-0.5 text-slate-500 dark:text-slate-400" />
+              <span className="text-[11px] font-bold">Recargar</span>
             </button>
             <button
               onClick={() => handleTabChange("retiro")}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white dark:bg-velocity-surface border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all font-medium"
+              className="flex flex-col items-center justify-center gap-1.5 p-3.5 rounded-[22px] bg-white dark:bg-[#1E2329] border border-slate-100 dark:border-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 active:scale-[0.95] transition-all shadow-sm"
             >
-              <Banknote className="w-5 h-5" />
-              <span className="text-xs font-semibold">Retirar</span>
+              <Banknote className="w-5 h-5 mb-0.5 text-slate-500 dark:text-slate-400" />
+              <span className="text-[11px] font-bold">Retirar</span>
             </button>
           </div>
 
@@ -217,83 +214,83 @@ export default function BilleteraPage() {
               <div className="bg-slate-200 dark:bg-slate-700 h-48 rounded-xl w-full"></div>
             </div>
           ) : (
-            <div className="space-y-4 animate-fade-in-up">
-              <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-4 border border-slate-200 dark:border-white/5">
-                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Red de la criptomoneda</p>
+            <div className="space-y-3.5 animate-fade-in-up">
+              <div className="bg-slate-50 dark:bg-white/[0.02] rounded-[24px] p-5 border border-slate-200 dark:border-white/5">
+                <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Red de la criptomoneda</p>
                 <p className="text-sm font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.red}</p>
               </div>
 
-              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                  <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span className="font-bold text-sm text-slate-800 dark:text-white">Datos para depósito</span>
+              <div className="bg-white dark:bg-[#1E2329] rounded-[24px] border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm">
+                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2.5 bg-slate-50/50 dark:bg-white/[0.02]">
+                  <Shield className="w-4 h-4 text-[#0EA5E9]" />
+                  <span className="font-bold text-[13px] text-slate-800 dark:text-white">Datos para depósito</span>
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-5 space-y-3">
                   <div className="flex justify-between items-center group">
-                    <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Dirección wallet</span>
+                    <span className="text-[13px] text-slate-500 dark:text-slate-400 font-medium tracking-wide">Dirección wallet</span>
                     <div className="flex items-center gap-2">
-                      <code className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded">{DATOS_RECARGA.wallet_cripto}</code>
-                      <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-                        <Copy className="w-4 h-4 text-slate-400 group-hover:text-velocity-primary transition-colors" />
+                      <code className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-md">{DATOS_RECARGA.wallet_cripto}</code>
+                      <button type="button" onClick={() => copyToClipboard(DATOS_RECARGA.wallet_cripto, "wallet")} className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+                        <Copy className="w-4 h-4 text-slate-400 group-hover:text-[#F46E20] transition-colors" />
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                  <Smartphone className="w-4 h-4 text-velocity-primary" />
-                  <span className="font-bold text-sm text-slate-800 dark:text-white">Pago móvil (Venezuela)</span>
+              <div className="bg-white dark:bg-[#1E2329] rounded-[24px] border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-3.5">
+                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/[0.02]">
+                  <Smartphone className="w-4 h-4 text-[#F46E20]" />
+                  <span className="font-bold text-[13px] text-slate-800 dark:text-white">Pago móvil (Venezuela)</span>
                 </div>
-                <ul className="p-4 space-y-3 text-sm">
-                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Banco</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.banco}</span></li>
-                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.rif}</span></li>
-                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Teléfono</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.telefono}</span></li>
-                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400">Cédula</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.cedula}</span></li>
+                <ul className="p-5 space-y-3 text-[13px]">
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400 font-medium">Banco</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.banco}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400 font-medium">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.rif}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400 font-medium">Teléfono</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.telefono}</span></li>
+                  <li className="flex justify-between"><span className="text-slate-500 dark:text-slate-400 font-medium">Cédula</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.pago_movil.cedula}</span></li>
                 </ul>
               </div>
 
-              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-4">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                  <Banknote className="w-4 h-4 text-emerald-600" />
-                  <span className="font-bold text-sm text-slate-800 dark:text-white">Transferencia Bancaria</span>
+              <div className="bg-white dark:bg-[#1E2329] rounded-[24px] border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-3.5">
+                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/[0.02]">
+                  <Banknote className="w-4 h-4 text-[#26A17B]" />
+                  <span className="font-bold text-[13px] text-slate-800 dark:text-white">Transferencia Bancaria</span>
                 </div>
-                <ul className="p-4 space-y-3 text-sm">
-                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">Titular</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.titular}</span></li>
-                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">Nro. de Cuenta</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.cuenta}</span></li>
-                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.rif}</span></li>
+                <ul className="p-5 space-y-3 text-[13px]">
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400 font-medium">Titular</span><span className="font-semibold text-slate-800 dark:text-white text-right">{DATOS_RECARGA.transferencia.titular}</span></li>
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400 font-medium">Cuenta</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.cuenta}</span></li>
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400 font-medium">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.rif}</span></li>
                 </ul>
               </div>
 
-              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-4">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
-                  <CreditCard className="w-4 h-4 text-[#0EA5E9]" />
-                  <span className="font-bold text-sm text-slate-800 dark:text-white">Tarjeta Internacional (BDV, Mercantil, Banesco)</span>
+              <div className="bg-white dark:bg-[#1E2329] rounded-[24px] border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-3.5">
+                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/[0.02]">
+                  <CreditCard className="w-4 h-4 text-blue-500" />
+                  <span className="font-bold text-[13px] text-slate-800 dark:text-white">Tarjeta Internacional</span>
                 </div>
-                <div className="p-4 space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-5 space-y-3.5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                     <div className="md:col-span-2">
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Nombre del Titular</label>
-                      <input type="text" placeholder="Como aparece en la tarjeta" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Titular de Tarjeta</label>
+                      <input type="text" placeholder="Como aparece en la tarjeta" className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-[13px] focus:ring-2 focus:ring-[#0EA5E9]/20 transition-all font-medium placeholder:font-normal outline-none" />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Número de Tarjeta</label>
-                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm font-mono tracking-widest focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Número de Tarjeta</label>
+                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-[13px] font-mono tracking-widest focus:ring-2 focus:ring-[#0EA5E9]/20 transition-all placeholder:font-normal outline-none" />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Fecha de Exp.</label>
-                      <input type="text" placeholder="MM/AA" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Fecha de Exp.</label>
+                      <input type="text" placeholder="MM/AA" className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 font-medium placeholder:font-normal outline-none transition-all" />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">CVC</label>
-                      <input type="password" placeholder="123" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">CVC</label>
+                      <input type="password" placeholder="123" className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 font-medium placeholder:font-normal outline-none transition-all" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <button type="button" onClick={() => handleTabChange("principal")} className="mt-4 w-full py-4 rounded-xl font-bold text-white shadow-xl shadow-velocity-primary/40 hover:scale-[1.01] transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
+              <button type="button" onClick={() => handleTabChange("principal")} className="mt-5 w-full py-4 rounded-[20px] font-bold text-white shadow-xl shadow-[#F46E20]/30 hover:scale-[1.01] active:scale-[0.98] transition-all bg-[#F46E20]">
                 Confirmar Depósito
               </button>
             </div>
@@ -304,37 +301,37 @@ export default function BilleteraPage() {
       {/* ─── TAB: ENVIAR ─── */}
       {tab === "enviar" && (
         <>
-          <button type="button" onClick={() => handleTabChange("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 font-medium">
+          <button type="button" onClick={() => handleTabChange("principal")} className="text-[13px] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 font-semibold transition-colors">
             ← Volver
           </button>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Enviar Fondos</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Envía instantáneamente a otros usuarios de {BRAND.name}.</p>
+          <h2 className="text-[22px] font-extrabold text-slate-800 dark:text-white mb-1.5">Enviar Fondos</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-[13px] mb-6 font-medium">Envía al instante por ecosistema VELO Tokens.</p>
 
           {isTransitioning ? (
-            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
+            <div className="bg-white dark:bg-[#1E2329] rounded-[28px] border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
               <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
               <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
               <div className="bg-slate-200 dark:bg-slate-700 h-12 rounded-xl w-full mt-4"></div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
+            <div className="bg-white dark:bg-[#1E2329] rounded-[28px] border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Destinatario (ID o Correo)</label>
+                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Destinatario (Usuario o QR)</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="text" placeholder="@usuario o correo@ejemplo.com" className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all font-medium" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input type="text" placeholder="@usuario o correo@ejemplo.com" className="w-full pl-11 pr-4 py-3.5 rounded-[20px] border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-[13px] focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all font-medium placeholder:font-normal" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Enviar</label>
+                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Monto VELO</label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
-                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-lg font-bold focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">V.</div>
+                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-9 pr-4 py-4 rounded-[20px] border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-xl font-extrabold focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all placeholder:text-slate-300 dark:placeholder:text-slate-700" />
                 </div>
               </div>
-              <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-velocity-primary/40 transition-all hover:scale-[1.02]" style={{ backgroundColor: BRAND.colors.primary }}>
+              <button type="button" className="w-full mt-2 py-4 rounded-[20px] font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-[#F46E20]/30 transition-all hover:scale-[1.01] active:scale-[0.98]" style={{ backgroundColor: BRAND.colors.primary }}>
                 <Send className="w-4 h-4" />
-                Enviar Dinero
+                Enviar Token Automático
               </button>
             </div>
           )}
@@ -344,38 +341,38 @@ export default function BilleteraPage() {
       {/* ─── TAB: RETIRO ─── */}
       {tab === "retiro" && (
         <>
-          <button type="button" onClick={() => handleTabChange("principal")} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 transition-colors font-medium">
+          <button type="button" onClick={() => handleTabChange("principal")} className="text-[13px] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 mb-4 flex items-center gap-1 font-semibold transition-colors">
             ← Volver
           </button>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Retirar Fondos</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Retira tus ganancias o fondos excedentes a tus métodos guardados.</p>
+          <h2 className="text-[22px] font-extrabold text-slate-800 dark:text-white mb-1.5">Retirar Fondos</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-[13px] mb-6 font-medium">Liquida VELO a Fiat en tus métodos guardados.</p>
 
           {isTransitioning ? (
-            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
+            <div className="bg-white dark:bg-[#1E2329] rounded-[28px] border border-slate-200 dark:border-white/5 p-6 space-y-5 animate-pulse">
               <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
               <div className="bg-slate-200 dark:bg-slate-700 h-16 rounded-xl w-full"></div>
               <div className="bg-slate-200 dark:bg-slate-700 h-12 rounded-xl w-full mt-4"></div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
+            <div className="bg-white dark:bg-[#1E2329] rounded-[28px] border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Monto a Retirar</label>
+                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Monto a Liquíidar (VELO)</label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</div>
-                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-lg font-bold focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all" />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">V.</div>
+                  <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-9 pr-4 py-4 rounded-[20px] border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-xl font-extrabold focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all placeholder:text-slate-300 dark:placeholder:text-slate-700" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Método de Destino</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white text-sm font-medium focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20] outline-none transition-all appearance-none cursor-pointer">
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="">Selecciona un método de pago</option>
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="pago-movil">Pago Móvil</option>
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="transferencia">Transferencia bancaria</option>
+                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Método de Destino</label>
+                <select className="w-full px-4 py-3.5 rounded-[20px] border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-white/[0.02] text-slate-800 dark:text-white text-[13px] font-medium focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all appearance-none cursor-pointer">
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="">Selecciona un método preguardado...</option>
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="pago-movil">Pago Móvil (BNC) - ****</option>
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="transferencia">Transferencia a Empresa (BNC)</option>
                 </select>
               </div>
-              <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-velocity-primary/40 transition-all hover:scale-[1.02]" style={{ backgroundColor: BRAND.colors.primary }}>
+              <button type="button" className="w-full mt-2 py-4 rounded-[20px] font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-[#0EA5E9]/30 transition-all hover:scale-[1.01] active:scale-[0.98] bg-[#0EA5E9]">
                 <ArrowUpFromLine className="w-4 h-4" />
-                Solicitar Retiro
+                Solicitar Liquidación
               </button>
             </div>
           )}
@@ -385,45 +382,45 @@ export default function BilleteraPage() {
       {/* ─── TAB: RECIBIR (modal) ─── */}
       {tab === "recibir" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => handleTabChange("principal")}>
-          <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-8 max-w-sm w-full text-center shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">Tu Código de Pago QR</p>
-            <div className="inline-block p-4 bg-white rounded-2xl border-2 border-slate-100 dark:border-white/10 mb-5 shadow-inner">
+          <div className="bg-white dark:bg-[#1E2329] rounded-[32px] border border-slate-200 dark:border-white/5 p-8 max-w-sm w-full text-center shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
+            <p className="text-[13px] font-bold text-slate-700 dark:text-slate-300 mb-6 tracking-wide">Código QR de {userName}</p>
+            <div className="inline-block p-4 bg-white rounded-[24px] border border-slate-200 shadow-sm mb-6">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("@velocity_xxxx")}&format=svg`}
-                alt="Código QR de tu ID"
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`Velozeety - ${userName}`)}&format=svg`}
+                alt={`Código QR de ${userName}`}
                 className="w-48 h-48 object-contain"
               />
             </div>
-            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-1">ID de Usuario</p>
-            <p className="font-mono font-bold text-lg text-slate-800 dark:text-white">@velocity_xxxx</p>
-            <button type="button" onClick={() => copyToClipboard("@velocity_xxxx", "user")} className="mt-4 text-sm flex items-center justify-center gap-2 mx-auto text-velocity-primary font-bold hover:scale-105 transition-all">
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Cuenta Velozeety Corp</p>
+            <p className="font-mono font-bold text-[19px] text-[#F46E20] truncate px-3">{userHandle}</p>
+            <button type="button" onClick={() => copyToClipboard(userHandle, "user")} className="mt-5 text-[13px] flex items-center justify-center gap-2 mx-auto text-slate-500 dark:text-slate-300 font-bold hover:scale-105 active:scale-95 transition-all bg-slate-100 dark:bg-white/5 py-2 px-4 rounded-full">
               <Copy className="w-4 h-4" />
-              Copiar ID para compartir
+              Copiar ID
             </button>
-            <button type="button" onClick={() => handleTabChange("principal")} className="mt-6 w-full py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition">
-              Cerrar
+            <button type="button" onClick={() => handleTabChange("principal")} className="mt-8 w-full py-3.5 rounded-2xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-[0.98]">
+              Cerrar Tablero
             </button>
           </div>
         </div>
-      )}
-
-      {/* ─── INFO RETIROS (siempre visible) ─── */}
-      <div className="mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 transition-colors">
-        <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-3">Información de Retiros</h3>
-        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Los fondos generados por servicios o ventas empresariales pueden ser liquidados diariamente.
+      )}{/* ─── INFO RETIROS (siempre visible) ─── */}
+      <div className="mt-8 p-5 rounded-[24px] bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 transition-colors">
+        <h3 className="text-[13px] font-bold text-slate-800 dark:text-white mb-2">Términos Financieros</h3>
+        <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+          La compra o recarga de VELO Tokens es el motor para utilizar los servicios ecosistema.
         </p>
-        <ul className="mt-4 space-y-2 text-xs text-slate-600 dark:text-slate-400">
-          <li className="flex gap-2"><span>•</span> <strong>Mínimo:</strong> 10 USD para liquidación inmediata vía Pago Móvil.</li>
-          <li className="flex gap-2"><span>•</span> <strong>Corporativo:</strong> Transferencias ACH para montos mayores a 500 USD.</li>
+        <ul className="mt-3.5 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+          <li className="flex gap-2"><span>•</span> <strong>Convertibilidad BCV:</strong> Tasa dinámica al día en bolívares.</li>
+          <li className="flex gap-2"><span>•</span> <strong>Retiros:</strong> Liquidación BNC inmediata (+ 10 VELO).</li>
         </ul>
       </div>
 
-      {copied && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl bg-slate-900 border border-white/10 text-white text-sm font-bold shadow-2xl animate-bounce">
-          ✓ ¡Copiado al portapapeles!
-        </div>
-      )}
-    </div>
+      {
+        copied && (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full bg-slate-800/90 backdrop-blur border border-white/20 text-white text-[13px] font-bold shadow-2xl animate-fade-in-up whitespace-nowrap z-[100]">
+            ✓ ¡{copied} copiado!
+          </div>
+        )
+      }
+    </div >
   );
 }
