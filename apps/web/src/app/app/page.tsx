@@ -21,6 +21,7 @@ import {
   ShoppingBag,
   Package,
   ChevronRight,
+  ArrowRight,
   Users,
   Briefcase,
   Dog,
@@ -31,6 +32,7 @@ import {
 import AppMap from "@/components/AppMap";
 import MapPickerModal from "@/components/MapPickerModal";
 import BcvWidget from "@/components/BcvWidget";
+import TripWizard from "@/components/TripWizard";
 import { t } from "@/lib/i18n";
 import { useLang } from "@/context/LanguageContext";
 import { ZONAS_VELOCITY } from "@/lib/zonas-venezuela";
@@ -110,6 +112,8 @@ export default function AppInicioPage() {
   const [showMapPicker, setShowMapPicker] = useState(false);
   const [mapPickerFor, setMapPickerFor] = useState<"pickup" | "dropoff" | null>(null);
   const [carrito, setCarrito] = useState<{ nombre: string; precio: string; cantidad: number }[]>([]);
+  const [wizardActive, setWizardActive] = useState(false);
+  const [wizardTripData, setWizardTripData] = useState<{ vehicle: string } | null>(null);
 
   const updateCartItem = (p: { nombre: string; precio: string }, delta: number) => {
     setCarrito((prev) => {
@@ -142,8 +146,21 @@ export default function AppInicioPage() {
       </div>
 
       {/* Panel derecho: Inicio (HOME) — Negocios + viajes */}
-      <div className="md:w-[420px] bg-white dark:bg-slate-900 md:border-l md:border-slate-200 dark:border-slate-800 md:shadow-xl p-5 flex flex-col gap-5 overflow-y-auto velocity-no-scrollbar">
-        {step === "select" && (
+      <div className={`md:w-[420px] bg-white dark:bg-slate-900 md:border-l md:border-slate-200 dark:border-slate-800 md:shadow-xl p-5 flex flex-col gap-5 ${wizardActive ? "overflow-hidden" : "overflow-y-auto"} velocity-no-scrollbar`}>
+        {/* ─── Wizard takes over the full panel when active ─── */}
+        {wizardActive && (
+          <div className="flex flex-col h-full min-h-0 animate-slide-up-soft">
+            <TripWizard
+              onClose={() => setWizardActive(false)}
+              onConfirm={(data) => {
+                setWizardTripData(data);
+                setWizardActive(false);
+                setStep("confirm");
+              }}
+            />
+          </div>
+        )}
+        {!wizardActive && step === "select" && (
           <>
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800 animate-slide-up-soft">
               <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">{t(lang, "home_title")}</h1>
@@ -338,371 +355,29 @@ export default function AppInicioPage() {
               </div>
             )}
 
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-2">{t(lang, "ride_req_title")}</h2>
-            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">{t(lang, "ride_where_pickup")}</h3>
-            <div className="flex gap-2 flex-wrap">
+
+            {/* ─── Trigger card — Pedir viaje ─── */}
+            <div className="border-t border-slate-100 dark:border-slate-800 pt-4">
               <button
                 type="button"
-                onClick={() => setPickupType("parada")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "parada" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
+                onClick={() => setWizardActive(true)}
+                className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-dashed border-[#F46E20]/50 dark:border-[#F46E20]/30 bg-[#F46E20]/5 hover:border-[#F46E20] hover:bg-[#F46E20]/10 transition-all group"
               >
-                {t(lang, "ride_stops")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setPickupType("ubicacion")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 flex items-center gap-1 transition ${pickupType === "ubicacion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
-              >
-                <Navigation className="w-4 h-4" />
-                {t(lang, "ride_my_loc")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setPickupType("direccion")}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition ${pickupType === "direccion" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
-              >
-                {t(lang, "ride_address")}
-              </button>
-            </div>
-            {pickupType === "parada" && (
-              <div className="grid grid-cols-2 gap-2">
-                {PARADAS_COMUNES.map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => setPickupValue(p.name)}
-                    className={`p-3 rounded-lg border-2 text-left text-sm font-medium transition ${pickupValue === p.name ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                      }`}
-                  >
-                    <MapPin className="w-4 h-4 inline mr-1" />
-                    {p.name}
-                  </button>
-                ))}
-              </div>
-            )}
-            {pickupType === "ubicacion" && (
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof navigator === "undefined" || !navigator.geolocation) {
-                      setPickupValue("Tu navegador no soporta geolocalización.");
-                      return;
-                    }
-                    setPickupValue("Obteniendo ubicación...");
-                    navigator.geolocation.getCurrentPosition(
-                      (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        setPickupValue(`Ubicación actual: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
-                      },
-                      (err) => {
-                        if (err.code === 1) setPickupValue("Permiso denegado. Activa la ubicación en tu dispositivo.");
-                        else if (err.code === 2) setPickupValue("Ubicación no disponible. Revisa GPS/conexión.");
-                        else setPickupValue("No se pudo obtener la ubicación. Revisa permisos.");
-                      },
-                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-                    );
-                  }}
-                  className="w-full px-3 py-2.5 rounded-lg border-2 border-[#0EA5E9] bg-[#0EA5E9]/10 text-slate-800 dark:text-slate-100 text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#0EA5E9]/20"
-                >
-                  <Navigation className="w-4 h-4" />
-                  Obtener mi ubicación ahora
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof navigator === "undefined" || !navigator.geolocation) {
-                      setPickupValue("Tu navegador no soporta geolocalización.");
-                      return;
-                    }
-                    setPickupValue("Compartiendo en tiempo real...");
-                    const watchId = navigator.geolocation.watchPosition(
-                      (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        setPickupValue(`En vivo: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
-                      },
-                      (err) => {
-                        if (err.code === 1) setPickupValue("Permiso denegado para ubicación en tiempo real.");
-                        else setPickupValue("No se pudo compartir en tiempo real.");
-                        navigator.geolocation.clearWatch(watchId);
-                      },
-                      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                    );
-                    (window as any).__velocityWatchId = watchId;
-                  }}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700"
-                >
-                  <Navigation className="w-4 h-4" />
-                  Compartir mi ubicación en tiempo real
-                </button>
-                {pickupValue && !pickupValue.startsWith("Obteniendo") && !pickupValue.startsWith("Compartiendo") && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{pickupValue}</p>
-                )}
-              </div>
-            )}
-            {pickupType === "direccion" && (
-              <div>
-                <input
-                  type="text"
-                  placeholder="Escribe la dirección de recogida"
-                  value={pickupValue}
-                  onChange={(e) => setPickupValue(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition-all shadow-sm"
-                />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 mb-1.5">{t(lang, "ride_zones")}</p>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {ZONAS_VELOCITY.slice(0, 6).map((z) => (
-                    <button
-                      key={z.id}
-                      type="button"
-                      onClick={() => setPickupValue(z.nombre)}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10 hover:border-[#0EA5E9]/40"
-                    >
-                      {z.nombre.split(" - ")[0] || z.nombre}
-                    </button>
-                  ))}
+                <div className="w-11 h-11 rounded-xl bg-[#F46E20] flex items-center justify-center shadow-lg shadow-[#F46E20]/30 group-hover:scale-105 transition-transform shrink-0">
+                  <Car className="w-5 h-5 text-white" />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => { setMapPickerFor("pickup"); setShowMapPicker(true); }}
-                  className="w-full py-2 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#0EA5E9]/50 hover:bg-[#0EA5E9]/5"
-                >
-                  <MapPin className="w-4 h-4" />
-                  {t(lang, "ride_map_pin")}
-                </button>
-              </div>
-            )}
-            <div className="mt-2">
-              <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Destino</label>
-              <input
-                type="text"
-                placeholder="¿A dónde vas?"
-                value={dropoff}
-                onChange={(e) => setDropoff(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition-all shadow-sm"
-              />
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {ZONAS_VELOCITY.slice(0, 5).map((z) => (
-                  <button
-                    key={z.id}
-                    type="button"
-                    onClick={() => setDropoff(z.nombre)}
-                    className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10"
-                  >
-                    {z.nombre.split(" - ")[0] || z.nombre}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => { setMapPickerFor("dropoff"); setShowMapPicker(true); }}
-                  className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-[#0EA5E9]/10 flex items-center gap-1"
-                >
-                  <MapPin className="w-3 h-3" /> Mapa
-                </button>
-              </div>
-            </div>
-
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_vehicle_type")}</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">{t(lang, "ride_vehicle_desc")}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { id: "moto" as const, Icon: Bike, label: t(lang, "ride_v_moto"), personas: t(lang, "ride_v_moto_pass"), equipaje: t(lang, "ride_v_moto_lug"), extra: null },
-                { id: "carro" as const, Icon: Car, label: t(lang, "ride_v_carro"), personas: t(lang, "ride_v_carro_pass"), equipaje: t(lang, "ride_v_carro_lug"), extra: null },
-                { id: "4x4" as const, Icon: Truck, label: t(lang, "ride_v_4x4"), personas: t(lang, "ride_v_4x4_pass"), equipaje: t(lang, "ride_v_4x4_lug"), extra: t(lang, "ride_v_4x4_extra") },
-                { id: "flete" as const, Icon: Boxes, label: t(lang, "ride_v_flete"), personas: t(lang, "ride_v_flete_pass"), equipaje: t(lang, "ride_v_flete_lug"), extra: t(lang, "ride_v_flete_extra") },
-              ].map(({ id, Icon, label, personas, equipaje, extra }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setVehicle(id)}
-                  className={`flex flex-col items-start gap-1.5 p-3 rounded-xl border-2 text-left transition ${vehicle === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100 shadow-sm" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300"
-                    }`}
-                >
-                  <div className="flex items-center gap-2 w-full">
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${vehicle === id ? "bg-[#0EA5E9]/20" : "bg-slate-100 dark:bg-slate-700"}`}>
-                      <Icon className="w-5 h-5" strokeWidth={2} style={vehicle === id ? { color: "#0EA5E9" } : {}} />
-                    </div>
-                    <span className="text-sm font-semibold">{label}</span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                    <span className="inline-flex items-center gap-0.5">
-                      <Users className="w-3.5 h-3.5" /> {personas}
-                    </span>
-                    <span className="inline-flex items-center gap-0.5">
-                      <Briefcase className="w-3.5 h-3.5" /> {equipaje}
-                    </span>
-                    {extra && (
-                      <span className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-500">
-                        {id === "4x4" ? <Dog className="w-3.5 h-3.5" /> : null}
-                        {extra}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-            {vehicle === "flete" && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 rounded-lg bg-slate-50 dark:bg-slate-800 p-2 border border-slate-100 dark:border-slate-700 mt-2">
-                {t(lang, "ride_flete_desc")}
-              </p>
-            )}
-
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_when")}</h2>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setTripMode("now")}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "now" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-white" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
-              >
-                <Zap className="w-4 h-4" />
-                {t(lang, "ride_now")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setTripMode("reserve")}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium text-sm transition ${tripMode === "reserve" ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
-              >
-                <Calendar className="w-4 h-4" />
-                {t(lang, "ride_reserve")}
-              </button>
-            </div>
-            {tripMode === "reserve" && (
-              <div className="rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 space-y-4 overflow-hidden mt-2">
-                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200">{t(lang, "ride_date")}</label>
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 capitalize">
-                      {new Date(calendarYear, calendarMonth).toLocaleDateString(lang, { month: "long", year: "numeric" })}
-                    </span>
-                    <div className="flex gap-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (calendarMonth === 0) {
-                            setCalendarMonth(11);
-                            setCalendarYear((y) => y - 1);
-                          } else setCalendarMonth((m) => m - 1);
-                        }}
-                        className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
-                        aria-label="Mes anterior"
-                      >
-                        ‹
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (calendarMonth === 11) {
-                            setCalendarMonth(0);
-                            setCalendarYear((y) => y + 1);
-                          } else setCalendarMonth((m) => m + 1);
-                        }}
-                        className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm"
-                        aria-label="Mes siguiente"
-                      >
-                      </button>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-7 gap-0.5 text-center text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
-                    {lang === "es" ? ["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-                      <span key={d}>{d}</span>
-                    )) : ["M", "T", "W", "T", "F", "S", "S"].map((d) => (
-                      <span key={d}>{d}</span>
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-7 gap-0.5">
-                    {(() => {
-                      const first = new Date(calendarYear, calendarMonth, 1);
-                      const startPad = (first.getDay() - 1 + 7) % 7;
-                      const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      const cells: (number | null)[] = [];
-                      for (let i = 0; i < startPad; i++) cells.push(null);
-                      for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-                      return cells.map((d, i) => {
-                        if (d === null) return <span key={i} />;
-                        const cellDate = new Date(calendarYear, calendarMonth, d);
-                        const isPast = cellDate < today;
-                        const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-                        const isSelected = reserveDate === dateStr;
-                        return (
-                          <button
-                            key={i}
-                            type="button"
-                            disabled={isPast}
-                            onClick={() => setReserveDate(dateStr)}
-                            className={`flex items-center justify-center h-8 rounded-lg text-sm font-medium transition ${isPast ? "text-slate-300 dark:text-slate-600 cursor-not-allowed" : "text-slate-800 dark:text-slate-200 hover:bg-[#0EA5E9]/20"
-                              } ${isSelected ? "bg-[#0EA5E9] !text-white hover:bg-[#0EA5E9]" : ""}`}
-                          >
-                            {d}
-                          </button>
-                        );
-                      });
-                    })()}
-                  </div>
+                <div className="flex-1 text-left">
+                  <p className="font-extrabold text-slate-800 dark:text-slate-100 text-[15px]">Pedir viaje</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Moto · Carro · 4×4 · Flete / Mudanza</p>
                 </div>
-                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mt-3 mb-1">{t(lang, "ride_time")}</label>
-                <select
-                  value={reserveTime}
-                  onChange={(e) => setReserveTime(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-medium text-[15px] focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all shadow-sm appearance-none"
-                >
-                  <option value="">{t(lang, "ride_select_time")}</option>
-                  {Array.from({ length: 24 * 2 }, (_, i) => {
-                    const h = Math.floor(i / 2);
-                    const m = (i % 2) * 30;
-                    const val = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-                    return (
-                      <option key={val} value={val}>
-                        {val}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            )}
-
-            <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 pt-3">{t(lang, "ride_payment")}</h2>
-            <div className="space-y-2 mb-2">
-              {[
-                { id: "efectivo" as const, label: t(lang, "ride_pay_cash"), Icon: Banknote },
-                { id: "pago_movil" as const, label: t(lang, "ride_pay_pm"), Icon: Smartphone },
-                { id: "wallet" as const, label: t(lang, "ride_pay_wallet"), Icon: Wallet },
-              ].map(({ id, label, Icon }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setPayment(id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg border-2 text-left text-sm font-medium transition ${payment === id ? "border-[#0EA5E9] bg-[#0EA5E9]/15 text-slate-800 dark:text-slate-100" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                    }`}
-                >
-                  <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                  {label}
-                </button>
-              ))}
+                <ArrowRight className="w-5 h-5 text-[#F46E20] group-hover:translate-x-0.5 transition-transform shrink-0" />
+              </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setStep("confirm")}
-              disabled={!pickupValue.trim() || !dropoff.trim() || (tripMode === "reserve" && (!reserveDate || !reserveTime))}
-              className="w-full py-4 rounded-[18px] font-bold text-white text-[15px] flex items-center justify-center gap-2 shadow-lg shadow-velocity-primary/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none disabled:active:scale-100 disabled:cursor-not-allowed"
-              style={{ backgroundColor: BRAND.colors.primary }}
-            >
-              {t(lang, "ride_req_btn")}
-            </button>
-            <p className="text-xs text-slate-500 text-center">
-              {t(lang, "ride_terms")}
-            </p>
           </>
         )}
 
-        {step === "confirm" && (
+
+        {!wizardActive && step === "confirm" && (
           <>
             <p className="text-sm text-slate-600">Buscando conductor...</p>
             <button type="button" onClick={() => setStep("driver")} className="text-sm font-medium text-white py-2.5 px-4 rounded-xl" style={{ backgroundColor: BRAND.colors.primary }}>
@@ -713,6 +388,7 @@ export default function AppInicioPage() {
             </button>
           </>
         )}
+
 
         {step === "driver" && (() => {
           const vehicleLabels = { moto: "Moto", carro: "Carro", "4x4": "4x4", flete: "Flete" };

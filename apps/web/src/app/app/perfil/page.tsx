@@ -151,49 +151,52 @@ export default function PerfilPage() {
                 transition={{ duration: 0.35, ease: "easeOut" }}
               >
                 <div className="h-1 bg-sky-200" aria-hidden />
-                <div className="p-6 md:p-8">
-                  <div className="flex items-center gap-5 mb-5">
-                    <div className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10">
-                      <RolIcon className="w-10 h-10 text-slate-700 dark:text-slate-300" strokeWidth={2} />
+                <div className="p-5 md:p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-[18px] flex items-center justify-center flex-shrink-0 bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10">
+                      <RolIcon className="w-8 h-8 text-slate-700 dark:text-slate-300" strokeWidth={2} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-2xl text-slate-900 dark:text-white leading-tight">{nombre}</p>
-                      <p className="text-slate-500 dark:text-slate-400 text-base mt-2 flex items-center gap-2">
+                      <p className="font-bold text-xl md:text-2xl text-slate-900 dark:text-white leading-tight truncate">{nombre}</p>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 flex items-center gap-1.5">
                         <BadgeCheck className="w-4 h-4 text-emerald-500" /> {rolLabel}
                       </p>
-                      <div className="flex gap-2 mt-3">
-                        <span className="inline-flex items-center gap-1 text-sm font-medium text-white bg-slate-800 px-2.5 py-1 rounded-md">
-                          <BadgeCheck className="w-4 h-4" /> Verificado premium
+                      <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-slate-800 px-2 py-1 rounded-md tracking-wide">
+                          <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
                         </span>
-                        <select
-                          value={rol}
-                          onChange={(e) => {
-                            const next = e.target.value as Rol;
-                            setRol(next);
-                            const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
-                            localStorage.setItem("velocity_user", JSON.stringify({ ...user, rol: next }));
-                          }}
-                          className="text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-velocity-surface dark:[&>option]:bg-velocity-surface dark:text-white border border-slate-200 dark:border-white/20 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-sky-500/20"
-                        >
-                          <option value="cliente">Cliente</option>
-                          <option value="conductor">Conductor</option>
-                          <option value="emprendedor">Emprendedor</option>
-                        </select>
+                        <div className="relative">
+                          <select
+                            value={rol}
+                            onChange={(e) => {
+                              const next = e.target.value as Rol;
+                              setRol(next);
+                              const user = JSON.parse(localStorage.getItem("velocity_user") || "{}");
+                              localStorage.setItem("velocity_user", JSON.stringify({ ...user, rol: next }));
+                            }}
+                            className="text-[11px] font-bold uppercase tracking-wider bg-white dark:bg-[#1E2329] dark:text-white border border-slate-200 dark:border-white/20 rounded-md py-1 items-center px-2 pr-6 outline-none hover:bg-slate-50 dark:hover:bg-white/5 transition-colors appearance-none cursor-pointer shadow-sm"
+                          >
+                            <option value="cliente">Cliente</option>
+                            <option value="conductor">Conductor</option>
+                            <option value="emprendedor">Emprendedor</option>
+                          </select>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-300 text-base mb-6 leading-relaxed">
+                  <p className="text-slate-600 dark:text-slate-300 text-[13px] md:text-sm mb-5 leading-relaxed">
                     Cuenta corporativa con acceso a servicios, billetera y soporte prioritario.
                   </p>
-                  <div className="rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-5 space-y-3 text-base">
-                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Mail className="w-5 h-5 flex-shrink-0 text-slate-400" /> {email}</p>
-                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Phone className="w-5 h-5 flex-shrink-0 text-slate-400" /> {telefono}</p>
+                  <div className="rounded-[18px] bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 p-4 space-y-2.5 text-[13px] md:text-sm">
+                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Mail className="w-4 h-4 flex-shrink-0 text-slate-400" /> <span className="truncate">{email}</span></p>
+                    <p className="flex items-center gap-3 text-slate-700 dark:text-slate-300"><Phone className="w-4 h-4 flex-shrink-0 text-slate-400" /> {telefono}</p>
                   </div>
 
                   {rol === "conductor" && (
-                    <div className="mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
-                      <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Información de conductor</p>
-                      <ul className="text-base text-slate-600 dark:text-slate-300 space-y-2">
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5">
+                      <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2.5">Información de conductor</p>
+                      <ul className="text-[13px] md:text-sm text-slate-600 dark:text-slate-300 space-y-2">
                         <li className="flex items-center gap-2">
                           <Car className="w-4 h-4 text-slate-400" /> Vehículo: Toyota Corolla · ABC-123
                         </li>
@@ -208,32 +211,32 @@ export default function PerfilPage() {
                   )}
 
                   {rol === "emprendedor" && (
-                    <div className="mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">Información de emprendedor</p>
-                      <p className="text-base text-slate-600 dark:text-slate-300">Tu negocio y catálogo se gestionan en la sección Empresa.</p>
-                      <button onClick={() => setSelectedSection("empresa")} className="inline-flex items-center gap-1 mt-2 text-base font-medium text-sky-600 hover:text-sky-700">
-                        Ir a Mi empresa <ChevronRight className="w-4 h-4" />
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5">
+                      <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Información de emprendedor</p>
+                      <p className="text-[13px] text-slate-600 dark:text-slate-300">Tu negocio y catálogo se gestionan en la sección Empresa.</p>
+                      <button onClick={() => setSelectedSection("empresa")} className="inline-flex items-center gap-1 mt-2 text-[13px] font-bold text-[#F46E20] hover:text-[#D95D1A] transition-colors">
+                        Ir a Mi empresa <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   )}
 
-                  <div className="flex gap-10 mt-6 pt-6 border-t border-slate-100 dark:border-white/5">
+                  <div className="flex gap-8 mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
                     {(rol === "cliente" || rol === "conductor") && (
                       <>
                         <div>
-                          <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">15</p>
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Viajes</p>
+                          <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">15</p>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Viajes</p>
                         </div>
                         <div>
-                          <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">2</p>
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Gratis</p>
+                          <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">2</p>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Gratis</p>
                         </div>
                       </>
                     )}
                     <div className="flex items-baseline gap-1.5">
-                      <Star className="w-6 h-6 text-amber-500 fill-amber-500" />
-                      <p className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">5.0</p>
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1 mt-1">Puntos</p>
+                      <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">5.0</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 mt-0.5">Puntos</p>
                     </div>
                   </div>
                 </div>

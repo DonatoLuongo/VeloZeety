@@ -1,7 +1,7 @@
 "use client";
 
 import { BRAND } from "@velocity/shared";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Wallet,
   Send,
@@ -15,25 +15,11 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { DATOS_RECARGA } from "@/lib/constants";
+import { useRates } from "@/hooks/useRates";
+import VeloPriceWidget from "@/components/VeloPriceWidget";
 
-type Tab = "principal" | "recargar" | "enviar" | "recibir" | "retiro" | "deposito";
-
-// Datos de prueba (simulados cifrados/seguros)
-const DATOS_RECARGA = {
-  red: "Red VELO (BEP-20 / Binance Smart Chain)",
-  wallet_cripto: "0x7a3f...9e2b",
-  pago_movil: {
-    banco: "Banco Nacional de Crédito",
-    rif: "J-40123456-7",
-    telefono: "0412-XXX-XXXX",
-    cedula: "V-XX.XXX.XXX",
-  },
-  transferencia: {
-    titular: "VELOCITY C.A.",
-    cuenta: "0102-XXXX-XX-XXXXXX-X",
-    rif: "J-40123456-7",
-  },
-};
+type Tab = "principal" | "enviar" | "recibir" | "recargar" | "retiro" | "deposito";
 
 export default function BilleteraPage() {
   const router = useRouter();
@@ -43,6 +29,10 @@ export default function BilleteraPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [userName, setUserName] = useState("Usuario VELO");
   const [userHandle, setUserHandle] = useState("@usuario_velo");
+
+  // Balance y Tasa BCV compartida globalmente
+  const balanceVelo = 1250.00;
+  const { rates } = useRates();
 
   useEffect(() => {
     try {
@@ -109,37 +99,43 @@ export default function BilleteraPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 relative z-10">
               {/* EUR */}
-              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-100/10 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇪🇺</div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Euros</p>
-                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "€ 100.00" : "••••"}</p>
-                  </div>
+              <div className="flex items-center gap-3 p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
+                <div className="w-8 h-8 rounded-full bg-[#003399]/20 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇪🇺</div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Euros</p>
+                  <p className="text-sm font-bold text-white tabular-nums truncate">
+                    {showBalance ?
+                      (rates ? `€ ${(balanceVelo * (rates.bcv / rates.eur)).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "...")
+                      : "••••"}
+                  </p>
                 </div>
               </div>
 
               {/* USDT */}
-              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#26A17B]/10 flex items-center justify-center shrink-0">
-                    <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=035" alt="Tether" className="w-5 h-5 opacity-90" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Tether TRC-20</p>
-                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "₮ 850.00" : "••••"}</p>
-                  </div>
+              <div className="flex items-center gap-3 p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
+                <div className="w-8 h-8 rounded-full bg-[#26A17B]/10 flex items-center justify-center shrink-0">
+                  <svg viewBox="0 0 2000 2000" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M1000 0c552.285 0 1000 447.715 1000 1000s-447.715 1000-1000 1000S0 1552.285 0 1000 447.715 0 1000 0z" fill="#26a17b" /><path d="M1155.65 899.782v-112.98h284.453V615.547H561.026v171.255h283.324v112.98c-204.606 13.92-365.178 57.075-365.178 108.675 0 53.078 165.61 97.234 374.92 110.165v276.064h151.107V1218.66c205.733-13.308 368.175-57.08 368.175-109.435 0-51.583-160.038-94.755-364.054-108.67zM1004.85 1098c-157.065 0-291.564-28.718-316.516-65.71 23.367-34.904 150.31-62.77 304.576-65.438v129.58c3.962.196 7.952.28 11.94.28 4.252 0 8.5-.095 12.72-.28V966.85c159.262 2.502 289.475 30.73 313.565 66.216-25.594 36.31-158.75 64.934-314.285 64.934z" fill="#FFF" /></svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Tether TRC-20</p>
+                  <p className="text-sm font-bold text-white tabular-nums truncate">
+                    {showBalance ?
+                      (rates ? `₮ ${(balanceVelo * (rates.bcv / rates.usdt)).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "...")
+                      : "••••"}
+                  </p>
                 </div>
               </div>
 
               {/* VES */}
-              <div className="flex items-center justify-between p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-100/10 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇻🇪</div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Bolívar BCV</p>
-                    <p className="text-sm font-bold text-white tabular-nums">{showBalance ? "Bs. 53,875.00" : "••••"}</p>
-                  </div>
+              <div className="flex items-center gap-3 p-3 rounded-[20px] bg-white/[0.03] border border-white/5 backdrop-blur-md">
+                <div className="w-8 h-8 rounded-full bg-slate-100/10 flex items-center justify-center text-lg shadow-inner shrink-0 leading-none">🇻🇪</div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Bolívar BCV</p>
+                  <p className="text-sm font-bold text-white tabular-nums truncate">
+                    {showBalance ?
+                      (rates ? `Bs. ${(balanceVelo * rates.bcv).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "...")
+                      : "••••"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -182,6 +178,11 @@ export default function BilleteraPage() {
               <Banknote className="w-5 h-5 mb-0.5 text-slate-500 dark:text-slate-400" />
               <span className="text-[11px] font-bold">Retirar</span>
             </button>
+          </div>
+
+          {/* ─── VELO PRICE WIDGET ─── */}
+          <div className="mb-6">
+            <VeloPriceWidget />
           </div>
 
           <div className="flex items-center justify-between mb-4">
@@ -356,7 +357,7 @@ export default function BilleteraPage() {
           ) : (
             <div className="bg-white dark:bg-[#1E2329] rounded-[28px] border border-slate-200 dark:border-white/5 p-6 space-y-5 shadow-sm animate-fade-in-up">
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Monto a Liquíidar (VELO)</label>
+                <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Monto a Liquidar (VELO)</label>
                 <div className="relative">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">V.</div>
                   <input type="text" inputMode="decimal" placeholder="0.00" className="w-full pl-9 pr-4 py-4 rounded-[20px] border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] text-slate-800 dark:text-white text-xl font-extrabold focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all placeholder:text-slate-300 dark:placeholder:text-slate-700" />
@@ -370,7 +371,7 @@ export default function BilleteraPage() {
                   <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="transferencia">Transferencia a Empresa (BNC)</option>
                 </select>
               </div>
-              <button type="button" className="w-full mt-2 py-4 rounded-[20px] font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-[#0EA5E9]/30 transition-all hover:scale-[1.01] active:scale-[0.98] bg-[#0EA5E9]">
+              <button type="button" className="w-full mt-2 py-4 rounded-[20px] font-bold text-white flex items-center justify-center gap-2 shadow-sm shadow-[#F46E20]/20 transition-all hover:scale-[1.01] active:scale-[0.98] bg-[#F46E20]">
                 <ArrowUpFromLine className="w-4 h-4" />
                 Solicitar Liquidación
               </button>
@@ -402,7 +403,9 @@ export default function BilleteraPage() {
             </button>
           </div>
         </div>
-      )}{/* ─── INFO RETIROS (siempre visible) ─── */}
+      )}
+
+      {/* ─── INFO RETIROS (siempre visible) ─── */}
       <div className="mt-8 p-5 rounded-[24px] bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 transition-colors">
         <h3 className="text-[13px] font-bold text-slate-800 dark:text-white mb-2">Términos Financieros</h3>
         <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
@@ -414,13 +417,11 @@ export default function BilleteraPage() {
         </ul>
       </div>
 
-      {
-        copied && (
-          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full bg-slate-800/90 backdrop-blur border border-white/20 text-white text-[13px] font-bold shadow-2xl animate-fade-in-up whitespace-nowrap z-[100]">
-            ✓ ¡{copied} copiado!
-          </div>
-        )
-      }
-    </div >
+      {copied && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full bg-slate-800/90 backdrop-blur border border-white/20 text-white text-[13px] font-bold shadow-2xl animate-fade-in-up whitespace-nowrap z-[100]">
+          ✓ ¡{copied} copiado!
+        </div>
+      )}
+    </div>
   );
 }
