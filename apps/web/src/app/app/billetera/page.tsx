@@ -12,6 +12,7 @@ import {
   Smartphone,
   ArrowUpFromLine,
   Banknote,
+  CreditCard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -62,11 +63,14 @@ export default function BilleteraPage() {
       {tab === "principal" && (
         <>
           {/* Dashboard Financiero Hero Card */}
-          <div className="bg-[#1E293B] rounded-2xl p-8 mb-6 border border-slate-700 shadow-xl transition-colors relative overflow-hidden">
-            <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px]" />
+          <div className="bg-slate-900/80 dark:bg-[#1E2329]/80 backdrop-blur-xl rounded-2xl p-8 mb-6 border border-white/20 dark:border-white/10 shadow-2xl transition-all relative overflow-hidden group hover:bg-slate-900/90 dark:hover:bg-[#1E2329]/90">
+            <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-blue-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-emerald-500/10 rounded-full blur-[60px] group-hover:bg-emerald-500/20 transition-all duration-700" />
+            {/* Grid overlay for tech feel */}
+            <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-5 dark:opacity-10 mix-blend-overlay pointer-events-none" />
 
             <div className="flex justify-between items-start mb-1 relative z-10">
-              <p className="text-slate-400 text-sm font-medium">Balance Total Replicado</p>
+              <p className="text-slate-300 dark:text-slate-400 text-sm font-medium">Balance Total Replicado</p>
               <button
                 onClick={() => setShowBalance(!showBalance)}
                 className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
@@ -250,6 +254,45 @@ export default function BilleteraPage() {
                 </ul>
               </div>
 
+              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-4">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                  <Banknote className="w-4 h-4 text-emerald-600" />
+                  <span className="font-bold text-sm text-slate-800 dark:text-white">Transferencia Bancaria</span>
+                </div>
+                <ul className="p-4 space-y-3 text-sm">
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">Titular</span><span className="font-semibold text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.titular}</span></li>
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">Nro. de Cuenta</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.cuenta}</span></li>
+                  <li className="flex justify-between items-center"><span className="text-slate-500 dark:text-slate-400">RIF</span><span className="font-mono font-medium text-slate-800 dark:text-white">{DATOS_RECARGA.transferencia.rif}</span></li>
+                </ul>
+              </div>
+
+              <div className="bg-white dark:bg-velocity-surface rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm transition-colors mt-4">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2 bg-slate-50/50 dark:bg-white/5">
+                  <CreditCard className="w-4 h-4 text-[#0EA5E9]" />
+                  <span className="font-bold text-sm text-slate-800 dark:text-white">Tarjeta Internacional (BDV, Mercantil, Banesco)</span>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Nombre del Titular</label>
+                      <input type="text" placeholder="Como aparece en la tarjeta" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Número de Tarjeta</label>
+                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm font-mono tracking-widest focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Fecha de Exp.</label>
+                      <input type="text" placeholder="MM/AA" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">CVC</label>
+                      <input type="password" placeholder="123" className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none transition-all" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <button type="button" onClick={() => handleTabChange("principal")} className="mt-4 w-full py-4 rounded-xl font-bold text-white shadow-xl shadow-velocity-primary/40 hover:scale-[1.01] transition-all" style={{ backgroundColor: BRAND.colors.primary }}>
                 Confirmar Depósito
               </button>
@@ -324,13 +367,10 @@ export default function BilleteraPage() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Método de Destino</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-white text-sm font-medium focus:ring-2 focus:ring-velocity-primary/20 outline-none transition-all appearance-none cursor-pointer">
-                  <option value="">Selecciona un método de pago</option>
-                  <option value="pago-movil">Pago Móvil</option>
-                  <option value="transferencia">Transferencia bancaria</option>
-                  <option value="wally">Wally</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="zinli">Zinli</option>
+                <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white text-sm font-medium focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20] outline-none transition-all appearance-none cursor-pointer">
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="">Selecciona un método de pago</option>
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="pago-movil">Pago Móvil</option>
+                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="transferencia">Transferencia bancaria</option>
                 </select>
               </div>
               <button type="button" className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-velocity-primary/40 transition-all hover:scale-[1.02]" style={{ backgroundColor: BRAND.colors.primary }}>

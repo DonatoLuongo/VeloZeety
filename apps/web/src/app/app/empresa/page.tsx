@@ -104,18 +104,18 @@ export default function MiEmpresaPage() {
         {/* Columna derecha: datos de la empresa, contacto, catálogo */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold text-slate-800 mb-1">Mi empresa</h1>
-            <p className="text-slate-500 text-sm mb-6">Gestiona tu negocio. Dashboard, pagos, facturación y envíos.</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">Mi empresa</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">Gestiona tu negocio. Dashboard, pagos, facturación y envíos.</p>
 
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-6">
-              <div className="p-5 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
+            <div className="bg-white dark:bg-[#1E2329] rounded-2xl border border-slate-200 dark:border-[#2B3139] overflow-hidden shadow-sm mb-6 transition-colors">
+              <div className="p-5 border-b border-slate-100 dark:border-[#2B3139] flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center">
-                    <Building2 className="w-7 h-7 text-slate-600" />
+                  <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-white/10 flex items-center justify-center">
+                    <Building2 className="w-7 h-7 text-slate-600 dark:text-slate-300" />
                   </div>
                   <div>
-                    <p className="font-semibold text-lg text-slate-800">{nombre || "Mi negocio"}</p>
-                    <p className="text-sm text-slate-500 capitalize">{tipo.replace("_", " ")}</p>
+                    <p className="font-semibold text-lg text-slate-800 dark:text-white">{nombre || "Mi negocio"}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 capitalize">{tipo.replace("_", " ")}</p>
                   </div>
                 </div>
                 {verified && <VerificadoBadge />}
@@ -144,12 +144,12 @@ export default function MiEmpresaPage() {
 
             {catalogo && productos.some((p) => p.nombre) && (
               <section>
-                <h2 className="text-lg font-semibold text-slate-800 mb-3">Catálogo / Menú</h2>
+                <h2 className="text-lg font-semibold text-slate-800 dark:text-white mb-3">Catálogo / Menú</h2>
                 <div className="space-y-3">
                   {productos.filter((p) => p.nombre).map((p) => (
-                    <div key={p.id} className="bg-white rounded-xl border border-slate-200 p-4">
-                      <p className="font-medium text-slate-800">{p.nombre}</p>
-                      {p.desc && <p className="text-sm text-slate-500">{p.desc}</p>}
+                    <div key={p.id} className="bg-white dark:bg-[#1E2329] rounded-xl border border-slate-200 dark:border-[#2B3139] p-4 transition-colors">
+                      <p className="font-medium text-slate-800 dark:text-white">{p.nombre}</p>
+                      {p.desc && <p className="text-sm text-slate-500 dark:text-slate-400">{p.desc}</p>}
                       <p className="text-sm font-semibold mt-1" style={{ color: BRAND.colors.primary }}>${p.precio || "0"}</p>
                     </div>
                   ))}
@@ -166,14 +166,14 @@ export default function MiEmpresaPage() {
     );
   }
 
-  const inputClass = "w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition text-slate-900 font-semibold placeholder:text-slate-500 bg-white";
-  const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
-  const selectClass = "w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#0EA5E9]/20 focus:border-[#0EA5E9] outline-none transition text-slate-800 font-semibold bg-white appearance-none cursor-pointer";
+  const inputClass = "w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-[#2B3139] focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20] outline-none transition text-slate-900 dark:text-white font-semibold placeholder:text-slate-500 dark:placeholder:text-slate-400 bg-white dark:bg-[#1E2329]";
+  const labelClass = "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5";
+  const selectClass = "w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-[#2B3139] focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20] outline-none transition text-slate-800 dark:text-white font-semibold bg-white dark:bg-[#1E2329] appearance-none cursor-pointer";
 
   return (
-    <div className="max-w-2xl mx-auto p-4 md:p-6">
-      <h1 className="text-2xl font-bold text-slate-800 mb-1">Registrar mi empresa</h1>
-      <p className="text-slate-500 text-sm mb-6">
+    <div className="max-w-2xl mx-auto p-4 md:p-6 transition-colors">
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">Registrar mi empresa</h1>
+      <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
         Completa los pasos para que tu negocio esté visible y los clientes puedan comprar y pedir delivery.
       </p>
 
@@ -199,12 +199,12 @@ export default function MiEmpresaPage() {
             <div>
               <label className={labelClass}>Tipo de negocio</label>
               <select value={tipo} onChange={(e) => setTipo(e.target.value as typeof tipo)} className={selectClass}>
-                <option value="restaurante" className="text-slate-800 font-medium bg-white">Restaurante</option>
-                <option value="tienda" className="text-slate-800 font-medium bg-white">Tienda</option>
-                <option value="comida_rapida" className="text-slate-800 font-medium bg-white">Comida rápida</option>
-                <option value="panaderia" className="text-slate-800 font-medium bg-white">Panadería</option>
-                <option value="farmacia" className="text-slate-800 font-medium bg-white">Farmacia</option>
-                <option value="otro" className="text-slate-800 font-medium bg-white">Otro</option>
+                <option value="restaurante" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Restaurante</option>
+                <option value="tienda" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Tienda</option>
+                <option value="comida_rapida" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Comida rápida</option>
+                <option value="panaderia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Panadería</option>
+                <option value="farmacia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Farmacia</option>
+                <option value="otro" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Otro</option>
               </select>
             </div>
             <div>
@@ -213,7 +213,7 @@ export default function MiEmpresaPage() {
             </div>
             <div>
               <label className={`${labelClass} flex items-center gap-2`}><ImageIcon className="w-4 h-4" /> Logo o imagen (próximamente)</label>
-              <div className="w-full h-24 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-sm">
+              <div className="w-full h-24 rounded-xl border-2 border-dashed border-slate-200 dark:border-[#2B3139] flex items-center justify-center text-slate-400 text-sm bg-slate-50 dark:bg-white/5 transition-colors">
                 Subir imagen
               </div>
             </div>
@@ -255,21 +255,21 @@ export default function MiEmpresaPage() {
 
         {step === 2 && (
           <>
-            <p className="text-slate-600 text-sm">Activa los servicios que ofreces. El pago por delivery se gestiona desde la app.</p>
-            <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-200 hover:border-[#0EA5E9]/30 cursor-pointer">
-              <input type="checkbox" checked={delivery} onChange={(e) => setDelivery(e.target.checked)} className="rounded border-slate-300 w-5 h-5" />
-              <Truck className="w-5 h-5 text-slate-500" />
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Activa los servicios que ofreces. El pago por delivery se gestiona desde la app.</p>
+            <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-200 dark:border-[#2B3139] hover:border-[#F46E20]/30 dark:hover:border-[#F46E20]/30 cursor-pointer transition-colors bg-white dark:bg-[#1E2329]">
+              <input type="checkbox" checked={delivery} onChange={(e) => setDelivery(e.target.checked)} className="rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 w-5 h-5 text-[#F46E20] focus:ring-[#F46E20]" />
+              <Truck className="w-5 h-5 text-slate-500 dark:text-slate-400" />
               <div>
-                <p className="font-medium text-slate-800">Ofrecer delivery</p>
-                <p className="text-sm text-slate-500">Nuestra flota lleva los pedidos a tus clientes.</p>
+                <p className="font-medium text-slate-800 dark:text-white">Ofrecer delivery</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Nuestra flota lleva los pedidos a tus clientes.</p>
               </div>
             </label>
-            <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-200 hover:border-[#0EA5E9]/30 cursor-pointer">
-              <input type="checkbox" checked={catalogo} onChange={(e) => setCatalogo(e.target.checked)} className="rounded border-slate-300 w-5 h-5" />
-              <Package className="w-5 h-5 text-slate-500" />
+            <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-slate-200 dark:border-[#2B3139] hover:border-[#F46E20]/30 dark:hover:border-[#F46E20]/30 cursor-pointer transition-colors bg-white dark:bg-[#1E2329]">
+              <input type="checkbox" checked={catalogo} onChange={(e) => setCatalogo(e.target.checked)} className="rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 w-5 h-5 text-[#F46E20] focus:ring-[#F46E20]" />
+              <Package className="w-5 h-5 text-slate-500 dark:text-slate-400" />
               <div>
-                <p className="font-medium text-slate-800">Catálogo / menú</p>
-                <p className="text-sm text-slate-500">Productos o platos que los clientes pueden ver y pedir.</p>
+                <p className="font-medium text-slate-800 dark:text-white">Catálogo / menú</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Productos o platos que los clientes pueden ver y pedir.</p>
               </div>
             </label>
           </>
@@ -277,21 +277,21 @@ export default function MiEmpresaPage() {
 
         {step === 3 && catalogo && (
           <>
-            <p className="text-slate-600 text-sm">Añade productos o platos. Los clientes pagarán con su billetera y tú recibirás el pago (retiro desde 10 USD).</p>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Añade productos o platos. Los clientes pagarán con su billetera y tú recibirás el pago (retiro desde 10 USD).</p>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">Productos o platos</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Productos o platos</label>
               <button type="button" onClick={addProducto} className="text-sm font-medium flex items-center gap-1" style={{ color: BRAND.colors.primary }}>
                 <Plus className="w-4 h-4" /> Añadir
               </button>
             </div>
             {productos.map((p, i) => (
-              <div key={p.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <input type="text" placeholder="Nombre del producto o plato" value={p.nombre} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, nombre: e.target.value } : x)))} className={`${inputClass} bg-white`} />
+              <div key={p.id} className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-[#2B3139] space-y-2">
+                <input type="text" placeholder="Nombre del producto o plato" value={p.nombre} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, nombre: e.target.value } : x)))} className={`${inputClass}`} />
                 <div className="grid grid-cols-2 gap-2">
-                  <input type="text" placeholder="Precio (USD)" value={p.precio} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, precio: e.target.value } : x)))} className={`${inputClass} bg-white`} />
-                  <input type="text" placeholder="Categoría" value={p.categoria} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, categoria: e.target.value } : x)))} className={`${inputClass} bg-white`} />
+                  <input type="text" placeholder="Precio (USD)" value={p.precio} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, precio: e.target.value } : x)))} className={`${inputClass}`} />
+                  <input type="text" placeholder="Categoría" value={p.categoria} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, categoria: e.target.value } : x)))} className={`${inputClass}`} />
                 </div>
-                <input type="text" placeholder="Descripción breve" value={p.desc} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, desc: e.target.value } : x)))} className={`${inputClass} bg-white`} />
+                <input type="text" placeholder="Descripción breve" value={p.desc} onChange={(e) => setProductos((prev) => prev.map((x, j) => (j === i ? { ...x, desc: e.target.value } : x)))} className={`${inputClass}`} />
               </div>
             ))}
           </>
@@ -299,7 +299,7 @@ export default function MiEmpresaPage() {
 
         <div className="flex gap-3 pt-4">
           {step > 0 && (
-            <button type="button" onClick={handleBack} className="px-5 py-3 rounded-xl border border-slate-200 font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+            <button type="button" onClick={handleBack} className="px-5 py-3 rounded-xl border border-slate-200 dark:border-white/10 font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 flex items-center gap-2">
               <ChevronLeft className="w-4 h-4" /> Atrás
             </button>
           )}
@@ -310,8 +310,8 @@ export default function MiEmpresaPage() {
         </div>
       </form>
 
-      <p className="mt-6 text-xs text-slate-500">
-        Tras la revisión, los administradores pueden asignar la insignia <strong>Verificado</strong>. Los pagos se depositan en tu wallet; retiro desde 10 USD por pago móvil o transferencia.
+      <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">
+        Tras la revisión, los administradores pueden asignar la insignia <strong className="dark:text-white">Verificado</strong>. Los pagos se depositan en tu wallet; retiro desde 10 USD por pago móvil o transferencia.
       </p>
     </div>
   );

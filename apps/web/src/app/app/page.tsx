@@ -25,6 +25,8 @@ import {
   Briefcase,
   Dog,
   Boxes,
+  Copy,
+  CheckCircle2,
 } from "lucide-react";
 import AppMap from "@/components/AppMap";
 import MapPickerModal from "@/components/MapPickerModal";
@@ -97,6 +99,8 @@ export default function AppInicioPage() {
   const [payment, setPayment] = useState<PaymentMethod>("wallet");
   const [step, setStep] = useState<"select" | "confirm" | "driver">("select");
   const [showConductorProfile, setShowConductorProfile] = useState(false);
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
   const [negocioSeleccionado, setNegocioSeleccionado] = useState<typeof NEGOCIOS_VERIFICADOS[0] | null>(null);
   const [showMapPicker, setShowMapPicker] = useState(false);
   const [mapPickerFor, setMapPickerFor] = useState<"pickup" | "dropoff" | null>(null);
@@ -213,32 +217,32 @@ export default function AppInicioPage() {
                   <div className="p-5 -mt-10 relative overflow-y-auto">
                     {/* Logo + nombre */}
                     <div className="flex items-end gap-3 mb-3">
-                      <div className="w-16 h-16 rounded-xl border-2 border-white bg-white shadow-md flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="w-16 h-16 rounded-xl border-2 border-white dark:border-slate-800 bg-white dark:bg-slate-800 shadow-md flex items-center justify-center overflow-hidden flex-shrink-0">
                         {negocioSeleccionado.logo === BRAND.logo ? (
                           <LocationIconOrange size={40} />
                         ) : negocioSeleccionado.logo ? (
                           <img src={negocioSeleccionado.logo} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <Building2 className="w-8 h-8 text-slate-500" />
+                          <Building2 className="w-8 h-8 text-slate-500 dark:text-slate-400" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0 pb-0.5">
-                        <h3 className="font-bold text-slate-800 text-lg truncate">{negocioSeleccionado.nombre}</h3>
-                        <p className="text-sm text-slate-500">{negocioSeleccionado.tipo}</p>
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg truncate">{negocioSeleccionado.nombre}</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{negocioSeleccionado.tipo}</p>
                         {negocioSeleccionado.verified && (
-                          <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-medium mt-1">
-                            <BadgeCheck className="w-3.5 h-3.5" /> Verificado · Solo comida
+                          <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-500 text-xs font-medium mt-1">
+                            <BadgeCheck className="w-3.5 h-3.5" /> Verificado
                           </span>
                         )}
                       </div>
                     </div>
                     {"descripcion" in negocioSeleccionado && negocioSeleccionado.descripcion && (
-                      <p className="text-sm text-slate-600 mb-3">{negocioSeleccionado.descripcion}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{negocioSeleccionado.descripcion}</p>
                     )}
-                    <div className="space-y-2 mb-4 text-sm text-slate-600">
+                    <div className="space-y-2 mb-4 text-sm text-slate-600 dark:text-slate-300">
                       {"direccion" in negocioSeleccionado && negocioSeleccionado.direccion && (
                         <p className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 flex-shrink-0 text-slate-400" />
+                          <MapPin className="w-4 h-4 flex-shrink-0 text-slate-400 dark:text-slate-500" />
                           {negocioSeleccionado.direccion}
                         </p>
                       )}
@@ -255,49 +259,49 @@ export default function AppInicioPage() {
                         </p>
                       )}
                     </div>
-                    <p className="text-sm font-semibold text-slate-800 mb-2">Catálogo — Selecciona cantidad y añade al carrito</p>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">Catálogo — Selecciona cantidad y añade al carrito</p>
                     <ul className="space-y-2 mb-4 max-h-44 overflow-y-auto">
                       {negocioSeleccionado.productos.map((p, i) => {
                         const key = `${negocioSeleccionado.id}-${p.nombre}`;
                         const q = cantidades[key] ?? 1;
                         return (
-                          <li key={i} className="py-2 px-3 rounded-lg bg-slate-50 border border-slate-100 text-sm flex flex-wrap items-center gap-2">
+                          <li key={i} className="py-2 px-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-sm flex flex-wrap items-center gap-2">
                             <div className="flex-1 min-w-0">
-                              <span className="font-medium text-slate-800">{p.nombre}</span>
+                              <span className="font-medium text-slate-800 dark:text-slate-100">{p.nombre}</span>
                               <span className="ml-1 font-semibold" style={{ color: BRAND.colors.primary }}>${p.precio}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: Math.max(1, (c[key] ?? 1) - 1) }))} className="w-7 h-7 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium">−</button>
-                              <span className="w-8 text-center font-medium text-slate-800">{q}</span>
-                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: (c[key] ?? 1) + 1 }))} className="w-7 h-7 rounded-lg border border-slate-200 bg-white text-slate-600 font-medium">+</button>
-                              <button type="button" onClick={() => setCarrito((prev) => [...prev, { nombre: p.nombre, precio: p.precio, cantidad: q }])} className="ml-1 px-2 py-1 rounded-lg text-xs font-medium text-white" style={{ backgroundColor: BRAND.colors.primary }}>Añadir</button>
+                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: Math.max(1, (c[key] ?? 1) - 1) }))} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">−</button>
+                              <span className="w-8 text-center font-medium text-slate-800 dark:text-slate-100">{q}</span>
+                              <button type="button" onClick={() => setCantidades((c) => ({ ...c, [key]: (c[key] ?? 1) + 1 }))} className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">+</button>
+                              <button type="button" onClick={() => setCarrito((prev) => [...prev, { nombre: p.nombre, precio: p.precio, cantidad: q }])} className="ml-1 px-2 py-1 rounded-lg text-xs font-medium text-white shadow-sm" style={{ backgroundColor: BRAND.colors.primary }}>Añadir</button>
                             </div>
                           </li>
                         );
                       })}
                     </ul>
                     {carrito.length > 0 && (
-                      <div className="mb-4 p-3 rounded-xl bg-slate-100 border border-slate-200">
-                        <p className="text-sm font-semibold text-slate-800 mb-2 flex items-center gap-1"><ShoppingBag className="w-4 h-4" /> Tu carrito ({carrito.length} {carrito.length === 1 ? "ítem" : "ítems"})</p>
-                        <ul className="space-y-1 text-sm text-slate-600 mb-2 max-h-24 overflow-y-auto">
+                      <div className="mb-4 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1"><ShoppingBag className="w-4 h-4" /> Tu carrito ({carrito.length} {carrito.length === 1 ? "ítem" : "ítems"})</p>
+                        <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-300 mb-2 max-h-24 overflow-y-auto">
                           {carrito.map((item, i) => (
                             <li key={i} className="flex justify-between">
                               <span>{item.nombre} × {item.cantidad}</span>
-                              <span className="font-medium">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}</span>
+                              <span className="font-medium text-slate-800 dark:text-slate-100">${(parseFloat(item.precio) * item.cantidad).toFixed(2)}</span>
                             </li>
                           ))}
                         </ul>
-                        <p className="text-sm font-bold text-slate-800 flex justify-between">
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 flex justify-between mt-3 pt-2 border-t border-slate-200 dark:border-slate-700">
                           Total <span style={{ color: BRAND.colors.primary }}>${carrito.reduce((sum, i) => sum + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)}</span>
                         </p>
-                        <button type="button" onClick={() => setCarrito([])} className="mt-2 w-full py-1.5 rounded-lg border border-slate-300 text-slate-600 text-xs font-medium">Vaciar carrito</button>
+                        <button type="button" onClick={() => setCarrito([])} className="mt-3 w-full py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition">Vaciar carrito</button>
                       </div>
                     )}
                     <button type="button" className="w-full py-2.5 rounded-xl font-medium text-white text-sm flex items-center justify-center gap-2" style={{ backgroundColor: BRAND.colors.primary }} disabled={carrito.length === 0}>
                       <Wallet className="w-4 h-4" />
                       {carrito.length > 0 ? `Pagar con VELO ($${carrito.reduce((s, i) => s + parseFloat(i.precio) * i.cantidad, 0).toFixed(2)})` : "Pagar con VELO"}
                     </button>
-                    <button type="button" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }} className="mt-2 w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium">
+                    <button type="button" onClick={() => { setNegocioSeleccionado(null); setCarrito([]); setCantidades({}); }} className="mt-2 w-full py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 dark:bg-slate-800 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition">
                       Cerrar
                     </button>
                   </div>
@@ -728,33 +732,99 @@ export default function AppInicioPage() {
                     <p className="text-xs text-emerald-600 font-medium mt-1">Llegada aprox. 3 min</p>
                   </div>
                 </div>
-                <div className="px-4 pb-4 flex gap-2">
-                  <button type="button" onClick={() => setShowConductorProfile(true)} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                    Ver perfil
-                  </button>
-                  <button type="button" className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: BRAND.colors.primary }}>
-                    Llamar / Chat
+                <div className="px-4 pb-4 flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setShowConductorProfile(true)} className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                      Ver perfil
+                    </button>
+                    <button type="button" className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white shadow-md shadow-[#0EA5E9]/20 transition hover:opacity-90" style={{ backgroundColor: BRAND.colors.primary }}>
+                      Llamar / Chat
+                    </button>
+                  </div>
+                  <button type="button" onClick={() => setShowPaymentMethods(true)} className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800/80 border border-slate-800 dark:border-slate-700 text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-700 transition shadow-lg shrink-0 mt-1">
+                    <Wallet className="w-4 h-4 text-emerald-400" /> Pagar Servicio (P2P)
                   </button>
                 </div>
               </div>
               {showConductorProfile && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setShowConductorProfile(false)}>
-                  <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-5 border border-slate-200" onClick={(e) => e.stopPropagation()}>
-                    <h3 className="font-semibold text-slate-800 mb-3">Perfil del conductor</h3>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowConductorProfile(false)}>
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-sm w-full p-5 border border-slate-200 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
+                    <h3 className="font-semibold text-slate-800 dark:text-white mb-3">Perfil del conductor</h3>
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-14 h-14 rounded-full bg-[#0EA5E9] flex items-center justify-center text-white">
                         <User className="w-7 h-7" />
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-800">Carlos Mendoza</p>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium mt-1">Verificado</span>
+                        <p className="font-semibold text-slate-800 dark:text-white">Carlos Mendoza</p>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-xs font-medium mt-1">Verificado</span>
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600">{vehicleDetail[vehicle]}</p>
-                    <p className="text-sm text-slate-500 mt-1">Color: {vehicleColors[vehicle]}</p>
-                    <p className="text-sm text-slate-500 mt-1">⭐ 4.9 · Más de 520 viajes</p>
-                    <p className="text-sm text-slate-500 mt-1">Tarifa estimada: ${tarifa}</p>
-                    <button type="button" onClick={() => setShowConductorProfile(false)} className="mt-4 w-full py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium">Cerrar</button>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{vehicleDetail[vehicle]}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">Color: {vehicleColors[vehicle]}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">⭐ 4.9 · Más de 520 viajes</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">Tarifa estimada: <strong className="text-slate-800 dark:text-white">${tarifa}</strong></p>
+                    <button type="button" onClick={() => setShowConductorProfile(false)} className="mt-4 w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">Cerrar</button>
+                  </div>
+                </div>
+              )}
+              {showPaymentMethods && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowPaymentMethods(false)}>
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 animate-scale-in" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-3 mb-4 border-b border-slate-100 dark:border-slate-800/60 pb-4">
+                      <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-500 border border-emerald-200 dark:border-emerald-800/30">
+                        <Banknote className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-800 dark:text-white text-lg">Pagar a Carlos</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Datos privados del conductor</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700/50">
+                        <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                          <Smartphone className="w-3.5 h-3.5 text-velocity-primary" />
+                          Pago Móvil
+                        </p>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex justify-between items-center group">
+                            <span className="text-slate-500 dark:text-slate-400 font-medium">Banco</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-slate-800 dark:text-slate-200">Banesco (0134)</span>
+                              <button onClick={() => { navigator.clipboard.writeText("0134"); setCopied("banco"); setTimeout(() => setCopied(null), 2000); }} className="text-slate-400 hover:text-[#0EA5E9] transition-colors" title="Copiar código de banco">
+                                {copied === "banco" ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center group">
+                            <span className="text-slate-500 dark:text-slate-400 font-medium">Teléfono</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-semibold tracking-wide text-slate-800 dark:text-slate-200">0414-1234567</span>
+                              <button onClick={() => { navigator.clipboard.writeText("04141234567"); setCopied("tlf"); setTimeout(() => setCopied(null), 2000); }} className="text-slate-400 hover:text-[#0EA5E9] transition-colors" title="Copiar teléfono">
+                                {copied === "tlf" ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center group">
+                            <span className="text-slate-500 dark:text-slate-400 font-medium">Cédula</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-semibold tracking-wide text-slate-800 dark:text-slate-200">V-20123456</span>
+                              <button onClick={() => { navigator.clipboard.writeText("20123456"); setCopied("ci"); setTimeout(() => setCopied(null), 2000); }} className="text-slate-400 hover:text-[#0EA5E9] transition-colors" title="Copiar cédula">
+                                {copied === "ci" ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] font-medium text-center text-amber-700/80 dark:text-amber-500/80 mt-4 bg-amber-50/50 dark:bg-amber-900/10 p-2.5 rounded-lg border border-amber-100/50 dark:border-amber-900/20">
+                      Copia los datos tocando el icono. Realiza el pago en tu banco e infórmale al conductor al abordar.
+                    </p>
+
+                    <button type="button" onClick={() => setShowPaymentMethods(false)} className="mt-4 w-full py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all active:scale-[0.98]">
+                      Volver al viaje
+                    </button>
                   </div>
                 </div>
               )}

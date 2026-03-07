@@ -26,6 +26,7 @@ function RegisterForm() {
   // Optional emprendedor section
   const [showEmprendedor, setShowEmprendedor] = useState(false);
   const [bizName, setBizName] = useState("");
+  const [bizRif, setBizRif] = useState("");
   const [bizCategory, setBizCategory] = useState("");
   const [bizAddress, setBizAddress] = useState("");
   const [bizPhone, setBizPhone] = useState("");
@@ -41,7 +42,7 @@ function RegisterForm() {
     const userData = {
       email, fullName, phone, rol,
       emprendedor: showEmprendedor && bizName ? {
-        bizName, bizCategory, bizAddress, bizPhone,
+        bizName, bizRif, bizCategory, bizAddress, bizPhone,
         status: "pending_verification",
       } : null,
     };
@@ -162,6 +163,14 @@ function RegisterForm() {
                 </label>
                 <input type="text" value={bizName} onChange={(e) => setBizName(e.target.value)}
                   placeholder={lang === "es" ? "Ej. Pizzería Napoli" : "E.g. Napoli Pizza"}
+                  className={INPUT} />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[var(--velocity-text)] mb-1.5">
+                  {lang === "es" ? "RIF del negocio" : "Business RIF"} *
+                </label>
+                <input type="text" value={bizRif} onChange={(e) => setBizRif(e.target.value)}
+                  placeholder={lang === "es" ? "Ej. J-12345678-9" : "E.g. J-12345678-9"}
                   className={INPUT} />
               </div>
               <div>

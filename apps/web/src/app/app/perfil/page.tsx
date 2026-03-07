@@ -33,10 +33,11 @@ import VehiculosPanel from "@/components/perfil/VehiculosPanel";
 import ConfiguracionPanel from "@/components/perfil/ConfiguracionPanel";
 import AyudaPanel from "@/components/perfil/AyudaPanel";
 import MetodosPagoPanel from "@/components/perfil/MetodosPagoPanel";
+import EmpresaPanel from "@/components/perfil/EmpresaPanel";
 
 type Rol = "cliente" | "conductor" | "emprendedor";
 
-type SectionId = "inicio" | "carritos" | "favoritos" | "referidos" | "historial" | "vehiculos" | "configuracion" | "ayuda" | "metodos-pago";
+type SectionId = "inicio" | "carritos" | "favoritos" | "referidos" | "historial" | "vehiculos" | "configuracion" | "ayuda" | "metodos-pago" | "empresa";
 
 export default function PerfilPage() {
   const router = useRouter();
@@ -69,6 +70,7 @@ export default function PerfilPage() {
     { id: "referidos", href: "/app/perfil/referidos", Icon: Users, title: "Referidos", desc: "Invita amigos y gana USD en tu wallet" },
     { id: "historial", href: "/app/perfil/historial", Icon: History, title: "Historial de viajes", desc: "Ver todos tus viajes" },
     ...((rol === "cliente" || rol === "conductor") ? [{ id: "vehiculos" as SectionId, href: "/app/perfil/vehiculos", Icon: Car, title: "Mis vehículos", desc: "Gestionar vehículos" }] : []),
+    ...((rol === "emprendedor") ? [{ id: "empresa" as SectionId, href: "/app/perfil/empresa", Icon: Building2, title: "Mi Empresa", desc: "Gestión de perfil y negocio" }] : []),
     { id: "configuracion", href: "/app/perfil/configuracion", Icon: Settings, title: "Configuración", desc: "Preferencias y ajustes" },
     { id: "ayuda", href: "/help", Icon: HelpCircle, title: "Ayuda y soporte", desc: "Preguntas frecuentes y contacto" },
     { id: "metodos-pago", href: "/app/perfil/metodos-pago", Icon: CreditCard, title: "Métodos de pago", desc: "Pago Móvil, Transferencia, Wally, PayPal, Zinli" },
@@ -209,9 +211,9 @@ export default function PerfilPage() {
                     <div className="mt-5 pt-5 border-t border-slate-100 dark:border-white/5">
                       <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">Información de emprendedor</p>
                       <p className="text-base text-slate-600 dark:text-slate-300">Tu negocio y catálogo se gestionan en la sección Empresa.</p>
-                      <Link href="/app/empresa" className="inline-flex items-center gap-1 mt-2 text-base font-medium text-sky-600 hover:text-sky-700">
+                      <button onClick={() => setSelectedSection("empresa")} className="inline-flex items-center gap-1 mt-2 text-base font-medium text-sky-600 hover:text-sky-700">
                         Ir a Mi empresa <ChevronRight className="w-4 h-4" />
-                      </Link>
+                      </button>
                     </div>
                   )}
 
@@ -247,9 +249,9 @@ export default function PerfilPage() {
                     <CreditCard className="w-5 h-5" /> Mi Billetera
                   </Link>
                   {rol === "emprendedor" && (
-                    <Link href="/app/empresa" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+                    <button onClick={() => setSelectedSection("empresa")} className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
                       <Building2 className="w-5 h-5" /> Panel Empresa
-                    </Link>
+                    </button>
                   )}
                 </div>
               </div>
@@ -279,6 +281,7 @@ export default function PerfilPage() {
           {selectedSection === "referidos" && <ReferidosPanel embedInDashboard />}
           {selectedSection === "historial" && <HistorialPanel embedInDashboard />}
           {selectedSection === "vehiculos" && <VehiculosPanel embedInDashboard />}
+          {selectedSection === "empresa" && <EmpresaPanel embedInDashboard />}
           {selectedSection === "configuracion" && <ConfiguracionPanel embedInDashboard />}
           {selectedSection === "ayuda" && <AyudaPanel embedInDashboard />}
           {selectedSection === "metodos-pago" && <MetodosPagoPanel embedInDashboard />}

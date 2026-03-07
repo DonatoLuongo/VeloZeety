@@ -177,12 +177,12 @@ function HeroCarousel({ lang, dark }: { lang: "es" | "en"; dark: boolean }) {
 
 /* ─── Services data ─── */
 const SERVICES = [
-  { Icon: Bike, color: "#F46E20", title_es: "Viajes en Moto", title_en: "Motorcycle Rides", sub_es: "Rápido, sin atascos", sub_en: "Fast, no traffic", href: "/ride" },
-  { Icon: Car, color: "#F0B90B", title_es: "Viajes en Carro", title_en: "Car Rides", sub_es: "Comodidad para todos", sub_en: "Comfort for all", href: "/ride" },
-  { Icon: Package, color: "#0EA5E9", title_es: "Delivery Express", title_en: "Express Delivery", sub_es: "Paquetes en minutos", sub_en: "Packages in minutes", href: "/app/envios" },
-  { Icon: Wallet, color: "#22C55E", title_es: "Billetera Digital", title_en: "Digital Wallet", sub_es: "USDT · Bs · PayPal", sub_en: "USDT · Bs · PayPal", href: "/app/billetera" },
-  { Icon: Ambulance, color: "#EF4444", title_es: "Emergencias", title_en: "Emergency", sub_es: "Protocolo médico", sub_en: "Medical protocol", href: "/app/emergencia" },
-  { Icon: Building2, color: "#A855F7", title_es: "Tu Negocio", title_en: "Your Business", sub_es: "Tienda + delivery", sub_en: "Store + delivery", href: "/business" },
+  { Icon: Bike, color: "#F46E20", title_es: "Viajes en Moto", title_en: "Motorcycle Rides", sub_es: "Rápido, sin atascos", sub_en: "Fast, no traffic", href: "/register?rol=cliente" },
+  { Icon: Car, color: "#F0B90B", title_es: "Viajes en Carro", title_en: "Car Rides", sub_es: "Comodidad para todos", sub_en: "Comfort for all", href: "/register?rol=cliente" },
+  { Icon: Package, color: "#0EA5E9", title_es: "Delivery Express", title_en: "Express Delivery", sub_es: "Paquetes en minutos", sub_en: "Packages in minutes", href: "/register?rol=cliente" },
+  { Icon: Wallet, color: "#22C55E", title_es: "Billetera Digital", title_en: "Digital Wallet", sub_es: "USDT · Bs · PayPal", sub_en: "USDT · Bs · PayPal", href: "/register?rol=cliente" },
+  { Icon: Ambulance, color: "#EF4444", title_es: "Emergencias", title_en: "Emergency", sub_es: "Protocolo médico", sub_en: "Medical protocol", href: "/register?rol=cliente" },
+  { Icon: Building2, color: "#A855F7", title_es: "Tu Negocio", title_en: "Your Business", sub_es: "Tienda + delivery", sub_en: "Store + delivery", href: "/register?rol=emprendedor" },
 ];
 
 /* ─── Business feature cards (Xiaomi product highlight) ─── */
@@ -247,9 +247,9 @@ export default function Home() {
 
           <nav className="hidden md:flex items-center gap-6">
             {[
-              [lang === "es" ? "Viajes" : "Rides", "/ride"],
-              [lang === "es" ? "Conducir" : "Drive", "/driver"],
-              [lang === "es" ? "Empresas" : "Business", "/business"],
+              [lang === "es" ? "Viajes" : "Rides", "/register?rol=cliente"],
+              [lang === "es" ? "Conducir" : "Drive", "/register?rol=conductor"],
+              [lang === "es" ? "Empresas" : "Business", "/register?rol=emprendedor"],
               [lang === "es" ? "Nosotros" : "About", "/about"],
             ].map(([label, href]) => (
               <Link key={href} href={href}
@@ -333,7 +333,7 @@ export default function Home() {
                 {lang === "es" ? "Todo en una sola app" : "Everything in one app"}
               </h2>
             </div>
-            <Link href="/about" className="text-sm font-bold text-[#F46E20] hover:underline flex items-center gap-1">
+            <Link href="/register?rol=cliente" className="text-sm font-bold text-[#F46E20] hover:underline flex items-center gap-1">
               {lang === "es" ? "Ver todos" : "See all"} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -403,7 +403,7 @@ export default function Home() {
                   <span key={item} className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--velocity-border)] text-[var(--velocity-muted)]">{item}</span>
                 ))}
               </div>
-              <Link href="/driver"
+              <Link href="/register?rol=conductor"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-white text-sm transition hover:opacity-90"
                 style={{ backgroundColor: "#F46E20" }}>
                 {lang === "es" ? "Comenzar a conducir" : "Start driving"} <ArrowRight className="w-4 h-4" />
@@ -431,7 +431,7 @@ export default function Home() {
               <h2 className="text-2xl md:text-3xl font-black text-[var(--velocity-text)]">
                 {lang === "es" ? "VeloZeety para tu empresa" : "VeloZeety for your business"}
               </h2>
-              <Link href="/business" className="text-sm font-bold text-[#F0B90B] hover:underline flex items-center gap-1">
+              <Link href="/register?rol=emprendedor" className="text-sm font-bold text-[#F0B90B] hover:underline flex items-center gap-1">
                 {lang === "es" ? "Más info" : "Learn more"} <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -579,10 +579,10 @@ export default function Home() {
                 },
                 {
                   title: lang === "es" ? "Productos" : "Products", links: [
-                    [lang === "es" ? "Viajes" : "Trips", "/app"],
-                    [lang === "es" ? "Conducir" : "Drive", "/driver"],
-                    [lang === "es" ? "VeloZeety Empresas" : "VeloZeety Business", "/business"],
-                    [lang === "es" ? "Tienda y servicios" : "Store & services", "/app/servicios"],
+                    [lang === "es" ? "Viajes" : "Trips", "/register?rol=cliente"],
+                    [lang === "es" ? "Conducir" : "Drive", "/register?rol=conductor"],
+                    [lang === "es" ? "VeloZeety Empresas" : "VeloZeety Business", "/register?rol=emprendedor"],
+                    [lang === "es" ? "Tienda y servicios" : "Store & services", "/register?rol=cliente"],
                   ]
                 },
                 {
@@ -594,8 +594,8 @@ export default function Home() {
                 },
                 {
                   title: lang === "es" ? "Viajes" : "Rides", links: [
-                    [lang === "es" ? "Reservar" : "Reserve", "/app"],
-                    [lang === "es" ? "Terminal" : "Terminal", "/app"],
+                    [lang === "es" ? "Reservar" : "Reserve", "/register?rol=cliente"],
+                    [lang === "es" ? "Terminal" : "Terminal", "/register?rol=cliente"],
                     [lang === "es" ? "Privacidad" : "Privacy", "/privacy"],
                     [lang === "es" ? "Términos" : "Terms", "/terms"],
                   ]

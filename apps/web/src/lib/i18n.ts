@@ -14,6 +14,13 @@ export const translations = {
         nav_register_drive_desc: "Ganar con tu vehículo",
         nav_register_biz: "Emprendedor",
         nav_register_biz_desc: "Tu negocio y delivery",
+        nav_home: "Inicio",
+        nav_shipments: "Envíos",
+        nav_wallet: "Billetera",
+        nav_services: "Servicios",
+        nav_emergency: "Emergencia",
+        nav_company: "Empresa",
+        nav_profile: "Perfil",
 
         // Landing Hero
         hero_title: "Tu ciudad en movimiento",
@@ -140,6 +147,13 @@ export const translations = {
         nav_register_drive_desc: "Earn with your vehicle",
         nav_register_biz: "Entrepreneur",
         nav_register_biz_desc: "Your business & delivery",
+        nav_home: "Home",
+        nav_shipments: "Shipments",
+        nav_wallet: "Wallet",
+        nav_services: "Services",
+        nav_emergency: "Emergency",
+        nav_company: "Business",
+        nav_profile: "Profile",
 
         // Landing Hero
         hero_title: "Your city in motion",

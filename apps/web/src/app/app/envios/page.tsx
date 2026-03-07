@@ -92,10 +92,10 @@ export default function EnviosPage() {
         <button
           onClick={() => { setTipoLogistica("mandaito"); if (vehiculo === "camion") setVehiculo("moto"); }}
           className={`p-4 rounded-2xl border-2 text-left transition-all ${tipoLogistica === "mandaito"
-            ? "border-[#F46E20] bg-[#F46E20]/8 dark:bg-[#F46E20]/10 shadow-md"
-            : "border-slate-200 dark:border-white/5 bg-white dark:bg-velocity-border hover:border-slate-300"}`}
+            ? "border-[#F46E20] bg-[#F46E20]/5 dark:bg-[#F46E20]/10 shadow-sm"
+            : "border-slate-200 dark:border-white/5 bg-white dark:bg-velocity-surface hover:border-slate-300 dark:hover:border-white/10"}`}
         >
-          <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center ${tipoLogistica === "mandaito" ? "bg-[#F46E20] text-white" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"}`}>
+          <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center ${tipoLogistica === "mandaito" ? "bg-[#F46E20] text-white shadow-md shadow-[#F46E20]/20" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"}`}>
             <Bike className="w-5 h-5" />
           </div>
           <p className="font-bold text-slate-800 dark:text-white">Mandaíto</p>
@@ -104,10 +104,10 @@ export default function EnviosPage() {
         <button
           onClick={() => { setTipoLogistica("flete"); setVehiculo("camion"); }}
           className={`p-4 rounded-2xl border-2 text-left transition-all ${tipoLogistica === "flete"
-            ? "border-[#059669] bg-emerald-50/60 dark:bg-emerald-500/8 shadow-md"
-            : "border-slate-200 dark:border-white/5 bg-white dark:bg-velocity-border hover:border-slate-300"}`}
+            ? "border-[#059669] bg-[#059669]/5 dark:bg-[#059669]/10 shadow-sm"
+            : "border-slate-200 dark:border-white/5 bg-white dark:bg-velocity-surface hover:border-slate-300 dark:hover:border-white/10"}`}
         >
-          <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center ${tipoLogistica === "flete" ? "bg-[#059669] text-white" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"}`}>
+          <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center ${tipoLogistica === "flete" ? "bg-[#059669] text-white shadow-md shadow-[#059669]/20" : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"}`}>
             <Truck className="w-5 h-5" />
           </div>
           <p className="font-bold text-slate-800 dark:text-white">Flete Pesado</p>
@@ -138,9 +138,11 @@ export default function EnviosPage() {
                   className={`flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all h-24
                     ${isDisabled
                       ? "opacity-40 cursor-not-allowed bg-slate-100 border-slate-200 dark:bg-white/5 dark:border-white/5 grayscale"
-                      : isSelected
-                        ? "border-[#F46E20] bg-[#F46E20]/8 dark:bg-[#F46E20]/15 text-[#F46E20] font-bold shadow-sm"
-                        : "border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-velocity-surface hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.02]"
+                      : isSelected && v.mode === "mandaito"
+                        ? "border-[#F46E20] bg-[#F46E20]/5 dark:bg-[#F46E20]/15 text-[#F46E20] font-bold shadow-sm"
+                        : isSelected && v.mode === "flete"
+                          ? "border-[#059669] bg-[#059669]/5 dark:bg-[#059669]/15 text-[#059669] font-bold shadow-sm"
+                          : "border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-velocity-surface hover:border-slate-300 dark:hover:border-white/20 hover:scale-[1.02]"
                     }`}
                 >
                   <v.Icon className="w-6 h-6" />

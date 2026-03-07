@@ -100,7 +100,6 @@ export default function EmergenciaPage() {
                     </Link>
                     <h1 className="text-lg font-bold text-[#3F474A] dark:text-velocity-text">Emergencias y Salud</h1>
                 </div>
-                <ThemeToggle />
             </div>
 
             <div className="max-w-3xl mx-auto p-4 md:p-6">
