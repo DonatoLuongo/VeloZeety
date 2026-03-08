@@ -26,6 +26,10 @@ import {
   Bus,
   CheckCircle2,
   Truck,
+  Car,
+  Bike,
+  Sparkles,
+  Info
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -66,13 +70,13 @@ const SERVICIOS_PREMIUM = [
   },
   {
     id: "autolavado",
-    title: "Autolavado",
+    title: "Autolavado Premium",
     short: "Lavado de vehículos en nuestro local",
-    Icon: Droplets,
-    tag: undefined as undefined,
-    detail: "Lavado profesional de motos y carros en las instalaciones VeloCity. Dirección del local indicada en la app. Servicio para particulares y flotas, con descuentos por plan. Incluye productos de calidad y atención rápida.",
-    pricing: "Moto desde 5 USD, carro desde 8 USD. Descuentos para flota.",
-    cta: "Ver ubicación del local",
+    Icon: Sparkles,
+    tag: "Nuevo" as const,
+    detail: "Lavado profesional de motos y carros en las instalaciones VeloCity. Servicio exclusivo para particulares y flotas, con descuentos por plan. Incluye productos de alta gama (cera de carnauba, shampoo neutro) y atención rápida con sala de espera VIP.",
+    pricing: "Motos desde $5 | Carros desde $8 | 4x4 desde $12",
+    cta: "Reservar Cita de Lavado",
   },
   {
     id: "grua",
@@ -117,6 +121,29 @@ const POR_PAGINA = 4;
 const CATEGORIAS_TIENDA = ["todos", "motos", "carros", "camiones", "4x4"] as const;
 
 type ProductItem = (typeof PRODUCTOS_TIENDA)[number];
+
+/* Mocks para Autolavado */
+const VEHICULOS_USUARIO = [
+  { id: "v1", tipo: "carro" as const, marca: "Toyota Yaris", placa: "AD345FG", color: "Gris" },
+  { id: "v2", tipo: "moto" as const, marca: "Honda XR 150", placa: "AA11BB", color: "Rojo" },
+];
+
+const PAQUETES_LAVADO = {
+  moto: [
+    { id: "m_basico", nombre: "Lavado Básico", desc: "Agua, shampoo y secado rápido", precio: 5 },
+    { id: "m_premium", nombre: "Lavado Premium", desc: "Incluye desengrasante, cera y silicón", precio: 8 },
+  ],
+  carro: [
+    { id: "c_basico", nombre: "Lavado Básico", desc: "Carrocería, aspirado simple", precio: 8 },
+    { id: "c_completo", nombre: "Lavado Completo", desc: "Aspirado profundo, tablero, encerado", precio: 12 },
+    { id: "c_vip", nombre: "Lavado VIP", desc: "Completo + lavado de motor y chasis", precio: 20 },
+  ],
+  "4x4": [
+    { id: "x_basico", nombre: "Lavado Básico", desc: "Carrocería, aspirado simple", precio: 12 },
+    { id: "x_completo", nombre: "Lavado Completo", desc: "Especial para barro, aspirado, encerado", precio: 18 },
+    { id: "x_vip", nombre: "Lavado VIP", desc: "Completo + lavado de chasis y motor 4x4", precio: 30 },
+  ],
+};
 
 /* Datos del negocio Tienda VeloCity para el modal */
 const NEGOCIO_TIENDA = {
@@ -274,6 +301,13 @@ export default function ServiciosPage() {
   const [subscribed, setSubscribed] = useState<Record<string, boolean>>({});
   const [aguaQuantityType, setAguaQuantityType] = useState("2");
   const [aguaQuantityCustom, setAguaQuantityCustom] = useState("");
+
+  /* Estados para Autolavado */
+  const [lavadoVehiculoId, setLavadoVehiculoId] = useState<string>("v1");
+  const [lavadoTipoManual, setLavadoTipoManual] = useState<"moto" | "carro" | "4x4">("carro");
+  const [lavadoPaqueteId, setLavadoPaqueteId] = useState<string>("");
+  const [lavadoFecha, setLavadoFecha] = useState<string>("");
+  const [lavadoHora, setLavadoHora] = useState<string>("09:00");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -630,26 +664,157 @@ export default function ServiciosPage() {
                         </>
                       )}
 
-                      {s.id === "autolavado" && (
+                      {s.id === "autolavado" && (() => {
+                        const esManual = lavadoVehiculoId === "manual";
+                        const vehiculoSeleccionado = VEHICULOS_USUARIO.find(v => v.id === lavadoVehiculoId);
+                        const tipoParaPaquetes = esManual ? lavadoTipoManual : (vehiculoSeleccionado?.tipo || "carro");
+                        const paquetes = PAQUETES_LAVADO[tipoParaPaquetes as keyof typeof PAQUETES_LAVADO] || PAQUETES_LAVADO.carro;
+
+                        // Auto-seleccionar primer paquete si cambia el tipo
+                        if (!paquetes.find(p => p.id === lavadoPaqueteId)) {
+                           if (paquetes.length > 0 && lavadoPaqueteId !== paquetes[0].id) {
+                               setTimeout(() => setLavadoPaqueteId(paquetes[0].id), 0);
+                           }
+                        }
+
+                        const paqueteSeleccionado = paquetes.find(p => p.id === lavadoPaqueteId) || paquetes[0];
+
+                        return (
                         <>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
-                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="moto">Moto</option>
-                              <option value="carro">Carro</option>
-                              <option value="camioneta">Camioneta / 4x4</option>
-                            </select>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <Car className="w-4 h-4" /> Selecciona tu Vehículo
+                            </label>
+                            <div className="grid grid-cols-1 gap-2 mb-4">
+                              {VEHICULOS_USUARIO.map(v => (
+                                <div
+                                  key={v.id}
+                                  onClick={() => setLavadoVehiculoId(v.id)}
+                                  className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${lavadoVehiculoId === v.id ? 'border-[#F46E20] bg-[#F46E20]/5' : 'border-slate-200 dark:border-white/10 hover:border-[#F46E20]/50 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                                >
+                                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${lavadoVehiculoId === v.id ? 'bg-[#F46E20]/20 text-[#F46E20]' : 'bg-slate-100 dark:bg-white/10 text-slate-500'}`}>
+                                    {v.tipo === 'moto' ? <Bike className="w-5 h-5" /> : <Car className="w-5 h-5" />}
+                                  </div>
+                                  <div>
+                                    <p className="font-bold text-slate-800 dark:text-white text-sm">{v.marca}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">{v.placa} • {v.color}</p>
+                                  </div>
+                                  <div className={`ml-auto w-4 h-4 rounded-full border-2 flex items-center justify-center ${lavadoVehiculoId === v.id ? 'border-[#F46E20]' : 'border-slate-300 dark:border-slate-600'}`}>
+                                    {lavadoVehiculoId === v.id && <div className="w-2 h-2 rounded-full bg-[#F46E20]" />}
+                                  </div>
+                                </div>
+                              ))}
+
+                              <div
+                                onClick={() => setLavadoVehiculoId("manual")}
+                                className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${lavadoVehiculoId === "manual" ? 'border-[#F46E20] bg-[#F46E20]/5' : 'border-slate-200 dark:border-white/10 hover:border-[#F46E20]/50 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                              >
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${lavadoVehiculoId === "manual" ? 'bg-[#F46E20]/20 text-[#F46E20]' : 'bg-slate-100 dark:bg-white/10 text-slate-500'}`}>
+                                  <Plus className="w-5 h-5" />
+                                </div>
+                                <div>
+                                  <p className="font-bold text-slate-800 dark:text-white text-sm">Otro vehículo</p>
+                                  <p className="text-xs text-slate-500 dark:text-slate-400">Ingresar manualmente</p>
+                                </div>
+                                <div className={`ml-auto w-4 h-4 rounded-full border-2 flex items-center justify-center ${lavadoVehiculoId === "manual" ? 'border-[#F46E20]' : 'border-slate-300 dark:border-slate-600'}`}>
+                                  {lavadoVehiculoId === "manual" && <div className="w-2 h-2 rounded-full bg-[#F46E20]" />}
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Placa del vehículo</label>
-                            <input type="text" placeholder="ABC-123" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+
+                          {esManual && (
+                            <div className="grid grid-cols-2 gap-3 mb-5 p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 animate-fade-in-up">
+                              <div className="col-span-2">
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
+                                <select
+                                  value={lavadoTipoManual}
+                                  onChange={(e) => setLavadoTipoManual(e.target.value as any)}
+                                  className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                                >
+                                  <option value="moto">Moto</option>
+                                  <option value="carro">Carro Sedán / Hatchback</option>
+                                  <option value="4x4">Camioneta / 4x4</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Placa</label>
+                                <input type="text" placeholder="ABC-123" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]" />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Marca/Modelo</label>
+                                <input type="text" placeholder="Ej: Aveo" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]" />
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="mb-5">
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <Sparkles className="w-4 h-4" /> Paquete de Lavado
+                            </label>
+                            <div className="space-y-2">
+                              {paquetes.map(p => (
+                                <div
+                                  key={p.id}
+                                  onClick={() => setLavadoPaqueteId(p.id)}
+                                  className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${lavadoPaqueteId === p.id ? 'border-sky-500 bg-sky-50 dark:bg-sky-500/10' : 'border-slate-200 dark:border-white/10 hover:border-sky-300'}`}
+                                >
+                                  <div>
+                                    <p className={`font-bold text-sm ${lavadoPaqueteId === p.id ? 'text-sky-700 dark:text-sky-400' : 'text-slate-800 dark:text-white'}`}>{p.nombre}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{p.desc}</p>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className={`font-black text-lg ${lavadoPaqueteId === p.id ? 'text-sky-700 dark:text-sky-400' : 'text-slate-800 dark:text-white'}`}>${p.precio}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Fecha deseada</label>
-                            <input type="date" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+
+                          <div className="grid grid-cols-2 gap-3 mb-2">
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Calendar className="w-4 h-4" /> Fecha
+                              </label>
+                              <input
+                                type="date"
+                                value={lavadoFecha}
+                                onChange={(e) => setLavadoFecha(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Clock className="w-4 h-4" /> Hora (Aprox)
+                              </label>
+                              <select
+                                value={lavadoHora}
+                                onChange={(e) => setLavadoHora(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                              >
+                                <option value="08:00">08:00 AM</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                              </select>
+                            </div>
                           </div>
+
+                          {paqueteSeleccionado && (
+                            <div className="mt-4 p-4 rounded-xl bg-[#F46E20]/10 border border-[#F46E20]/20 flex justify-between items-center">
+                              <div>
+                                <p className="text-xs font-bold text-[#F46E20] uppercase tracking-wide">Total a Pagar</p>
+                                <p className="text-[10px] text-[#F46E20]/80">Pago en local o Billetera</p>
+                              </div>
+                              <p className="text-2xl font-black text-[#F46E20]">${paqueteSeleccionado.precio.toFixed(2)}</p>
+                            </div>
+                          )}
                         </>
-                      )}
+                      )})()}
 
                       {s.id === "grua" && (
                         <>
