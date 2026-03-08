@@ -2,6 +2,34 @@
 
 import { useLang } from "@/context/LanguageContext";
 
+// SVG flag components for cross-platform compatibility (Windows can't render emoji flags)
+function SpainFlag({ className = "" }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={className} width="20" height="15" aria-hidden>
+      <rect width="640" height="480" fill="#AA151B"/>
+      <rect width="640" height="240" y="120" fill="#F1BF00"/>
+    </svg>
+  );
+}
+
+function USFlag({ className = "" }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={className} width="20" height="15" aria-hidden>
+      <rect width="640" height="480" fill="#fff"/>
+      <g fill="#B22234">
+        <rect width="640" height="37"/>
+        <rect width="640" height="37" y="74"/>
+        <rect width="640" height="37" y="148"/>
+        <rect width="640" height="37" y="222"/>
+        <rect width="640" height="37" y="296"/>
+        <rect width="640" height="37" y="370"/>
+        <rect width="640" height="37" y="444"/>
+      </g>
+      <rect width="260" height="260" fill="#3C3B6E"/>
+    </svg>
+  );
+}
+
 export default function LanguageToggle() {
     const { lang, setLang } = useLang();
 
@@ -12,8 +40,8 @@ export default function LanguageToggle() {
             aria-label={lang === "es" ? "Switch to English" : "Cambiar a Español"}
             title={lang === "es" ? "Switch to English" : "Cambiar a Español"}
         >
-            <span className="text-base leading-none select-none">
-                {lang === "es" ? "🇪🇸" : "🇺🇸"}
+            <span className="leading-none select-none flex items-center">
+                {lang === "es" ? <SpainFlag /> : <USFlag />}
             </span>
             <span className="uppercase tracking-wide text-xs font-bold">
                 {lang === "es" ? "ES" : "EN"}

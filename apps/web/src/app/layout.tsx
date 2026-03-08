@@ -103,6 +103,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
         />
+        {/* Twemoji CDN — emojis consistentes en Windows/Mac/Linux */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js';
+                s.crossOrigin = 'anonymous';
+                s.onload = function() {
+                  if (typeof twemoji !== 'undefined') {
+                    twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+                    var observer = new MutationObserver(function() {
+                      twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+                  }
+                };
+                document.head.appendChild(s);
+              })();
+            `,
+          }}
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              img.emoji {
+                height: 1em;
+                width: 1em;
+                margin: 0 .05em 0 .1em;
+                vertical-align: -0.1em;
+                display: inline;
+              }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-screen bg-[var(--velocity-bg)] text-[var(--velocity-text)] antialiased font-sans transition-colors duration-300">
         <ThemeProvider>

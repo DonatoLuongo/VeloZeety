@@ -2,11 +2,135 @@
 
 import { BRAND } from "@velocity/shared";
 import Link from "next/link";
-import { useState } from "react";
-import { Package, MapPin, User, Phone, FileText, ArrowRight, Truck, Bike, Car, Shield, Navigation } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Package, MapPin, User, Phone, FileText, ArrowRight, Truck, Bike, Car, Shield, Navigation, Loader2, X } from "lucide-react";
 
 const VZ = "#F46E20"; // VeloZeety orange
 const GREEN = "#059669"; // emerald-600 less bright
+
+// --- Mock address suggestions (simulando una API de geocodificación) ---
+const MOCK_ADDRESSES: Record<string, string[]> = {
+  // Venezuela common addresses
+  "": [],
+  "ca": ["Calle Bolívar, Centro, Caracas", "Calle Miranda, Los Palos Grandes, Caracas", "Calle Sucre, El Paraíso, Caracas", "Carretera Panamericana, San Antonio de Los Altos", "Cabudare, Av. Intercomunal, Lara"],
+  "av": ["Av. Libertador, Chacao, Caracas", "Av. Francisco de Miranda, Caracas", "Av. Las Mercedes, Las Mercedes, Caracas", "Av. Bolívar, Valencia, Carabobo", "Av. Universidad, Los Chaguaramos, Caracas"],
+  "ce": ["C.C. Sambil, Chacao, Caracas", "Centro Comercial Tolón, Las Mercedes", "Centro Empresarial La Hoyada, Caracas", "Centro Médico de Caracas, San Bernardino"],
+  "ur": ["Urb. El Cafetal, Baruta, Caracas", "Urb. Santa Fe, Baruta, Caracas", "Urb. Los Samanes, Baruta, Caracas", "Urb. La Trinidad, Caracas"],
+  "ma": ["Maracay, Centro, Aragua", "Maiquetía, Vargas", "Maracaibo, Centro, Zulia", "Manzanares, Baruta, Caracas"],
+  "va": ["Valencia, Centro, Carabobo", "Valle Arriba, Baruta, Caracas", "Valle de la Pascua, Guárico"],
+  "ba": ["Barquisimeto, Centro, Lara", "Baruta, Miranda", "Barcelona, Anzoátegui"],
+  "ch": ["Chacao, Caracas", "Chacaíto, Caracas", "Charallave, Miranda"],
+  "sa": ["San Antonio de Los Altos, Miranda", "Santa Rosalía, Caracas", "Sabana Grande, Caracas", "San Cristóbal, Táchira"],
+  "lo": ["Los Palos Grandes, Caracas", "Los Chaguaramos, Caracas", "Los Teques, Miranda", "Los Dos Caminos, Caracas"],
+  "el": ["El Hatillo, Miranda", "El Paraíso, Caracas", "El Cafetal, Baruta", "El Marqués, Caracas"],
+  "la": ["Las Mercedes, Caracas", "La Trinidad, Caracas", "La Candelaria, Caracas", "La Urbina, Caracas"],
+  "pu": ["Puerto Ordaz, Bolívar", "Puerto La Cruz, Anzoátegui", "Pueblo Nuevo, Barquisimeto"],
+};
+
+function getAddressSuggestions(query: string): string[] {
+  if (!query || query.length < 2) return [];
+  const q = query.toLowerCase().trim();
+  // Find matching prefix
+  for (const prefix of Object.keys(MOCK_ADDRESSES).sort((a, b) => b.length - a.length)) {
+    if (q.startsWith(prefix) && prefix.length > 0) {
+      return MOCK_ADDRESSES[prefix].filter(a => a.toLowerCase().includes(q));
+    }
+  }
+  // Fallback: search all addresses
+  const all = Object.values(MOCK_ADDRESSES).flat();
+  return all.filter(a => a.toLowerCase().includes(q)).slice(0, 5);
+}
+
+interface AddressInputProps {
+  value: string;
+  onChange: (val: string) => void;
+  placeholder: string;
+  required?: boolean;
+  className: string;
+  showGeolocate?: boolean;
+  onGeolocate?: () => void;
+  isGeolocating?: boolean;
+}
+
+function AddressInput({ value, onChange, placeholder, required, className, showGeolocate, onGeolocate, isGeolocating }: AddressInputProps) {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isFocused && value.length >= 2) {
+      const results = getAddressSuggestions(value);
+      setSuggestions(results);
+      setShowSuggestions(results.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
+  }, [value, isFocused]);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={wrapperRef} className="relative w-full">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+        placeholder={placeholder}
+        required={required}
+        className={className}
+        autoComplete="off"
+      />
+      {showGeolocate && (
+        <button
+          type="button"
+          onClick={onGeolocate}
+          disabled={isGeolocating}
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
+          title="Usar mi ubicación actual"
+        >
+          {isGeolocating ? (
+            <Loader2 className="w-5 h-5 text-[#F46E20] animate-spin" />
+          ) : (
+            <Navigation className="w-5 h-5 text-slate-400 hover:text-[#F46E20] transition-colors" />
+          )}
+        </button>
+      )}
+
+      {/* Dropdown de sugerencias */}
+      {showSuggestions && (
+        <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-[#1E2329] border border-slate-200 dark:border-[#2B3139] rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in">
+          {suggestions.map((s, i) => (
+            <button
+              key={i}
+              type="button"
+              className="w-full text-left px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center gap-3 border-b border-slate-100 dark:border-white/5 last:border-b-0"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onChange(s);
+                setShowSuggestions(false);
+              }}
+            >
+              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="truncate">{s}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function EnviosPage() {
   const [tipoLogistica, setTipoLogistica] = useState<"mandaito" | "flete">("mandaito");
@@ -17,6 +141,56 @@ export default function EnviosPage() {
   const [nombreDestinatario, setNombreDestinatario] = useState("");
   const [telefonoDestinatario, setTelefonoDestinatario] = useState("");
   const [enviado, setEnviado] = useState(false);
+  const [isGeolocating, setIsGeolocating] = useState(false);
+  const [geoError, setGeoError] = useState<string | null>(null);
+
+  const handleGeolocate = useCallback(() => {
+    if (!navigator.geolocation) {
+      setGeoError("Tu navegador no soporta geolocalización.");
+      return;
+    }
+    setIsGeolocating(true);
+    setGeoError(null);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          // Use OpenStreetMap Nominatim for reverse geocoding (free, no API key)
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+            { headers: { "Accept-Language": "es" } }
+          );
+          const data = await res.json();
+          if (data.display_name) {
+            setOrigen(data.display_name.split(",").slice(0, 3).join(",").trim());
+          } else {
+            setOrigen(`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+          }
+        } catch {
+          // Fallback to coordinates
+          setOrigen(`${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+        }
+        setIsGeolocating(false);
+      },
+      (error) => {
+        setIsGeolocating(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setGeoError("Permiso de ubicación denegado. Actívalo en tu navegador.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setGeoError("Tu ubicación no está disponible en este momento.");
+            break;
+          case error.TIMEOUT:
+            setGeoError("Tiempo de espera agotado. Intenta de nuevo.");
+            break;
+          default:
+            setGeoError("No se pudo obtener tu ubicación.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,21 +312,48 @@ export default function EnviosPage() {
           </div>
         </section>
 
-        {/* Sección Ruta */}
+        {/* Sección Ruta con Autocompletado y Geolocalización */}
         <section className="bg-white dark:bg-[#1E2329] rounded-2xl border border-slate-200 dark:border-[#2B3139] p-6 shadow-sm">
           <label className="block text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Paso 2: Ruta del Envío</label>
           <div className="space-y-4 relative">
             <div className={`absolute left-5 top-[50px] bottom-[50px] w-0.5 border-l-2 border-dashed ${tipoLogistica === 'mandaito' ? 'border-[#F46E20]/30' : 'border-blue-500/30'}`} />
             
-            <div className="relative pl-12 focus-within:text-[#F46E20] transition-colors">
-              <div className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-[4px] bg-white dark:bg-[#1E2329] z-10 ${tipoLogistica === 'mandaito' ? 'border-[#F46E20]' : 'border-blue-500'}`} />
-              <input type="text" value={origen} onChange={(e) => setOrigen(e.target.value)} placeholder="¿Dónde recogemos el paquete?" required className={tipoLogistica === 'mandaito' ? INPUT_CLASS : BLUE_INPUT_CLASS} />
-              <Navigation className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 hover:text-slate-500 cursor-pointer" />
+            {/* Input Origen con Geolocalización + Autocompletado */}
+            <div className="relative pl-12">
+              <div className={`absolute left-3.5 top-5 w-4 h-4 rounded-full border-[4px] bg-white dark:bg-[#1E2329] z-10 ${tipoLogistica === 'mandaito' ? 'border-[#F46E20]' : 'border-blue-500'}`} />
+              <AddressInput
+                value={origen}
+                onChange={setOrigen}
+                placeholder="¿Dónde recogemos el paquete?"
+                required
+                className={`${tipoLogistica === 'mandaito' ? INPUT_CLASS : BLUE_INPUT_CLASS} pr-12`}
+                showGeolocate
+                onGeolocate={handleGeolocate}
+                isGeolocating={isGeolocating}
+              />
             </div>
 
-            <div className="relative pl-12 focus-within:text-emerald-500 transition-colors">
-              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-[4px] border-emerald-500 bg-white dark:bg-[#1E2329] z-10" />
-              <input type="text" value={destino} onChange={(e) => setDestino(e.target.value)} placeholder="¿Cuál es el destino final?" required className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-slate-900 dark:text-white font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm" />
+            {/* Mensaje de error de geolocalización */}
+            {geoError && (
+              <div className="ml-12 flex items-center gap-2 text-xs text-red-500 font-medium bg-red-50 dark:bg-red-500/10 px-3 py-2 rounded-lg">
+                <X className="w-3.5 h-3.5 shrink-0" />
+                {geoError}
+                <button type="button" onClick={() => setGeoError(null)} className="ml-auto text-red-400 hover:text-red-600">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
+            {/* Input Destino con Autocompletado */}
+            <div className="relative pl-12">
+              <div className="absolute left-3.5 top-5 w-4 h-4 rounded-full border-[4px] border-emerald-500 bg-white dark:bg-[#1E2329] z-10" />
+              <AddressInput
+                value={destino}
+                onChange={setDestino}
+                placeholder="¿Cuál es el destino final?"
+                required
+                className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-slate-900 dark:text-white font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
+              />
             </div>
           </div>
         </section>
