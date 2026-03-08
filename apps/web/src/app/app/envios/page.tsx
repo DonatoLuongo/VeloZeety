@@ -374,9 +374,9 @@ export default function EnviosPage() {
                   <input type="number" placeholder="Peso est." className={BLUE_INPUT_CLASS + " pl-12"} />
                 </div>
                 <select className={BLUE_INPUT_CLASS + " appearance-none cursor-pointer"}>
-                  <option>Sin ayudante</option>
-                  <option>1 Ayudante de carga</option>
-                  <option>2 Ayudantes de carga</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin ayudante</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">1 Ayudante de carga</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">2 Ayudantes de carga</option>
                 </select>
               </div>
             )}

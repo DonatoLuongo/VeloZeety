@@ -199,12 +199,12 @@ export default function MiEmpresaPage() {
             <div>
               <label className={labelClass}>Tipo de negocio</label>
               <select value={tipo} onChange={(e) => setTipo(e.target.value as typeof tipo)} className={selectClass}>
-                <option value="restaurante" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Restaurante</option>
-                <option value="tienda" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Tienda</option>
-                <option value="comida_rapida" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Comida rápida</option>
-                <option value="panaderia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Panadería</option>
-                <option value="farmacia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Farmacia</option>
-                <option value="otro" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Otro</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="restaurante">Restaurante</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="tienda">Tienda</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="comida_rapida">Comida rápida</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="panaderia">Panadería</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="farmacia">Farmacia</option>
+                <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium" value="otro">Otro</option>
               </select>
             </div>
             <div>

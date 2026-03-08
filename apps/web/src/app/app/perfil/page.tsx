@@ -26,7 +26,12 @@ import {
   CreditCard,
   Zap,
   Shield,
+  Bell,
+  Camera,
+  Edit3,
+  Trash2,
 } from "lucide-react";
+import VerificationBadge from "@/components/VerificationBadge";
 import CarritosPanel from "@/components/perfil/CarritosPanel";
 import FavoritosPanel from "@/components/perfil/FavoritosPanel";
 import ReferidosPanel from "@/components/perfil/ReferidosPanel";
@@ -163,13 +168,17 @@ export default function PerfilPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-xl md:text-2xl text-slate-900 dark:text-white leading-tight truncate">{nombre}</p>
-                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 flex items-center gap-1.5">
-                        <BadgeCheck className="w-4 h-4 text-emerald-500" /> {rolLabel}
+                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 flex items-center gap-1.5 font-medium">
+                        <BadgeCheck className={`w-4 h-4 ${
+                          (rol === "cliente" ? "standard" : "premium") === "premium" 
+                            ? "text-orange-500" 
+                            : rol === "conductor" 
+                              ? "text-emerald-500" 
+                              : "text-blue-500"
+                        }`} /> {rolLabel}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-slate-800 px-2 py-1 rounded-md tracking-wide">
-                          <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
-                        </span>
+                        <VerificationBadge role={rol as any} type={rol === "cliente" ? "standard" : "premium"} className="mb-1" />
                         {(() => {
                           const lvlInfo = getLevelForXP(userXP);
                           const lvl = lvlInfo.currentLevel;
@@ -193,9 +202,9 @@ export default function PerfilPage() {
                             }}
                             className="text-[11px] font-bold uppercase tracking-wider bg-white dark:bg-[#1E2329] dark:text-white border border-slate-200 dark:border-white/20 rounded-md py-1 items-center px-2 pr-6 outline-none hover:bg-slate-50 dark:hover:bg-white/5 transition-colors appearance-none cursor-pointer shadow-sm"
                           >
-                            <option value="cliente">Cliente</option>
-                            <option value="conductor">Conductor</option>
-                            <option value="emprendedor">Emprendedor</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="cliente">Cliente</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="conductor">Conductor</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="emprendedor">Emprendedor</option>
                           </select>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
                         </div>

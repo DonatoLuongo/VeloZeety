@@ -84,9 +84,9 @@ export default function AppLayout({
               target="_blank"
               rel="noopener noreferrer"
               title="Síguenos en X"
-              className="group p-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/8 transition-all duration-200"
+              className="group p-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200"
             >
-              <svg viewBox="0 0 24 24" className="w-[17px] h-[17px] fill-current text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-200">
+              <svg viewBox="0 0 24 24" className="w-[17px] h-[17px] fill-current text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors duration-200">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
             </a>

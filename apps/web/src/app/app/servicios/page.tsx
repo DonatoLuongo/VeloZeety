@@ -29,6 +29,7 @@ import {
   Car,
   Bike,
   Sparkles,
+  Star,
   Info
 } from "lucide-react";
 import Link from "next/link";
@@ -38,16 +39,6 @@ import LocationIconOrange from "@/components/LocationIconOrange";
 const CARRITO_KEY = "velocity_carrito_guardado";
 
 const SERVICIOS_PREMIUM = [
-  {
-    id: "emergencia",
-    title: "Emergencias y Salud",
-    short: "Ambulancia, auxilio médico vial y organismos del Estado",
-    Icon: ShieldAlert,
-    tag: "Nuevo" as "Nuevo" | "Aproximadamente" | "Futuro servicio" | undefined,
-    detail: "Acceso inmediato a servicios de rescate y salud. Solicita ambulancias privadas parientes de VeloCity, auxilio médico vial (paramédicos), bomberos o policía. También permite reportar fallas de infraestructura pública (semáforos, cables) directamente a los organismos competentes. Tu seguridad es nuestra prioridad.",
-    pricing: "Servicios públicos sin costo. Servicios privados según proveedor.",
-    cta: "Solicitar asistencia ahora",
-  },
   {
     id: "transporte-educativo",
     title: "Transporte Educativo",
@@ -368,14 +359,14 @@ export default function ServiciosPage() {
                       Nuevo
                     </span>
                   )}
-                  {s.tag === "Aproximadamente" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">
-                      Aproximadamente
+                  {String(s.tag) === "Aproximadamente" && (
+                    <span className="flex items-center gap-1 text-[10px] bg-sky-50 dark:bg-sky-500/10 text-[#0EA5E9] dark:text-sky-400 px-2 py-0.5 rounded-full font-bold border border-sky-100 dark:border-sky-500/20">
+                      <Clock className="w-3 h-3" /> {s.tag}
                     </span>
                   )}
-                  {s.tag === "Futuro servicio" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30">
-                      Aprox. / Futuro servicio
+                  {String(s.tag) === "Futuro servicio" && (
+                    <span className="flex items-center gap-1 text-[10px] bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold border border-slate-200 dark:border-white/10">
+                      <Star className="w-3 h-3" /> {s.tag}
                     </span>
                   )}
                 </div>
@@ -559,31 +550,24 @@ export default function ServiciosPage() {
                     <FileText className="w-4 h-4 text-slate-400" />
                     {s.pricing}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (s.id === "emergencia") {
-                        router.push("/app/emergencia");
-                      } else {
-                        setShowSubscription(s.id);
-                      }
-                    }}
-                    className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
-                    style={{ backgroundColor: BRAND.colors.primary }}
-                  >
-                    {s.id === "emergencia" && <PhoneCall className="w-5 h-5" />}
-                    {s.id === "transporte-educativo" && <Bus className="w-5 h-5" />}
-                    {s.id === "autolavado" && <MapPin className="w-5 h-5" />}
-                    {(s.id === "agua-potable") && <Calendar className="w-5 h-5" />}
-                    {s.cta}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSubscription(s.id)}
+                      className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
+                      style={{ backgroundColor: BRAND.colors.primary }}
+                    >
+                      {s.id === "transporte-educativo" && <Bus className="w-5 h-5" />}
+                      {s.id === "autolavado" && <MapPin className="w-5 h-5" />}
+                      {(s.id === "agua-potable") && <Calendar className="w-5 h-5" />}
+                      {s.cta}
+                    </button>
                 </div>
               </div>
 
               {/* Modal de Suscripción / Registro */}
               {showSubscription === s.id && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubscription(null)}>
-                  <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                  <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">Suscribirse a {s.title}</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{s.pricing}</p>
 
@@ -616,10 +600,10 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Grado / Nivel</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="">Selecciona</option>
-                              <option value="jardin">Jardín de infancia</option>
-                              <option value="primaria">Primaria</option>
-                              <option value="secundaria">Secundaria</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="">Selecciona</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="jardin">Jardín de infancia</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="primaria">Primaria</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="secundaria">Secundaria</option>
                             </select>
                           </div>
                         </>
@@ -638,11 +622,11 @@ export default function ServiciosPage() {
                               onChange={(e) => setAguaQuantityType(e.target.value)}
                               className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 mb-2"
                             >
-                              <option value="2">2 botellones</option>
-                              <option value="4">4 botellones</option>
-                              <option value="6">6 botellones</option>
-                              <option value="8">8 botellones</option>
-                              <option value="custom">Más (especificar)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="2">2 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="4">4 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="6">6 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="8">8 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="custom">Más (especificar)</option>
                             </select>
                             {aguaQuantityType === "custom" && (
                               <input
@@ -657,8 +641,8 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Horario preferido</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="manana">Mañana (8:00 - 12:00)</option>
-                              <option value="tarde">Tarde (12:00 - 17:00)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="manana">Mañana (8:00 - 12:00)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white" value="tarde">Tarde (12:00 - 17:00)</option>
                             </select>
                           </div>
                         </>
@@ -732,9 +716,9 @@ export default function ServiciosPage() {
                                   onChange={(e) => setLavadoTipoManual(e.target.value as any)}
                                   className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
                                 >
-                                  <option value="moto">Moto</option>
-                                  <option value="carro">Carro Sedán / Hatchback</option>
-                                  <option value="4x4">Camioneta / 4x4</option>
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro Sedán / Hatchback</option>
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="4x4">Camioneta / 4x4</option>
                                 </select>
                               </div>
                               <div>
