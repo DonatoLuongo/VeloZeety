@@ -26,11 +26,15 @@ import {
   Bus,
   CheckCircle2,
   Truck,
+  Car,
+  Bike,
+  Sparkles,
+  Star,
+  Info
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LocationIconOrange from "@/components/LocationIconOrange";
-import VerificationBadge from "@/components/VerificationBadge";
 
 const CARRITO_KEY = "velocity_carrito_guardado";
 
@@ -40,7 +44,7 @@ const SERVICIOS_PREMIUM = [
     title: "Transporte Educativo",
     short: "Rutas escolares verificadas y seguras para tus hijos",
     Icon: Bus,
-    tag: "Nuevo" as "Nuevo" | "Aproximadamente" | "Futuro servicio" | undefined,
+    tag: "Nuevo" as const,
     detail: "Servicio de transporte escolar con conductores verificados, unidades rastreadas por GPS en tiempo real y comunicación directa con los padres. Rutas fijas o personalizadas desde tu hogar hasta el colegio. Incluye seguro de pasajeros, cinturones de seguridad y aire acondicionado. Monitoreo en vivo desde la app para que los padres sepan exactamente dónde están sus hijos. Disponible para jardines de infancia, primaria y secundaria.",
     pricing: "Desde 40 USD/mes por ruta fija. Rutas personalizadas según distancia.",
     cta: "Solicitar ruta escolar",
@@ -57,13 +61,13 @@ const SERVICIOS_PREMIUM = [
   },
   {
     id: "autolavado",
-    title: "Autolavado",
+    title: "Autolavado Premium",
     short: "Lavado de vehículos en nuestro local",
-    Icon: Droplets,
-    tag: undefined as undefined,
-    detail: "Lavado profesional de motos y carros en las instalaciones VeloCity. Dirección del local indicada en la app. Servicio para particulares y flotas, con descuentos por plan. Incluye productos de calidad y atención rápida.",
-    pricing: "Moto desde 5 USD, carro desde 8 USD. Descuentos para flota.",
-    cta: "Ver ubicación del local",
+    Icon: Sparkles,
+    tag: "Nuevo" as const,
+    detail: "Lavado profesional de motos y carros en las instalaciones VeloCity. Servicio exclusivo para particulares y flotas, con descuentos por plan. Incluye productos de alta gama (cera de carnauba, shampoo neutro) y atención rápida con sala de espera VIP.",
+    pricing: "Motos desde $5 | Carros desde $8 | 4x4 desde $12",
+    cta: "Reservar Cita de Lavado",
   },
   {
     id: "grua",
@@ -108,6 +112,29 @@ const POR_PAGINA = 4;
 const CATEGORIAS_TIENDA = ["todos", "motos", "carros", "camiones", "4x4"] as const;
 
 type ProductItem = (typeof PRODUCTOS_TIENDA)[number];
+
+/* Mocks para Autolavado */
+const VEHICULOS_USUARIO = [
+  { id: "v1", tipo: "carro" as const, marca: "Toyota Yaris", placa: "AD345FG", color: "Gris" },
+  { id: "v2", tipo: "moto" as const, marca: "Honda XR 150", placa: "AA11BB", color: "Rojo" },
+];
+
+const PAQUETES_LAVADO = {
+  moto: [
+    { id: "m_basico", nombre: "Lavado Básico", desc: "Agua, shampoo y secado rápido", precio: 5 },
+    { id: "m_premium", nombre: "Lavado Premium", desc: "Incluye desengrasante, cera y silicón", precio: 8 },
+  ],
+  carro: [
+    { id: "c_basico", nombre: "Lavado Básico", desc: "Carrocería, aspirado simple", precio: 8 },
+    { id: "c_completo", nombre: "Lavado Completo", desc: "Aspirado profundo, tablero, encerado", precio: 12 },
+    { id: "c_vip", nombre: "Lavado VIP", desc: "Completo + lavado de motor y chasis", precio: 20 },
+  ],
+  "4x4": [
+    { id: "x_basico", nombre: "Lavado Básico", desc: "Carrocería, aspirado simple", precio: 12 },
+    { id: "x_completo", nombre: "Lavado Completo", desc: "Especial para barro, aspirado, encerado", precio: 18 },
+    { id: "x_vip", nombre: "Lavado VIP", desc: "Completo + lavado de chasis y motor 4x4", precio: 30 },
+  ],
+};
 
 /* Datos del negocio Tienda VeloCity para el modal */
 const NEGOCIO_TIENDA = {
@@ -157,7 +184,9 @@ function NegocioModal({
             <div className="flex-1 min-w-0 pb-1">
               <h3 className="font-bold text-slate-900 dark:text-white text-xl leading-tight">Tienda VeloCity</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400">Accesorios</p>
-              <VerificationBadge type="premium" className="mt-1" />
+              <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400 text-[10px] font-bold mt-1 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30">
+                <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
+              </span>
             </div>
           </div>
 
@@ -264,6 +293,13 @@ export default function ServiciosPage() {
   const [aguaQuantityType, setAguaQuantityType] = useState("2");
   const [aguaQuantityCustom, setAguaQuantityCustom] = useState("");
 
+  /* Estados para Autolavado */
+  const [lavadoVehiculoId, setLavadoVehiculoId] = useState<string>("v1");
+  const [lavadoTipoManual, setLavadoTipoManual] = useState<"moto" | "carro" | "4x4">("carro");
+  const [lavadoPaqueteId, setLavadoPaqueteId] = useState<string>("");
+  const [lavadoFecha, setLavadoFecha] = useState<string>("");
+  const [lavadoHora, setLavadoHora] = useState<string>("09:00");
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -323,14 +359,14 @@ export default function ServiciosPage() {
                       Nuevo
                     </span>
                   )}
-                  {s.tag === "Aproximadamente" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">
-                      Aproximadamente
+                  {String(s.tag) === "Aproximadamente" && (
+                    <span className="flex items-center gap-1 text-[10px] bg-sky-50 dark:bg-sky-500/10 text-[#0EA5E9] dark:text-sky-400 px-2 py-0.5 rounded-full font-bold border border-sky-100 dark:border-sky-500/20">
+                      <Clock className="w-3 h-3" /> {s.tag}
                     </span>
                   )}
-                  {s.tag === "Futuro servicio" && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30">
-                      Aprox. / Futuro servicio
+                  {String(s.tag) === "Futuro servicio" && (
+                    <span className="flex items-center gap-1 text-[10px] bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold border border-slate-200 dark:border-white/10">
+                      <Star className="w-3 h-3" /> {s.tag}
                     </span>
                   )}
                 </div>
@@ -514,31 +550,24 @@ export default function ServiciosPage() {
                     <FileText className="w-4 h-4 text-slate-400" />
                     {s.pricing}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (s.id === "emergencia") {
-                        router.push("/app/emergencia");
-                      } else {
-                        setShowSubscription(s.id);
-                      }
-                    }}
-                    className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
-                    style={{ backgroundColor: BRAND.colors.primary }}
-                  >
-                    {s.id === "emergencia" && <PhoneCall className="w-5 h-5" />}
-                    {s.id === "transporte-educativo" && <Bus className="w-5 h-5" />}
-                    {s.id === "autolavado" && <MapPin className="w-5 h-5" />}
-                    {(s.id === "agua-potable") && <Calendar className="w-5 h-5" />}
-                    {s.cta}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSubscription(s.id)}
+                      className="w-full py-3 rounded-xl font-medium text-white flex items-center justify-center gap-2 text-base"
+                      style={{ backgroundColor: BRAND.colors.primary }}
+                    >
+                      {s.id === "transporte-educativo" && <Bus className="w-5 h-5" />}
+                      {s.id === "autolavado" && <MapPin className="w-5 h-5" />}
+                      {(s.id === "agua-potable") && <Calendar className="w-5 h-5" />}
+                      {s.cta}
+                    </button>
                 </div>
               </div>
 
               {/* Modal de Suscripción / Registro */}
               {showSubscription === s.id && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowSubscription(null)}>
-                  <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                  <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">Suscribirse a {s.title}</h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{s.pricing}</p>
 
@@ -619,36 +648,167 @@ export default function ServiciosPage() {
                         </>
                       )}
 
-                      {s.id === "autolavado" && (
+                      {s.id === "autolavado" && (() => {
+                        const esManual = lavadoVehiculoId === "manual";
+                        const vehiculoSeleccionado = VEHICULOS_USUARIO.find(v => v.id === lavadoVehiculoId);
+                        const tipoParaPaquetes = esManual ? lavadoTipoManual : (vehiculoSeleccionado?.tipo || "carro");
+                        const paquetes = PAQUETES_LAVADO[tipoParaPaquetes as keyof typeof PAQUETES_LAVADO] || PAQUETES_LAVADO.carro;
+
+                        // Auto-seleccionar primer paquete si cambia el tipo
+                        if (!paquetes.find(p => p.id === lavadoPaqueteId)) {
+                           if (paquetes.length > 0 && lavadoPaqueteId !== paquetes[0].id) {
+                               setTimeout(() => setLavadoPaqueteId(paquetes[0].id), 0);
+                           }
+                        }
+
+                        const paqueteSeleccionado = paquetes.find(p => p.id === lavadoPaqueteId) || paquetes[0];
+
+                        return (
                         <>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
-                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="camioneta">Camioneta / 4x4</option>
-                            </select>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <Car className="w-4 h-4" /> Selecciona tu Vehículo
+                            </label>
+                            <div className="grid grid-cols-1 gap-2 mb-4">
+                              {VEHICULOS_USUARIO.map(v => (
+                                <div
+                                  key={v.id}
+                                  onClick={() => setLavadoVehiculoId(v.id)}
+                                  className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${lavadoVehiculoId === v.id ? 'border-[#F46E20] bg-[#F46E20]/5' : 'border-slate-200 dark:border-white/10 hover:border-[#F46E20]/50 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                                >
+                                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${lavadoVehiculoId === v.id ? 'bg-[#F46E20]/20 text-[#F46E20]' : 'bg-slate-100 dark:bg-white/10 text-slate-500'}`}>
+                                    {v.tipo === 'moto' ? <Bike className="w-5 h-5" /> : <Car className="w-5 h-5" />}
+                                  </div>
+                                  <div>
+                                    <p className="font-bold text-slate-800 dark:text-white text-sm">{v.marca}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">{v.placa} • {v.color}</p>
+                                  </div>
+                                  <div className={`ml-auto w-4 h-4 rounded-full border-2 flex items-center justify-center ${lavadoVehiculoId === v.id ? 'border-[#F46E20]' : 'border-slate-300 dark:border-slate-600'}`}>
+                                    {lavadoVehiculoId === v.id && <div className="w-2 h-2 rounded-full bg-[#F46E20]" />}
+                                  </div>
+                                </div>
+                              ))}
+
+                              <div
+                                onClick={() => setLavadoVehiculoId("manual")}
+                                className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${lavadoVehiculoId === "manual" ? 'border-[#F46E20] bg-[#F46E20]/5' : 'border-slate-200 dark:border-white/10 hover:border-[#F46E20]/50 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                              >
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${lavadoVehiculoId === "manual" ? 'bg-[#F46E20]/20 text-[#F46E20]' : 'bg-slate-100 dark:bg-white/10 text-slate-500'}`}>
+                                  <Plus className="w-5 h-5" />
+                                </div>
+                                <div>
+                                  <p className="font-bold text-slate-800 dark:text-white text-sm">Otro vehículo</p>
+                                  <p className="text-xs text-slate-500 dark:text-slate-400">Ingresar manualmente</p>
+                                </div>
+                                <div className={`ml-auto w-4 h-4 rounded-full border-2 flex items-center justify-center ${lavadoVehiculoId === "manual" ? 'border-[#F46E20]' : 'border-slate-300 dark:border-slate-600'}`}>
+                                  {lavadoVehiculoId === "manual" && <div className="w-2 h-2 rounded-full bg-[#F46E20]" />}
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Placa del vehículo</label>
-                            <input type="text" placeholder="ABC-123" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+
+                          {esManual && (
+                            <div className="grid grid-cols-2 gap-3 mb-5 p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 animate-fade-in-up">
+                              <div className="col-span-2">
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
+                                <select
+                                  value={lavadoTipoManual}
+                                  onChange={(e) => setLavadoTipoManual(e.target.value as any)}
+                                  className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                                >
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro Sedán / Hatchback</option>
+                                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="4x4">Camioneta / 4x4</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Placa</label>
+                                <input type="text" placeholder="ABC-123" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]" />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Marca/Modelo</label>
+                                <input type="text" placeholder="Ej: Aveo" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]" />
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="mb-5">
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <Sparkles className="w-4 h-4" /> Paquete de Lavado
+                            </label>
+                            <div className="space-y-2">
+                              {paquetes.map(p => (
+                                <div
+                                  key={p.id}
+                                  onClick={() => setLavadoPaqueteId(p.id)}
+                                  className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${lavadoPaqueteId === p.id ? 'border-sky-500 bg-sky-50 dark:bg-sky-500/10' : 'border-slate-200 dark:border-white/10 hover:border-sky-300'}`}
+                                >
+                                  <div>
+                                    <p className={`font-bold text-sm ${lavadoPaqueteId === p.id ? 'text-sky-700 dark:text-sky-400' : 'text-slate-800 dark:text-white'}`}>{p.nombre}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{p.desc}</p>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className={`font-black text-lg ${lavadoPaqueteId === p.id ? 'text-sky-700 dark:text-sky-400' : 'text-slate-800 dark:text-white'}`}>${p.precio}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Fecha deseada</label>
-                            <input type="date" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
+
+                          <div className="grid grid-cols-2 gap-3 mb-2">
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Calendar className="w-4 h-4" /> Fecha
+                              </label>
+                              <input
+                                type="date"
+                                value={lavadoFecha}
+                                onChange={(e) => setLavadoFecha(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Clock className="w-4 h-4" /> Hora (Aprox)
+                              </label>
+                              <select
+                                value={lavadoHora}
+                                onChange={(e) => setLavadoHora(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#F46E20]/20 focus:border-[#F46E20]"
+                              >
+                                <option value="08:00">08:00 AM</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                              </select>
+                            </div>
                           </div>
+
+                          {paqueteSeleccionado && (
+                            <div className="mt-4 p-4 rounded-xl bg-[#F46E20]/10 border border-[#F46E20]/20 flex justify-between items-center">
+                              <div>
+                                <p className="text-xs font-bold text-[#F46E20] uppercase tracking-wide">Total a Pagar</p>
+                                <p className="text-[10px] text-[#F46E20]/80">Pago en local o Billetera</p>
+                              </div>
+                              <p className="text-2xl font-black text-[#F46E20]">${paqueteSeleccionado.precio.toFixed(2)}</p>
+                            </div>
+                          )}
                         </>
-                      )}
+                      )})()}
 
                       {s.id === "grua" && (
                         <>
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo a remolcar</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro sedán / Hatchback</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="camioneta">Camioneta / SUV / 4x4</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="pesado">Camión / Carga pesada</option>
+                              <option value="moto">Moto</option>
+                              <option value="carro">Carro sedán / Hatchback</option>
+                              <option value="camioneta">Camioneta / SUV / 4x4</option>
+                              <option value="pesado">Camión / Carga pesada</option>
                             </select>
                           </div>
                           <div>
@@ -658,11 +818,11 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Motivo del servicio</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="accidente">Accidente</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="falla-mecanica">Falla mecánica</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="neumatico">Neumático / Caucho</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="bateria">Bateria / Eléctrico</option>
-                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="otro">Otro</option>
+                              <option value="accidente">Accidente</option>
+                              <option value="falla-mecanica">Falla mecánica</option>
+                              <option value="neumatico">Neumático / Caucho</option>
+                              <option value="bateria">Bateria / Eléctrico</option>
+                              <option value="otro">Otro</option>
                             </select>
                           </div>
                         </>

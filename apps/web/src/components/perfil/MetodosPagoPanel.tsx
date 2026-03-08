@@ -4,10 +4,36 @@ import { useState } from "react";
 import { BRAND } from "@velocity/shared";
 import { Smartphone, Building2, Wallet, CreditCard, Plus, CheckCircle2 } from "lucide-react";
 
+const PayPalLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-7 h-7" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.076 21.337H2.47a1.103 1.103 0 0 1-1.077-1.3l2.854-18.19A1.103 1.103 0 0 1 5.324 1h8.63c3.042 0 4.965.525 5.926 1.62.961 1.096 1.144 2.8.55 5.1-.643 2.5-2.015 4.39-4.12 5.672-2.103 1.282-4.904 1.923-8.402 1.923h-1.286a1.103 1.103 0 0 0-1.077.935l-1.469 5.087z" fill="#003087" />
+    <path d="M11.64 23.337H7.034a1.103 1.103 0 0 1-1.077-1.3L8.81 3.847a1.103 1.103 0 0 1 1.077-.91h8.63c3.042 0 4.965.525 5.926 1.62.961 1.096 1.144 2.8.55 5.1-.643 2.5-2.015 4.39-4.12 5.672-2.103 1.282-4.904 1.923-8.402 1.923h-1.286a1.103 1.103 0 0 0-1.077.935l-1.469 5.087z" fill="#009CDE" />
+    <path d="M12.926 17.62c2.103-1.282 3.475-3.172 4.118-5.672.594-2.3-.41-4.004-1.37-5.1-.962-1.095-2.885-1.62-5.927-1.62H8.81l-3.328 20.25h4.606l1.469-5.087a1.103 1.103 0 0 1 1.077-.935h.292z" fill="#012169" opacity="0.1" />
+  </svg>
+);
+
+const WallyLogo = () => (
+  <svg viewBox="0 0 100 100" className="w-8 h-8">
+    <path fill="#F46E20" d="M22,45 L37,30 L52,45 L37,60 Z" />
+    <path fill="#F46E20" d="M41,64 L56,49 L71,64 L56,79 Z" opacity="0.85" />
+    <path fill="#F46E20" d="M60,45 L75,30 L90,45 L75,60 Z" />
+  </svg>
+);
+
+const ZinliLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-8 h-8">
+    <rect width="24" height="24" rx="6" fill="#5F35B6" />
+    <path d="M6 7h12l-9 8h9v2H6l9-8H6V7z" fill="#00D094" />
+    <path d="M10.5 12.5l3-2.5" stroke="#5F35B6" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
 const METODOS = [
   { id: "pago-movil", name: "Pago Móvil", Icon: Smartphone, desc: "Venezuela" },
   { id: "transferencia", name: "Transferencia bancaria", Icon: Building2, desc: "Cuenta en bolívares o USD" },
-  { id: "paypal", name: "PayPal", Icon: CreditCard, desc: "Retiros internacionales" }
+  { id: "paypal", name: "PayPal", Icon: PayPalLogo, desc: "Retiros internacionales" },
+  { id: "wally", name: "Wally Panama", Icon: WallyLogo, desc: "Billetera digital internacional", comingSoon: true },
+  { id: "zinli", name: "Zinli", Icon: ZinliLogo, desc: "Billetera digital P2P", comingSoon: true }
 ];
 
 type MetodosPagoPanelProps = { embedInDashboard?: boolean };
@@ -28,20 +54,28 @@ export default function MetodosPagoPanel({ embedInDashboard }: MetodosPagoPanelP
       <div className="space-y-4 mb-6">
         {METODOS.map((m) => {
           const isAdded = agregados[m.id];
+          const isComingSoon = m.comingSoon;
           return (
             <div
               key={m.id}
-              className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm"
+              className={`bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-opacity ${isComingSoon ? "opacity-75" : ""}`}
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0">
-                  <m.Icon className="w-6 h-6 text-slate-600 dark:text-slate-300" />
+                <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                   <m.Icon className={typeof m.Icon === 'function' ? "" : "w-6 h-6 text-slate-600 dark:text-slate-300"} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800 dark:text-slate-100 text-base">{m.name}</p>
+                  <p className="font-semibold text-slate-800 dark:text-slate-100 text-base flex items-center gap-2">
+                    {m.name}
+                    {isComingSoon && (
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                        Próximamente
+                      </span>
+                    )}
+                  </p>
                   <p className="text-sm text-slate-500 dark:text-slate-400">{m.desc}</p>
                 </div>
-                {!isAdded && activeForm !== m.id && (
+                {!isAdded && activeForm !== m.id && !isComingSoon && (
                   <button
                     type="button"
                     onClick={() => setActiveForm(m.id)}
@@ -49,6 +83,14 @@ export default function MetodosPagoPanel({ embedInDashboard }: MetodosPagoPanelP
                     style={{ backgroundColor: BRAND.colors.primary }}
                   >
                     <Plus className="w-4 h-4" /> Agregar
+                  </button>
+                )}
+                {isComingSoon && (
+                  <button
+                    disabled
+                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-white/5 cursor-not-allowed"
+                  >
+                    Próximamente
                   </button>
                 )}
                 {isAdded && (

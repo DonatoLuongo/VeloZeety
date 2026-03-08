@@ -24,7 +24,6 @@ export default function VerificationBadge({
   // Verificado Premium (Todos): Naranja
   
   let colorClass = "";
-  let textColor = "";
   let text = type === "premium" ? "Verificado premium" : "Verificado";
 
   if (type === "premium") {
@@ -35,7 +34,7 @@ export default function VerificationBadge({
     if (role === "conductor") {
       colorClass = "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30";
     } else {
-      // Cliente y Emprendedor (que es como un cliente avanzado) usan azul
+      // Cliente y Emprendedor usan azul
       colorClass = "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-500/30";
     }
   }

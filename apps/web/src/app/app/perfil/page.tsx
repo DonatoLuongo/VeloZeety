@@ -26,7 +26,12 @@ import {
   CreditCard,
   Zap,
   Shield,
+  Bell,
+  Camera,
+  Edit3,
+  Trash2,
 } from "lucide-react";
+import VerificationBadge from "@/components/VerificationBadge";
 import CarritosPanel from "@/components/perfil/CarritosPanel";
 import FavoritosPanel from "@/components/perfil/FavoritosPanel";
 import ReferidosPanel from "@/components/perfil/ReferidosPanel";
@@ -38,7 +43,6 @@ import MetodosPagoPanel from "@/components/perfil/MetodosPagoPanel";
 import EmpresaPanel from "@/components/perfil/EmpresaPanel";
 import NivelBadge from "@/components/perfil/NivelBadge";
 import { getLevelForXP } from "@/lib/levels";
-import VerificationBadge from "@/components/VerificationBadge";
 
 type Rol = "cliente" | "conductor" | "emprendedor";
 
@@ -174,7 +178,7 @@ export default function PerfilPage() {
                         }`} /> {rolLabel}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 mt-2.5">
-                        <VerificationBadge role={rol} type={rol === "cliente" ? "standard" : "premium"} className="mb-1" />
+                        <VerificationBadge role={rol as any} type={rol === "cliente" ? "standard" : "premium"} className="mb-1" />
                         {(() => {
                           const lvlInfo = getLevelForXP(userXP);
                           const lvl = lvlInfo.currentLevel;
@@ -198,9 +202,9 @@ export default function PerfilPage() {
                             }}
                             className="text-[11px] font-bold uppercase tracking-wider bg-white dark:bg-[#1E2329] dark:text-white border border-slate-200 dark:border-white/20 rounded-md py-1 items-center px-2 pr-6 outline-none hover:bg-slate-50 dark:hover:bg-white/5 transition-colors appearance-none cursor-pointer shadow-sm"
                           >
-                            <option value="cliente" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Cliente</option>
-                            <option value="conductor" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Conductor</option>
-                            <option value="emprendedor" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Emprendedor</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="cliente">Cliente</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="conductor">Conductor</option>
+                            <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" value="emprendedor">Emprendedor</option>
                           </select>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
                         </div>
