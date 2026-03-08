@@ -21,15 +21,8 @@ import {
   Receipt,
   Send,
 } from "lucide-react";
+import VerificationBadge from "@/components/VerificationBadge";
 
-function VerificadoBadge() {
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium">
-      <BadgeCheck className="w-3.5 h-3.5" />
-      Verificado
-    </span>
-  );
-}
 
 const STEPS = ["Datos básicos", "Contacto y legal", "Servicios", "Catálogo"] as const;
 
@@ -118,7 +111,7 @@ export default function MiEmpresaPage() {
                     <p className="text-sm text-slate-500 dark:text-slate-400 capitalize">{tipo.replace("_", " ")}</p>
                   </div>
                 </div>
-                {verified && <VerificadoBadge />}
+                {verified && <VerificationBadge role="emprendedor" type="standard" />}
               </div>
               {descripcion && (
                 <div className="px-5 py-3 border-b border-slate-100">
@@ -199,12 +192,12 @@ export default function MiEmpresaPage() {
             <div>
               <label className={labelClass}>Tipo de negocio</label>
               <select value={tipo} onChange={(e) => setTipo(e.target.value as typeof tipo)} className={selectClass}>
-                <option value="restaurante" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Restaurante</option>
-                <option value="tienda" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Tienda</option>
-                <option value="comida_rapida" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Comida rápida</option>
-                <option value="panaderia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Panadería</option>
-                <option value="farmacia" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Farmacia</option>
-                <option value="otro" className="text-slate-800 dark:text-white font-medium bg-white dark:bg-slate-800">Otro</option>
+                <option value="restaurante" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Restaurante</option>
+                <option value="tienda" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Tienda</option>
+                <option value="comida_rapida" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Comida rápida</option>
+                <option value="panaderia" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Panadería</option>
+                <option value="farmacia" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Farmacia</option>
+                <option value="otro" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-medium">Otro</option>
               </select>
             </div>
             <div>

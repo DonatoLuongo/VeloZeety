@@ -30,26 +30,17 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LocationIconOrange from "@/components/LocationIconOrange";
+import VerificationBadge from "@/components/VerificationBadge";
 
 const CARRITO_KEY = "velocity_carrito_guardado";
 
 const SERVICIOS_PREMIUM = [
   {
-    id: "emergencia",
-    title: "Emergencias y Salud",
-    short: "Ambulancia, auxilio médico vial y organismos del Estado",
-    Icon: ShieldAlert,
-    tag: "Nuevo" as "Nuevo" | "Aproximadamente" | "Futuro servicio" | undefined,
-    detail: "Acceso inmediato a servicios de rescate y salud. Solicita ambulancias privadas parientes de VeloCity, auxilio médico vial (paramédicos), bomberos o policía. También permite reportar fallas de infraestructura pública (semáforos, cables) directamente a los organismos competentes. Tu seguridad es nuestra prioridad.",
-    pricing: "Servicios públicos sin costo. Servicios privados según proveedor.",
-    cta: "Solicitar asistencia ahora",
-  },
-  {
     id: "transporte-educativo",
     title: "Transporte Educativo",
     short: "Rutas escolares verificadas y seguras para tus hijos",
     Icon: Bus,
-    tag: "Nuevo" as const,
+    tag: "Nuevo" as "Nuevo" | "Aproximadamente" | "Futuro servicio" | undefined,
     detail: "Servicio de transporte escolar con conductores verificados, unidades rastreadas por GPS en tiempo real y comunicación directa con los padres. Rutas fijas o personalizadas desde tu hogar hasta el colegio. Incluye seguro de pasajeros, cinturones de seguridad y aire acondicionado. Monitoreo en vivo desde la app para que los padres sepan exactamente dónde están sus hijos. Disponible para jardines de infancia, primaria y secundaria.",
     pricing: "Desde 40 USD/mes por ruta fija. Rutas personalizadas según distancia.",
     cta: "Solicitar ruta escolar",
@@ -166,9 +157,7 @@ function NegocioModal({
             <div className="flex-1 min-w-0 pb-1">
               <h3 className="font-bold text-slate-900 dark:text-white text-xl leading-tight">Tienda VeloCity</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400">Accesorios</p>
-              <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400 text-[10px] font-bold mt-1 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30">
-                <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
-              </span>
+              <VerificationBadge type="premium" className="mt-1" />
             </div>
           </div>
 
@@ -582,10 +571,10 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Grado / Nivel</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="">Selecciona</option>
-                              <option value="jardin">Jardín de infancia</option>
-                              <option value="primaria">Primaria</option>
-                              <option value="secundaria">Secundaria</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="">Selecciona</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="jardin">Jardín de infancia</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="primaria">Primaria</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="secundaria">Secundaria</option>
                             </select>
                           </div>
                         </>
@@ -604,11 +593,11 @@ export default function ServiciosPage() {
                               onChange={(e) => setAguaQuantityType(e.target.value)}
                               className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 mb-2"
                             >
-                              <option value="2">2 botellones</option>
-                              <option value="4">4 botellones</option>
-                              <option value="6">6 botellones</option>
-                              <option value="8">8 botellones</option>
-                              <option value="custom">Más (especificar)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="2">2 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="4">4 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="6">6 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="8">8 botellones</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="custom">Más (especificar)</option>
                             </select>
                             {aguaQuantityType === "custom" && (
                               <input
@@ -623,8 +612,8 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Horario preferido</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="manana">Mañana (8:00 - 12:00)</option>
-                              <option value="tarde">Tarde (12:00 - 17:00)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="manana">Mañana (8:00 - 12:00)</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white" value="tarde">Tarde (12:00 - 17:00)</option>
                             </select>
                           </div>
                         </>
@@ -635,9 +624,9 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="moto">Moto</option>
-                              <option value="carro">Carro</option>
-                              <option value="camioneta">Camioneta / 4x4</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="camioneta">Camioneta / 4x4</option>
                             </select>
                           </div>
                           <div>
@@ -656,10 +645,10 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo a remolcar</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="moto">Moto</option>
-                              <option value="carro">Carro sedán / Hatchback</option>
-                              <option value="camioneta">Camioneta / SUV / 4x4</option>
-                              <option value="pesado">Camión / Carga pesada</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="moto">Moto</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="carro">Carro sedán / Hatchback</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="camioneta">Camioneta / SUV / 4x4</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="pesado">Camión / Carga pesada</option>
                             </select>
                           </div>
                           <div>
@@ -669,11 +658,11 @@ export default function ServiciosPage() {
                           <div>
                             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Motivo del servicio</label>
                             <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="accidente">Accidente</option>
-                              <option value="falla-mecanica">Falla mecánica</option>
-                              <option value="neumatico">Neumático / Caucho</option>
-                              <option value="bateria">Bateria / Eléctrico</option>
-                              <option value="otro">Otro</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="accidente">Accidente</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="falla-mecanica">Falla mecánica</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="neumatico">Neumático / Caucho</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="bateria">Bateria / Eléctrico</option>
+                              <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100" value="otro">Otro</option>
                             </select>
                           </div>
                         </>

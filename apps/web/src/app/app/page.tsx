@@ -3,6 +3,7 @@
 import { BRAND } from "@velocity/shared";
 import { useState } from "react";
 import Link from "next/link";
+import VerificationBadge from "@/components/VerificationBadge";
 import LocationIconOrange from "@/components/LocationIconOrange";
 import {
   MapPin,
@@ -184,9 +185,7 @@ export default function AppInicioPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <span className="font-medium text-slate-800 dark:text-slate-100 text-sm">{neg.nombre}</span>
                         {neg.verified && (
-                          <span className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-500 text-xs">
-                            <BadgeCheck className="w-3.5 h-3.5" /> Verificado
-                          </span>
+                          <VerificationBadge role="emprendedor" type="standard" showText={true} />
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -265,9 +264,7 @@ export default function AppInicioPage() {
                         <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg truncate">{negocioSeleccionado.nombre}</h3>
                         <p className="text-sm text-slate-500 dark:text-slate-400">{negocioSeleccionado.tipo}</p>
                         {negocioSeleccionado.verified && (
-                          <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-500 text-xs font-medium mt-1">
-                            <BadgeCheck className="w-3.5 h-3.5" /> Verificado
-                          </span>
+                          <VerificationBadge role="emprendedor" type="standard" className="mt-1" />
                         )}
                       </div>
                     </div>
@@ -423,9 +420,7 @@ export default function AppInicioPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-semibold text-slate-800">Carlos Mendoza</p>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium">
-                        <BadgeCheck className="w-3 h-3" /> Verificado
-                      </span>
+                      <VerificationBadge role="conductor" type="standard" />
                     </div>
                     <p className="text-sm text-slate-600 flex items-center gap-1 mt-0.5">
                       <span>⭐ 4.9</span>
@@ -494,7 +489,7 @@ export default function AppInicioPage() {
                       </div>
                       <div>
                         <p className="font-semibold text-slate-800 dark:text-white">Carlos Mendoza</p>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-xs font-medium mt-1">Verificado</span>
+                        <VerificationBadge role="conductor" type="standard" />
                       </div>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">{vehicleDetail[vehicle]}</p>

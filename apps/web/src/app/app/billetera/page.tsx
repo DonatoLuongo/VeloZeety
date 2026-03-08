@@ -366,9 +366,9 @@ export default function BilleteraPage() {
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Método de Destino</label>
                 <select className="w-full px-4 py-3.5 rounded-[20px] border border-slate-200 dark:border-[#2B3139] bg-white dark:bg-white/[0.02] text-slate-800 dark:text-white text-[13px] font-medium focus:ring-2 focus:ring-[#F46E20]/20 outline-none transition-all appearance-none cursor-pointer">
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="">Selecciona un método preguardado...</option>
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="pago-movil">Pago Móvil (BNC) - ****</option>
-                  <option className="bg-white dark:bg-[#1E2329] text-slate-800 dark:text-white" value="transferencia">Transferencia a Empresa (BNC)</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white" value="">Selecciona un método preguardado...</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white" value="pago-movil">Pago Móvil (BNC) - ****</option>
+                  <option className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white" value="transferencia">Transferencia a Empresa (BNC)</option>
                 </select>
               </div>
               <button type="button" className="w-full mt-2 py-4 rounded-[20px] font-bold text-white flex items-center justify-center gap-2 shadow-sm shadow-[#F46E20]/20 transition-all hover:scale-[1.01] active:scale-[0.98] bg-[#F46E20]">
