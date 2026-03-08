@@ -1,4 +1,5 @@
 "use client";
+// Force rebuild: Synchronize UI with latest Premium features
 
 import { BRAND } from "@velocity/shared";
 import { useState, useEffect } from "react";
