@@ -113,7 +113,7 @@ export default function AppInicioPage() {
   const [mapPickerFor, setMapPickerFor] = useState<"pickup" | "dropoff" | null>(null);
   const [carrito, setCarrito] = useState<{ nombre: string; precio: string; cantidad: number }[]>([]);
   const [wizardActive, setWizardActive] = useState(false);
-  const [wizardTripData, setWizardTripData] = useState<{ vehicle: string } | null>(null);
+  const [wizardTripData, setWizardTripData] = useState<any>(null);
 
   const updateCartItem = (p: { nombre: string; precio: string }, delta: number) => {
     setCarrito((prev) => {
@@ -448,6 +448,37 @@ export default function AppInicioPage() {
                       Llamar / Chat
                     </button>
                   </div>
+                  {wizardTripData?.payment === "pago_movil" && (
+                    <div className="mt-2 p-3 rounded-xl bg-slate-50 dark:bg-[#1E2329] border border-slate-200 dark:border-[#2B3139] shadow-inner mb-2">
+                      <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                        <Smartphone className="w-3.5 h-3.5 text-[#0EA5E9]" /> Datos Pago Móvil Conductor
+                      </p>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-slate-500">Banco</span>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">Banesco (0134)</span>
+                        </div>
+                        <div className="flex justify-between items-center text-xs group">
+                          <span className="text-slate-500">Teléfono</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-medium text-slate-800 dark:text-slate-200">04141234567</span>
+                            <button title="Copiar Teléfono" type="button" onClick={() => { navigator.clipboard.writeText("04141234567"); alert("Teléfono copiado"); }} className="p-1 rounded-md text-slate-400 hover:text-[#0EA5E9] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center text-xs group">
+                          <span className="text-slate-500">Cédula</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-medium text-slate-800 dark:text-slate-200">V12345678</span>
+                            <button title="Copiar Cédula" type="button" onClick={() => { navigator.clipboard.writeText("12345678"); alert("Cédula copiada"); }} className="p-1 rounded-md text-slate-400 hover:text-[#0EA5E9] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <button type="button" onClick={() => setShowPaymentMethods(true)} className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800/80 border border-slate-800 dark:border-slate-700 text-white text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-700 transition shadow-lg shrink-0 mt-1">
                     <Wallet className="w-4 h-4 text-emerald-400" /> Pagar Servicio (P2P)
                   </button>

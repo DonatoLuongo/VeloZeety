@@ -51,5 +51,11 @@ import { validate } from "./env.validation";
     TrackingModule,
     RequestsModule,
   ],
+  providers: [
+    {
+      provide: require('@nestjs/core').APP_GUARD,
+      useClass: require('@nestjs/throttler').ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule { }

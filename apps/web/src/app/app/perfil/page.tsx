@@ -24,6 +24,8 @@ import {
   MapPin,
   ShoppingCart,
   CreditCard,
+  Zap,
+  Shield,
 } from "lucide-react";
 import CarritosPanel from "@/components/perfil/CarritosPanel";
 import FavoritosPanel from "@/components/perfil/FavoritosPanel";
@@ -34,6 +36,8 @@ import ConfiguracionPanel from "@/components/perfil/ConfiguracionPanel";
 import AyudaPanel from "@/components/perfil/AyudaPanel";
 import MetodosPagoPanel from "@/components/perfil/MetodosPagoPanel";
 import EmpresaPanel from "@/components/perfil/EmpresaPanel";
+import NivelBadge from "@/components/perfil/NivelBadge";
+import { getLevelForXP } from "@/lib/levels";
 
 type Rol = "cliente" | "conductor" | "emprendedor";
 
@@ -46,6 +50,7 @@ export default function PerfilPage() {
   const [email, setEmail] = useState("cliente@velocity.com");
   const [telefono, setTelefono] = useState("+58 424 123 4567");
   const [selectedSection, setSelectedSection] = useState<SectionId>("inicio");
+  const [userXP] = useState(3500); // Mock: XP actual del usuario (Nivel 3 - Tortuga, badge Viajero Constante desbloqueada)
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -69,7 +74,7 @@ export default function PerfilPage() {
     { id: "favoritos", href: "/app/perfil/favoritos", Icon: Heart, title: "Favorito", desc: "Conductores guardados como favoritos" },
     { id: "referidos", href: "/app/perfil/referidos", Icon: Users, title: "Referidos", desc: "Invita amigos y gana USD en tu wallet" },
     { id: "historial", href: "/app/perfil/historial", Icon: History, title: "Historial de viajes", desc: "Ver todos tus viajes" },
-    ...((rol === "cliente" || rol === "conductor") ? [{ id: "vehiculos" as SectionId, href: "/app/perfil/vehiculos", Icon: Car, title: "Mis vehículos", desc: "Gestionar vehículos" }] : []),
+    ...((rol === "conductor") ? [{ id: "vehiculos" as SectionId, href: "/app/perfil/vehiculos", Icon: Car, title: "Mis vehículos", desc: "Gestionar vehículos" }] : []),
     ...((rol === "emprendedor") ? [{ id: "empresa" as SectionId, href: "/app/perfil/empresa", Icon: Building2, title: "Mi Empresa", desc: "Gestión de perfil y negocio" }] : []),
     { id: "configuracion", href: "/app/perfil/configuracion", Icon: Settings, title: "Configuración", desc: "Preferencias y ajustes" },
     { id: "ayuda", href: "/help", Icon: HelpCircle, title: "Ayuda y soporte", desc: "Preguntas frecuentes y contacto" },
@@ -165,6 +170,18 @@ export default function PerfilPage() {
                         <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-slate-800 px-2 py-1 rounded-md tracking-wide">
                           <BadgeCheck className="w-3.5 h-3.5" /> Verificado premium
                         </span>
+                        {(() => {
+                          const lvlInfo = getLevelForXP(userXP);
+                          const lvl = lvlInfo.currentLevel;
+                          return (
+                            <span
+                              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white px-2 py-1 rounded-md tracking-wide shadow-sm"
+                              style={{ backgroundColor: lvl.color }}
+                            >
+                              <span className="text-xs">{lvl.emoji}</span> Nv. {lvl.level} {lvl.name}
+                            </span>
+                          );
+                        })()}
                         <div className="relative">
                           <select
                             value={rol}
@@ -251,12 +268,22 @@ export default function PerfilPage() {
                   <Link href="/app/billetera" className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
                     <CreditCard className="w-5 h-5" /> Mi Billetera
                   </Link>
+                  {rol === "conductor" && (
+                    <button onClick={() => setSelectedSection("vehiculos")} className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
+                      <Car className="w-5 h-5" /> Gestionar vehículos
+                    </button>
+                  )}
                   {rol === "emprendedor" && (
                     <button onClick={() => setSelectedSection("empresa")} className="px-5 py-3 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-velocity-primary/10 text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95">
                       <Building2 className="w-5 h-5" /> Panel Empresa
                     </button>
                   )}
                 </div>
+              </div>
+
+              {/* Sistema de Niveles */}
+              <div className="mb-6">
+                <NivelBadge totalXP={userXP} rol={rol} />
               </div>
 
               <div className="hidden md:block">

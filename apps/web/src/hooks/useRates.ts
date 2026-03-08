@@ -55,12 +55,14 @@ export function useRates() {
             setLoading(true);
             setError(false);
 
-            // Fetch DolarAPI for oficial y paralelo
-            const dolApi = await fetch("https://ve.dolarapi.com/v1/dolares")
+            // Fetch ExchangeRate-API for VES (BCV) and EUR
+            // This API gives true updated realtime standard values (e.g. 433.17)
+            const erApi = await fetch("https://api.exchangerate-api.com/v4/latest/USD")
                 .then((r) => r.json())
-                .catch(() => []);
+                .catch(() => null);
 
-            const euroApi = await fetch("https://ve.dolarapi.com/v1/euros")
+            // Fetch DolarAPI for USDT (paralelo)
+            const dolApi = await fetch("https://ve.dolarapi.com/v1/dolares")
                 .then((r) => r.json())
                 .catch(() => []);
 
@@ -68,14 +70,16 @@ export function useRates() {
             let usdtRate = 618.00;
             let eurRate = 501.72;
 
-            // Extract from arrays
-            const oficialRaw = dolApi.find((d: any) => d.fuente === "oficial")?.promedio;
-            const paraleloRaw = dolApi.find((d: any) => d.fuente === "paralelo")?.promedio;
-            const eurRaw = euroApi.find((d: any) => d.fuente === "oficial")?.promedio;
+            if (erApi && erApi.rates) {
+                if (erApi.rates.VES) bcvRate = erApi.rates.VES;
+                if (erApi.rates.EUR) eurRate = bcvRate / erApi.rates.EUR;
+            } else {
+                const oficialRaw = dolApi.find((d: any) => d.fuente === "oficial")?.promedio;
+                if (oficialRaw) bcvRate = oficialRaw;
+            }
 
-            if (oficialRaw) bcvRate = oficialRaw;
+            const paraleloRaw = dolApi.find((d: any) => d.fuente === "paralelo")?.promedio;
             if (paraleloRaw) usdtRate = paraleloRaw;
-            if (eurRaw) eurRate = eurRaw;
 
             const newRates: Rates = {
                 bcv: Math.max(bcvRate, 43.10),

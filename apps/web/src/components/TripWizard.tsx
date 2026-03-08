@@ -377,32 +377,62 @@ export default function TripWizard({ onClose, onConfirm }: Props) {
                     </div>
                 )}
 
-                {/* STEP 2 — Vehicle */}
+                {/* STEP 2 — Vehicle & Details */}
                 {step === 2 && (
-                    <div className="grid grid-cols-2 gap-2.5 animate-slide-up-soft">
-                        {VEHICLES.map(({ id, Icon, label, personas, equipaje, extra }) => (
-                            <button
-                                key={id}
-                                type="button"
-                                onClick={() => setVehicle(id)}
-                                className={`flex flex-col items-start gap-2 p-3.5 rounded-2xl border-2 text-left transition-all ${vehicle === id
-                                        ? "border-[#F46E20] bg-[#F46E20]/8 dark:bg-[#F46E20]/12 shadow-md shadow-[#F46E20]/10"
-                                        : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600"
-                                    }`}
-                            >
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${vehicle === id ? "bg-[#F46E20]" : "bg-slate-100 dark:bg-slate-700"}`}>
-                                    <Icon className={`w-5 h-5 ${vehicle === id ? "text-white" : "text-slate-600 dark:text-slate-300"}`} strokeWidth={2} />
-                                </div>
-                                <div>
-                                    <p className={`text-sm font-bold leading-tight ${vehicle === id ? "text-[#F46E20]" : "text-slate-800 dark:text-slate-100"}`}>{label}</p>
-                                    <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                                        <span className="inline-flex items-center gap-0.5"><Users className="w-3 h-3" /> {personas}</span>
-                                        <span className="inline-flex items-center gap-0.5"><Briefcase className="w-3 h-3" /> {equipaje}</span>
-                                        {extra && <span className={`inline-flex items-center gap-0.5 font-medium ${id === "4x4" ? "text-emerald-600 dark:text-emerald-400" : "text-[#F46E20]"}`}>{id === "4x4" && <Dog className="w-3 h-3" />} {extra}</span>}
+                    <div className="animate-slide-up-soft space-y-4">
+                        <div className="grid grid-cols-2 gap-2.5">
+                            {VEHICLES.map(({ id, Icon, label, personas, equipaje, extra }) => (
+                                <button
+                                    key={id}
+                                    type="button"
+                                    onClick={() => setVehicle(id)}
+                                    className={`flex flex-col items-start gap-2 p-3.5 rounded-2xl border-2 text-left transition-all ${vehicle === id
+                                            ? "border-[#F46E20] bg-[#F46E20]/8 dark:bg-[#F46E20]/12 shadow-md shadow-[#F46E20]/10"
+                                            : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600"
+                                        }`}
+                                >
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${vehicle === id ? "bg-[#F46E20]" : "bg-slate-100 dark:bg-slate-700"}`}>
+                                        <Icon className={`w-5 h-5 ${vehicle === id ? "text-white" : "text-slate-600 dark:text-slate-300"}`} strokeWidth={2} />
                                     </div>
+                                    <div>
+                                        <p className={`text-sm font-bold leading-tight ${vehicle === id ? "text-[#F46E20]" : "text-slate-800 dark:text-slate-100"}`}>{label}</p>
+                                        <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                                            <span className="inline-flex items-center gap-0.5"><Users className="w-3 h-3" /> {personas}</span>
+                                            <span className="inline-flex items-center gap-0.5"><Briefcase className="w-3 h-3" /> {equipaje}</span>
+                                            {extra && <span className={`inline-flex items-center gap-0.5 font-medium ${id === "4x4" ? "text-emerald-600 dark:text-emerald-400" : "text-[#F46E20]"}`}>{id === "4x4" && <Dog className="w-3 h-3" />} {extra}</span>}
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Detalles Dinámicos */}
+                        {(vehicle === "carro" || vehicle === "4x4") && (
+                            <div className="pt-2 animate-fade-in-up">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wide">Detalles adicionales (Opcional)</label>
+                                <textarea
+                                    placeholder="¿Llevas equipaje extra, mascotas o cajas medianas?"
+                                    className="w-full h-20 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 focus:border-[#F46E20] focus:ring-1 focus:ring-[#F46E20] outline-none transition-all resize-none"
+                                />
+                                <div className="flex items-center gap-2 mt-2">
+                                    <input type="checkbox" id="pets" className="w-4 h-4 rounded border-slate-300 text-[#F46E20] focus:ring-[#F46E20]" />
+                                    <label htmlFor="pets" className="text-sm font-medium text-slate-700 dark:text-slate-300">Viajo con mascota</label>
                                 </div>
-                            </button>
-                        ))}
+                            </div>
+                        )}
+                        {vehicle === "flete" && (
+                            <div className="pt-2 animate-fade-in-up">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wide">Especificaciones de carga</label>
+                                <textarea
+                                    placeholder="Detalla los objetos grandes a transportar (Ej: 1 nevera, 2 sofás). Dimensiones y peso aproximado."
+                                    className="w-full h-24 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 focus:border-[#F46E20] focus:ring-1 focus:ring-[#F46E20] outline-none transition-all resize-none"
+                                />
+                                <p className="text-[10px] text-slate-500 mt-1.5 flex items-start gap-1">
+                                    <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                                    El conductor revisará la carga para confirmar la tarifa final o solicitar modificaciones si excede la capacidad.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
 

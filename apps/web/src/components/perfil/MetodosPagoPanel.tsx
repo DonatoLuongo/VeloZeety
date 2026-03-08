@@ -7,9 +7,7 @@ import { Smartphone, Building2, Wallet, CreditCard, Plus, CheckCircle2 } from "l
 const METODOS = [
   { id: "pago-movil", name: "Pago Móvil", Icon: Smartphone, desc: "Venezuela" },
   { id: "transferencia", name: "Transferencia bancaria", Icon: Building2, desc: "Cuenta en bolívares o USD" },
-  { id: "wally", name: "Wally", Icon: Wallet, desc: "Billetera digital" },
-  { id: "paypal", name: "PayPal", Icon: CreditCard, desc: "Retiros internacionales" },
-  { id: "zinli", name: "Zinli", Icon: CreditCard, desc: "Billetera y tarjeta virtual" },
+  { id: "paypal", name: "PayPal", Icon: CreditCard, desc: "Retiros internacionales" }
 ];
 
 type MetodosPagoPanelProps = { embedInDashboard?: boolean };
@@ -115,10 +113,10 @@ export default function MetodosPagoPanel({ embedInDashboard }: MetodosPagoPanelP
                         </div>
                       </>
                     )}
-                    {(m.id === "wally" || m.id === "paypal" || m.id === "zinli") && (
+                    {(m.id === "paypal") && (
                       <div className="md:col-span-2">
                         <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Correo electrónico asociado a {m.name}</label>
-                        <input type="email" placeholder="tucorreo@ejemplo.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-white/20 bg-white dark:bg-velocity-bg text-sm text-slate-800 dark:text-slate-100" />
+                        <input type="email" placeholder="tucorreo@ejemplo.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#2B3139] bg-white dark:bg-[#1E2329] text-sm text-slate-800 dark:text-white outline-none focus:border-[#F46E20]" />
                       </div>
                     )}
                   </div>
