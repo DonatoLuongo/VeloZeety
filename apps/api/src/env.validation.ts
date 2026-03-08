@@ -5,7 +5,7 @@ export const envValidationSchema = z.object({
     PORT: z.coerce.number().default(3001),
     DATABASE_URL: z.string().url(),
     REDIS_URL: z.string().url(),
-    JWT_SECRET: z.string().min(10),
+    JWT_SECRET: z.string().min(10).default('v3lozeety_secret_fallback_change_me'),
     CORS_ORIGIN: z.string().optional(),
 });
 
