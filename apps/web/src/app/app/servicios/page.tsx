@@ -536,11 +536,11 @@ export default function ServiciosPage() {
                     <div>
                       <h2 className="text-2xl font-bold text-slate-800 dark:text-white">{s.title}</h2>
                       {s.tag && (
-                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${s.tag === "Nuevo" ? "bg-sky-100 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-500/30" :
-                          s.tag === "Aproximadamente" ? "bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30" :
+                        <span className={`inline-block mt-1 text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded ${String(s.tag) === "Nuevo" ? "bg-sky-100 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-500/30" :
+                          String(s.tag) === "Aproximadamente" ? "bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30" :
                             "bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30"
                           }`}>
-                          {s.tag === "Futuro servicio" ? "Aprox. / Futuro servicio" : s.tag}
+                          {String(s.tag) === "Futuro servicio" ? "Aprox. / Futuro servicio" : s.tag}
                         </span>
                       )}
                       <p className="text-slate-500 dark:text-slate-400 mt-2">{s.short}</p>
