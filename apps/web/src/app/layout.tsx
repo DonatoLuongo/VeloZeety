@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+// Trigger: Force full UI rebuild
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/context/LanguageContext";
 
