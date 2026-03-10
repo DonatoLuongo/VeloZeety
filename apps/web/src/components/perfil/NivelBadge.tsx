@@ -20,6 +20,17 @@ export default function NivelBadge({ totalXP, rol = "cliente" }: NivelBadgeProps
   const [selectedBadge, setSelectedBadge] = useState<VeloLevel | null>(null);
   const [showAllHistory, setShowAllHistory] = useState(false);
 
+  const THEMATIC_ELEMENTS: Record<number, string[]> = {
+    1: ['🍃', '🌿', '🌱', '🌼', '🐌'],
+    2: ['🌳', '🌿', '🪵', '🪴', '🦥'],
+    3: ['🌴', '🪨', '🐢', '🍃', '🌊'],
+    4: ['🌵', '☀️', '🪨', '🦎', '🦂'],
+    5: ['🌳', '☀️', '🌾', '🐘', '🌅'],
+    6: ['🌾', '💨', '🐎', '🐴', '🌻'],
+    7: ['🌾', '⚡', '💨', '🐆', '🐾'],
+    8: ['☁️', '💨', '🌤️', '🦅', '🌪️'],
+  };
+
   useEffect(() => {
     if (showModal) {
       setViewedLevelIndex(currentLevel.level - 1);
@@ -104,9 +115,30 @@ export default function NivelBadge({ totalXP, rol = "cliente" }: NivelBadgeProps
             style={{ backgroundColor: isViewedLevelUnlocked ? viewedLevel.color : '#64748b' }}
           >
             {/* Header Colored Area */}
-            <div className="relative pt-6 px-6 pb-12 sm:pt-10 sm:px-10 sm:pb-16 transition-colors duration-500">
+            <div className="relative pt-6 px-6 pb-12 sm:pt-10 sm:px-10 sm:pb-16 transition-colors duration-500 shrink-0">
               
-              <div className="flex items-center justify-between mb-8 sm:mb-12">
+              {/* === THEME BACKGROUND === */}
+              <div className="absolute inset-0 overflow-hidden sm:rounded-tl-[36px] sm:rounded-tr-[36px] rounded-t-[36px] pointer-events-none">
+                <div className="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center">
+                   {THEMATIC_ELEMENTS[viewedLevel.level]?.map((emoji, i) => (
+                      <div 
+                        key={i} 
+                        className="absolute text-5xl sm:text-7xl opacity-40 animate-pulse"
+                        style={{
+                          top: `${[10, 60, 20, 70, 40][i % 5]}%`,
+                          left: `${[15, 80, 70, 20, 40][i % 5]}%`,
+                          transform: `rotate(${[-15, 25, 10, -30, 45][i % 5]}deg) scale(${[0.8, 1.2, 0.9, 1.1, 1][i % 5]})`,
+                          transition: 'all 0.5s ease-in-out'
+                        }}
+                      >
+                        {emoji}
+                      </div>
+                   ))}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/5 to-black/30 pointer-events-none mix-blend-overlay" />
+              </div>
+
+              <div className="relative z-10 flex items-center justify-between mb-6 sm:mb-10">
                  <button 
                    onClick={() => setShowModal(false)}
                    className="p-1.5 -ml-1.5 rounded-full hover:bg-black/10 text-white transition-colors"
@@ -122,26 +154,57 @@ export default function NivelBadge({ totalXP, rol = "cliente" }: NivelBadgeProps
                  </button>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="relative z-10 flex items-center justify-between">
                 <div className="text-left">
-                    <h2 className="text-[34px] sm:text-[40px] font-extrabold text-white leading-none mb-1">
+                    <h2 className="text-[34px] sm:text-[40px] font-extrabold text-white leading-none mb-1 shadow-black/20 text-shadow-sm">
                         Nivel {viewedLevel.level}
                     </h2>
-                    <p className="text-white/90 text-[17px] sm:text-xl font-medium capitalize flex items-center gap-2">
+                    <p className="text-white/90 text-[17px] sm:text-xl font-medium capitalize flex items-center gap-2 drop-shadow-sm">
                         {viewedLevel.name}
                         {viewedLevel.level === currentLevel.level && (
-                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-slate-900">Actual</span>
+                            <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-slate-900 shadow-sm">Actual</span>
                         )}
                     </p>
                 </div>
-                <div className={`w-[84px] h-[84px] sm:w-[100px] sm:h-[100px] rounded-full flex items-center justify-center text-[40px] sm:text-[50px] shadow-inner shrink-0 ${viewedLevel.level === currentLevel.level ? 'animate-bounce' : ''}`}
-                     style={{backgroundColor: `#00000015`}}>
+                <div className={`w-[84px] h-[84px] sm:w-[100px] sm:h-[100px] rounded-full flex items-center justify-center text-[40px] sm:text-[50px] shadow-lg shrink-0 border-4 border-white/10 ${viewedLevel.level === currentLevel.level ? 'animate-bounce' : ''}`}
+                     style={{backgroundColor: `#00000025`, backdropFilter: 'blur(4px)'}}>
                     {viewedLevel.emoji}
                 </div>
               </div>
 
+              {/* Interactive Carousel Arrows (Top placement) */}
+              <div className="relative z-10 flex justify-between items-center mt-8 sm:mt-10 px-0">
+                  <button 
+                    onClick={handlePrevLevel}
+                    disabled={viewedLevelIndex === 0}
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-black/20 text-white hover:bg-black/30 hover:scale-105 transition-all disabled:opacity-0 disabled:pointer-events-none backdrop-blur-md shadow-sm border border-white/10"
+                    aria-label="Nivel anterior"
+                  >
+                    <ChevronLeft className="w-6 h-6 -ml-0.5"/>
+                  </button>
+
+                  {viewedLevel.level === currentLevel.level ? (
+                      <span className="text-[13px] sm:text-[14px] font-bold text-white flex items-center gap-2 px-4 py-2 bg-black/20 backdrop-blur-md rounded-full shadow-sm border border-white/10">
+                         Estás aquí <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(7ade80,0.6)]"></span>
+                      </span>
+                  ) : (
+                      <span className="text-[12px] sm:text-[13px] font-bold text-white/90 px-4 py-2 bg-black/20 backdrop-blur-md rounded-full shadow-sm border border-white/10">
+                         Nivel {viewedLevel.level} de {VELO_LEVELS.length}
+                      </span>
+                  )}
+
+                  <button 
+                    onClick={handleNextLevel}
+                    disabled={viewedLevelIndex === VELO_LEVELS.length - 1}
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-black/20 text-white hover:bg-black/30 hover:scale-105 transition-all disabled:opacity-0 disabled:pointer-events-none backdrop-blur-md shadow-sm border border-white/10"
+                    aria-label="Siguiente nivel"
+                  >
+                    <ChevronRight className="w-6 h-6 -mr-0.5"/>
+                  </button>
+              </div>
+
               {/* Interactive Carousel Dots */}
-              <div className="absolute -bottom-3 right-8 flex gap-1.5 bg-white dark:bg-[#1E2329] py-2 px-3 rounded-full shadow-lg z-10 border border-slate-100 dark:border-[#2B3139]">
+              <div className="absolute -bottom-3 right-8 flex gap-1.5 bg-white dark:bg-[#1E2329] py-2 px-3 rounded-full shadow-xl z-20 border border-slate-100 dark:border-[#2B3139]">
                  {VELO_LEVELS.map((l, i) => (
                     <button 
                        key={i} 
@@ -256,34 +319,7 @@ export default function NivelBadge({ totalXP, rol = "cliente" }: NivelBadgeProps
                  )}
               </div>
 
-              {/* Carousel controls */}
-              <div className="py-4 border-b border-slate-100 dark:border-white/10 flex justify-between items-center mb-8">
-                  <button 
-                    onClick={handlePrevLevel}
-                    disabled={viewedLevelIndex === 0}
-                    className="flex items-center gap-1 text-[15px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition disabled:opacity-30 disabled:hover:text-slate-500"
-                  >
-                    <ChevronLeft className="w-4 h-4"/> Anterior
-                  </button>
-
-                  {viewedLevel.level === currentLevel.level ? (
-                      <span className="text-[13px] font-bold text-slate-800 dark:text-white flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-white/10 rounded-full">
-                         Estás aquí <span className="text-[10px]" style={{color: currentLevel.color}}>●</span>
-                      </span>
-                  ) : (
-                      <span className="text-[13px] font-bold text-slate-400">
-                         Nivel {viewedLevel.level} de 8
-                      </span>
-                  )}
-
-                  <button 
-                    onClick={handleNextLevel}
-                    disabled={viewedLevelIndex === VELO_LEVELS.length - 1}
-                    className="flex items-center gap-1 text-[15px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition disabled:opacity-30 disabled:hover:text-slate-500"
-                  >
-                    Siguiente <ChevronRight className="w-4 h-4"/>
-                  </button>
-              </div>
+              {/* Carousel controls removed from here, moved to header area */}
 
               {/* Insignias Section */}
               <h3 className="text-[22px] sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">
