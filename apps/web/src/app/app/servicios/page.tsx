@@ -3,6 +3,8 @@
 
 import { BRAND } from "@velocity/shared";
 import { useState, useEffect } from "react";
+import GruaWizard from "@/components/servicios/GruaWizard";
+import { GruaIcon } from "@/components/ui/GruaIcon";
 import {
   Trash2,
   Leaf,
@@ -75,7 +77,7 @@ const SERVICIOS_PREMIUM = [
     id: "grua",
     title: "Servicio de Grúa 24/7",
     short: "Asistencia vial y remolque para todo tipo de vehículos",
-    Icon: Truck,
+    Icon: GruaIcon,
     tag: "Nuevo" as const,
     detail: "Servicio de grúa profesional disponible las 24 horas del día. Contamos con grúas de plataforma y de gancho para motos, carros, camionetas y vehículos de carga pesada. Tiempo de respuesta optimizado según tu ubicación GPS. Personal capacitado para maniobras delicadas y traslados seguros.",
     pricing: "Desde 30 USD según distancia y tipo de vehículo.",
@@ -579,6 +581,11 @@ export default function ServiciosPage() {
         ) : (() => {
           const s = SERVICIOS_PREMIUM.find((x) => x.id === panelVista);
           if (!s) return null;
+
+          if (panelVista === "grua") {
+            return <GruaWizard onBack={() => setPanelVista("tienda")} />;
+          }
+
           return (
             <section className="w-full max-w-3xl mx-auto">
               <div className="bg-white dark:bg-velocity-surface rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
@@ -856,34 +863,6 @@ export default function ServiciosPage() {
                           )}
                         </>
                       )})()}
-
-                      {s.id === "grua" && (
-                        <>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de vehículo a remolcar</label>
-                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="moto">Moto</option>
-                              <option value="carro">Carro sedán / Hatchback</option>
-                              <option value="camioneta">Camioneta / SUV / 4x4</option>
-                              <option value="pesado">Camión / Carga pesada</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ubicación exacta de la falla</label>
-                            <input type="text" placeholder="Ej: Autopista Prados del Este, salida Concresa" className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/20" />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Motivo del servicio</label>
-                            <select className="w-full px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-slate-100">
-                              <option value="accidente">Accidente</option>
-                              <option value="falla-mecanica">Falla mecánica</option>
-                              <option value="neumatico">Neumático / Caucho</option>
-                              <option value="bateria">Bateria / Eléctrico</option>
-                              <option value="otro">Otro</option>
-                            </select>
-                          </div>
-                        </>
-                      )}
                     </div>
 
                     <div className="flex gap-3">

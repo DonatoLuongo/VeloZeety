@@ -151,8 +151,8 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                <h3 className="font-bold text-slate-800 dark:text-white whitespace-nowrap shrink-0">Productos en Carrito ({filteredItems.length})</h3>
                
-               <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                 <div className="relative w-full sm:w-64">
+               <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-lg">
+                 <div className="relative w-full">
                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                    <input
                      type="text"
@@ -162,13 +162,13 @@ export default function CarritosPanel({ embedInDashboard }: CarritosPanelProps) 
                      className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-[#1A1F27] border border-slate-200 dark:border-[#2B3139] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 dark:text-white placeholder:text-slate-400"
                    />
                  </div>
-                 <div className="relative w-full sm:w-auto">
+                 <div className="relative w-full sm:w-[160px] shrink-0">
                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10 pointer-events-none" />
                    <input
                      type="date"
                      value={dateFilter}
                      onChange={(e) => setDateFilter(e.target.value)}
-                     className="w-full sm:w-[140px] pl-9 pr-3 py-2 bg-slate-50 dark:bg-[#1A1F27] border border-slate-200 dark:border-[#2B3139] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 dark:text-white min-h-[38px] cursor-pointer relative [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:m-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                     className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-[#1A1F27] border border-slate-200 dark:border-[#2B3139] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-800 dark:text-white min-h-[38px] cursor-pointer relative [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:m-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                    />
                  </div>
                </div>
